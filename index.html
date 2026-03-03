@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Taskflow</title>
 
-  <style>
+  
+  }
+<style>
   :root {
     --bg-color: #f1f5f9;
     --primary: #1e3a8a;
@@ -19,9 +21,115 @@
     --spacing: 20px;
     --radius: 14px;
     --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    <style>
   }
 
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font);
+  }
+
+  body {
+    display: flex;
+    min-height: 100vh;
+    background: var(--bg-color);
+    color: var(--text);
+  }
+
+  aside {
+    width: 260px;
+    background: linear-gradient(180deg, var(--primary), var(--primary-light));
+    color: white;
+    padding: var(--spacing);
+  }
+
+  aside h2 {
+    margin-bottom: 25px;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+  }
+
+  aside p {
+    margin-bottom: 12px;
+    opacity: 0.9;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  aside p:hover {
+    opacity: 1;
+    transform: translateX(4px);
+  }
+
+  main {
+    flex: 1;
+    padding: 40px;
+  }
+
+  header h1 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+  }
+
+  section {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .task {
+    background: var(--card);
+    padding: 22px;
+    border-radius: var(--radius);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.25s ease;
+    border: 1px solid #e2e8f0;
+  }
+
+  .task:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  }
+
+  .task-info strong {
+    font-size: 1rem;
+  }
+
+  .task-info span {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .badge {
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+  }
+
+  .high { background: var(--high); }
+  .medium { background: var(--medium); }
+  .low { background: var(--low); }
+
+  @media (max-width: 768px) {
+    body {
+      flex-direction: column;
+    }
+
+    aside {
+      width: 100%;
+      text-align: center;
+    }
+
+    main {
+      padding: 20px;
+    }
+  }
+</style>
   * {
     box-sizing: border-box;
     margin: 0;
