@@ -5,19 +5,19 @@ const search = document.getElementById("search");
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-function renderTasks() {
+function renderTasks(){
 
-list.innerHTML = "";
+list.innerHTML="";
 
 tasks.forEach((task,index)=>{
 
-const li = document.createElement("li");
+const li=document.createElement("li");
 
-li.textContent = task;
+li.textContent=task;
 
-const deleteBtn = document.createElement("button");
+const deleteBtn=document.createElement("button");
 
-deleteBtn.textContent = "Eliminar";
+deleteBtn.textContent="Eliminar";
 
 deleteBtn.addEventListener("click",()=>{
 
@@ -35,7 +35,7 @@ list.appendChild(li);
 
 });
 
-document.getElementById("task-count").textContent = tasks.length;
+document.getElementById("task-count").textContent=tasks.length;
 
 }
 
@@ -49,7 +49,7 @@ form.addEventListener("submit",(e)=>{
 
 e.preventDefault();
 
-const taskText = input.value.trim();
+const taskText=input.value.trim();
 
 if(taskText==="") return;
 
@@ -65,13 +65,13 @@ input.value="";
 
 search.addEventListener("keyup",()=>{
 
-const text = search.value.toLowerCase();
+const text=search.value.toLowerCase();
 
-const items = document.querySelectorAll("#task-list li");
+const items=document.querySelectorAll("#task-list li");
 
 items.forEach(item=>{
 
-const content = item.textContent.toLowerCase();
+const content=item.textContent.toLowerCase();
 
 if(content.includes(text)){
 
