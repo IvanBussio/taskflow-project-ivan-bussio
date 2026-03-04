@@ -97,3 +97,26 @@ document.body.classList.toggle("dark-mode");
 });
 
 renderTasks();
+const themeSelector = document.getElementById("theme-selector");
+
+themeSelector.addEventListener("change",(e)=>{
+
+const color = e.target.value;
+
+document.documentElement.style.setProperty("--primary", color);
+
+document.documentElement.style.setProperty("--primary-light", color);
+
+localStorage.setItem("themeColor", color);
+
+});
+
+const savedTheme = localStorage.getItem("themeColor");
+
+if(savedTheme){
+
+document.documentElement.style.setProperty("--primary", savedTheme);
+
+document.documentElement.style.setProperty("--primary-light", savedTheme);
+
+}
