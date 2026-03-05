@@ -1,8 +1,7 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="es">
-<head>
 
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -12,12 +11,9 @@
 
 </head>
 
-
 <body class="bg-gray-100 dark:bg-gray-900 min-h-screen transition-colors duration-300">
 
 <div class="max-w-2xl mx-auto p-6">
-
-<!-- HEADER -->
 
 <div class="flex justify-between items-center mb-8">
 
@@ -29,13 +25,10 @@ TaskFlow
 id="themeToggle"
 class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:scale-105 transition"
 >
-Cambiar tema
+Modo oscuro
 </button>
 
 </div>
-
-
-<!-- CREAR TAREA -->
 
 <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow mb-6">
 
@@ -63,17 +56,12 @@ Añadir
 
 </div>
 
-
-<!-- LISTA DE TAREAS -->
-
 <div id="taskList" class="space-y-4"></div>
 
 </div>
 
 
 <script>
-
-/* DARK MODE */
 
 const themeToggle = document.getElementById("themeToggle");
 
@@ -93,8 +81,6 @@ localStorage.theme = "light";
 
 });
 
-
-/* TASKFLOW */
 
 const addBtn = document.getElementById("addTask");
 const input = document.getElementById("taskInput");
