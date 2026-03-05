@@ -21,9 +21,9 @@ tailwind.config = {
 
 <div class="max-w-2xl mx-auto p-6">
 
-<div class="flex justify-between items-center mb-8">
+<!-- HEADER -->
 
-<div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow mb-6 transition-colors duration-500">  
+<div class="flex justify-between items-center mb-8">
 
 <h1 class="text-3xl font-bold text-gray-800 dark:text-white">
 TaskFlow
@@ -39,7 +39,9 @@ class="p-2 rounded-md bg-gray-200 dark:bg-gray-700 hover:scale-110 transition"
 </div>
 
 
-<div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow mb-6">
+<!-- CREAR TAREA -->
+
+<div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow mb-6 transition-colors duration-500">
 
 <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">
 Nueva tarea
@@ -66,6 +68,8 @@ Añadir
 </div>
 
 
+<!-- LISTA DE TAREAS -->
+
 <div id="taskList" class="space-y-4"></div>
 
 </div>
@@ -73,13 +77,19 @@ Añadir
 
 <script>
 
-/* DARK MODE */
+/* BOTÓN MODO OSCURO */
 
 const themeToggle = document.getElementById("themeToggle");
 
 themeToggle.addEventListener("click", () => {
 
 document.documentElement.classList.toggle("dark");
+
+if(document.documentElement.classList.contains("dark")){
+themeToggle.textContent="☀️";
+}else{
+themeToggle.textContent="🌙";
+}
 
 });
 
@@ -98,8 +108,6 @@ if (!text) return;
 
 const task = document.createElement("div");
 
-task.className =
-task.className =
 task.className =
 "flex justify-between items-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg transition-all duration-500";
 
