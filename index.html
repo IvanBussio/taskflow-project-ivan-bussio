@@ -99,7 +99,9 @@ if (!text) return;
 const task = document.createElement("div");
 
 task.className =
-"flex justify-between items-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg transition";
+task.className =
+task.className =
+"flex justify-between items-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg transition-all duration-500";
 
 task.innerHTML = `
 <span class="text-gray-800 dark:text-gray-200">${text}</span>
