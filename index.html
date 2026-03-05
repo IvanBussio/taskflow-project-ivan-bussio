@@ -1,210 +1,132 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Taskflow</title>
-
-<style>
-
-:root{
---bg-color:#f1f5f9;
---primary:#065f46;
---primary-light:#10b981;
---card:#ffffff;
---text:#0f172a;
---muted:#64748b;
---spacing:20px;
---radius:14px;
---font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
-}
-
-*{
-box-sizing:border-box;
-margin:0;
-padding:0;
-font-family:var(--font);
-}
-
-body{
-display:flex;
-min-height:100vh;
-background:var(--bg-color);
-color:var(--text);
-}
-
-/* DARK MODE */
-
-.dark-mode{
---bg-color:#0f172a;
---card:#1e293b;
---text:#f1f5f9;
---muted:#94a3b8;
-}
-
-/* SIDEBAR */
-
-aside{
-width:260px;
-background:linear-gradient(180deg,var(--primary),var(--primary-light));
-color:white;
-padding:var(--spacing);
-}
-
-aside h2{
-margin-bottom:25px;
-}
-
-aside p{
-margin-bottom:12px;
-cursor:pointer;
-}
-
-/* MAIN */
-
-main{
-flex:1;
-padding:40px;
-}
-
-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:25px;
-}
-
-/* FORM */
-
-#task-form{
-display:flex;
-gap:10px;
-margin-bottom:15px;
-}
-
-#task-input{
-padding:12px;
-flex:1;
-border-radius:8px;
-border:1px solid #ccc;
-}
-
-/* BOTONES */
-
-button{
-padding:12px 18px;
-border:none;
-border-radius:10px;
-background:linear-gradient(135deg,var(--primary),var(--primary-light));
-color:white;
-cursor:pointer;
-font-weight:600;
-transition:0.25s;
-}
-
-button:hover{
-transform:translateY(-2px);
-}
-
-/* SEARCH */
-
-#search{
-margin-bottom:20px;
-padding:12px;
-width:100%;
-border-radius:8px;
-border:1px solid #ccc;
-}
-
-/* TASK LIST */
-
-#task-list{
-list-style:none;
-display:flex;
-flex-direction:column;
-gap:12px;
-}
-
-#task-list li{
-background:var(--card);
-padding:16px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-border-radius:var(--radius);
-border:1px solid #e2e8f0;
-transition:0.2s;
-}
-
-#task-list li:hover{
-transform:translateY(-3px);
-box-shadow:0 6px 14px rgba(0,0,0,0.1);
-}
-
-/* BOTÓN ELIMINAR */
-
-#task-list button{
-background:#ef4444;
-}
-
-/* RESPONSIVE */
-
-@media(max-width:768px){
-
-body{
-flex-direction:column;
-}
-
-aside{
-width:100%;
-text-align:center;
-}
-
-main{
-padding:20px;
-}
-
-}
-
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow</title>
+  <link href="./dist/output.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
 
-<aside>
-<h2>Categorías</h2>
-<p>Proyecto</p>
-<p>Estudio</p>
-<p>Urgente</p>
-</aside>
+<div class="min-h-screen p-8">
 
-<main>
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-gray-800 dark:text-white">TaskFlow</h1>
 
-<header>
+    <button id="theme-toggle"
+      class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:scale-105 transition">
+      🌙 Modo oscuro
+    </button>
+  </div>
 
-<h1>Lista de Tareas (<span id="task-count">0</span>)</h1>
+  <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md mb-6">
 
-<button id="dark-toggle">🌙</button>
+    <h2 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-200">Nueva tarea</h2>
 
-</header>
+    <div class="flex gap-4">
 
-<section>
+      <input
+        type="text"
+        placeholder="Escribe una tarea..."
+        id="taskInput"
+        class="flex-1 border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white transition"
+      />
 
-<form id="task-form">
-<input type="text" id="task-input" placeholder="Escribe una tarea..." required>
-<button type="submit">Añadir</button>
-</form>
+      <button
+        id="addTask"
+        class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:ring-2 focus:ring-blue-400 transition duration-200">
+        Añadir
+      </button>
 
-<input type="text" id="search" placeholder="Buscar tarea...">
+    </div>
+  </div>
 
-<ul id="task-list"></ul>
+  <div id="taskList" class="space-y-4"></div>
 
-</section>
+</div>
 
-</main>
-
-<script src="js/app.js"></script>
-
+<script src="./script.js"></script>
 </body>
 </html>
+
+
+/* tailwind.config.js */
+module.exports = {
+  darkMode: 'class',
+  content: ["./*.html", "./src/**/*.{js,ts}"] ,
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+
+
+/* src/input.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* script.js */
+
+const toggle = document.getElementById("theme-toggle");
+
+if (localStorage.theme === "dark") {
+  document.documentElement.classList.add("dark");
+}
+
+toggle.addEventListener("click", () => {
+
+  document.documentElement.classList.toggle("dark");
+
+  if (document.documentElement.classList.contains("dark")) {
+    localStorage.theme = "dark";
+  } else {
+    localStorage.theme = "light";
+  }
+});
+
+
+const addTaskBtn = document.getElementById("addTask");
+const input = document.getElementById("taskInput");
+const list = document.getElementById("taskList");
+
+addTaskBtn.addEventListener("click", () => {
+
+  const text = input.value.trim();
+
+  if (!text) return;
+
+  const task = document.createElement("div");
+
+  task.className = "flex justify-between items-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg transition";
+
+  task.innerHTML = `
+    <span class="text-gray-800 dark:text-gray-200">${text}</span>
+
+    <button class="text-red-500 hover:text-red-700 transition">Eliminar</button>
+  `;
+
+  task.querySelector("button").addEventListener("click", () => {
+    task.remove();
+  });
+
+  list.appendChild(task);
+
+  input.value = "";
+});
+
+
+/* instalación */
+
+// 1 instalar tailwind
+// npm install -D tailwindcss
+
+// 2 iniciar config
+// npx tailwindcss init
+
+// 3 compilar css
+// npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch
+
