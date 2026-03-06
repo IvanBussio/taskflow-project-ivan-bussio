@@ -9,7 +9,9 @@
 
 <style>
 
-*{box-sizing:border-box}
+*{
+box-sizing:border-box
+}
 
 body{
 margin:0;
@@ -20,7 +22,7 @@ color:white;
 transition:background .3s,color .3s;
 }
 
-/* light mode */
+/* LIGHT MODE */
 
 body.light{
 background:#f5f7fb;
@@ -40,6 +42,8 @@ body.light .card{
 background:rgba(0,0,0,0.06);
 }
 
+/* HEADER */
+
 header{
 display:flex;
 flex-direction:column;
@@ -58,7 +62,7 @@ opacity:.9;
 margin-top:6px;
 }
 
-/* theme button */
+/* THEME BUTTON */
 
 .theme-toggle{
 margin-top:15px;
@@ -76,7 +80,7 @@ transition:transform .3s ease;
 transform:scale(1.15) rotate(10deg);
 }
 
-/* dashboard */
+/* DASHBOARD */
 
 .dashboard{
 display:flex;
@@ -99,6 +103,8 @@ display:block;
 font-size:20px;
 }
 
+/* PROGRESS */
+
 .progress-wrapper{
 width:260px;
 margin-top:15px;
@@ -118,7 +124,7 @@ width:0%;
 transition:width .3s;
 }
 
-/* board */
+/* BOARD */
 
 .board{
 display:flex;
@@ -133,7 +139,10 @@ background:rgba(255,255,255,0.15);
 border-radius:16px;
 padding:20px;
 width:300px;
+box-shadow:0 10px 30px rgba(0,0,0,0.35);
 }
+
+/* COLUMN TITLES */
 
 .column h3{
 text-align:center;
@@ -143,8 +152,6 @@ margin-top:0;
 position:relative;
 padding-bottom:8px;
 }
-
-/* colored underline */
 
 .column[data-column="todo"] h3::after,
 .column[data-column="doing"] h3::after,
@@ -163,7 +170,7 @@ border-radius:2px;
 .column[data-column="doing"] h3::after{background:#f1c40f}
 .column[data-column="done"] h3::after{background:#2ecc71}
 
-/* tasks */
+/* TASKS */
 
 .tasks{
 min-height:80px;
@@ -187,13 +194,13 @@ transform:translateY(-2px);
 box-shadow:0 6px 14px rgba(0,0,0,0.25);
 }
 
-/* priority colors */
+/* PRIORITY COLORS */
 
 .task.priority-high{border-left-color:#e74c3c}
 .task.priority-medium{border-left-color:#f1c40f}
 .task.priority-low{border-left-color:#2ecc71}
 
-/* add task */
+/* ADD TASK */
 
 .add-task{
 display:flex;
@@ -230,7 +237,7 @@ border-radius:6px;
 cursor:pointer;
 }
 
-/* buttons */
+/* BUTTONS */
 
 button.delete{
 background:#e84118;
@@ -302,19 +309,24 @@ opacity:.8;
 
 <div class="column" data-column="todo">
 <h3>📌 To Do</h3>
+
 <div class="tasks"></div>
 
 <div class="add-task">
+
 <input class="task-input" placeholder="New task">
 
 <div class="task-options">
+
 <input type="date" class="date-picker">
+
 <select class="priority-picker">
 <option value="">Priority</option>
 <option value="Low">Low</option>
 <option value="Medium">Medium</option>
 <option value="High">High</option>
 </select>
+
 </div>
 
 <button class="add-btn" onclick="addTask(this)">+</button>
@@ -324,14 +336,21 @@ opacity:.8;
 </div>
 
 <div class="column" data-column="doing">
+
 <h3>⚙️ Doing</h3>
+
 <div class="tasks"></div>
+
 </div>
 
 <div class="column" data-column="done">
+
 <h3>✅ Done</h3>
+
 <div class="tasks"></div>
+
 <button class="clear-done" onclick="clearDone()">Clear completed</button>
+
 </div>
 
 </div>
