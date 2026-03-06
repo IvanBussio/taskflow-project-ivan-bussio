@@ -13,61 +13,57 @@
 box-sizing:border-box
 }
 
+/* BODY */
+
 body{
 margin:0;
 font-family:'Poppins',sans-serif;
 min-height:100vh;
-background:linear-gradient(135deg,#0f172a,#1e293b);
+background:#0f172a;
 color:white;
 overflow-x:hidden;
 transition:background .3s,color .3s;
 }
 
-/* animated background */
+/* animated elegant background */
 
-body::before,
+body::before{
+content:"";
+position:fixed;
+inset:0;
+background:linear-gradient(120deg,#0f172a,#1e293b,#0f172a);
+background-size:300% 300%;
+animation:bgMove 18s ease infinite;
+z-index:-2;
+}
+
 body::after{
 content:"";
 position:fixed;
-width:600px;
-height:600px;
-border-radius:50%;
+width:700px;
+height:700px;
+background:radial-gradient(circle,#6366f1 0%,transparent 70%);
 filter:blur(120px);
 opacity:.35;
+top:-200px;
+right:-200px;
+animation:blobFloat 22s ease-in-out infinite alternate;
 z-index:-1;
-animation:blobMove 20s ease-in-out infinite alternate;
 }
 
-body::before{
-background:#6366f1;
-top:-150px;
-left:-150px;
+@keyframes bgMove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
 }
 
-body::after{
-background:#22c55e;
-bottom:-150px;
-right:-150px;
-animation-duration:26s;
+@keyframes blobFloat{
+0%{transform:translate(0,0) scale(1)}
+50%{transform:translate(-120px,120px) scale(1.15)}
+100%{transform:translate(60px,-80px) scale(1)}
 }
 
-@keyframes blobMove{
-
-0%{
-transform:translate(0,0) scale(1);
-}
-
-50%{
-transform:translate(120px,80px) scale(1.1);
-}
-
-100%{
-transform:translate(-80px,140px) scale(1);
-}
-
-}
-
-/* light mode */
+/* LIGHT MODE */
 
 body.light{
 background:#f5f7fb;
@@ -87,9 +83,10 @@ body.light .card{
 background:rgba(0,0,0,0.06);
 }
 
-/* header */
+/* HEADER */
 
 header{
+position:relative;
 display:flex;
 flex-direction:column;
 align-items:center;
@@ -107,25 +104,29 @@ opacity:.9;
 margin-top:6px;
 }
 
-/* theme button */
+/* THEME BUTTON */
 
 .theme-toggle{
-margin-top:15px;
-padding:6px 12px;
+position:absolute;
+top:20px;
+right:20px;
+padding:8px 10px;
 border:none;
-border-radius:6px;
-background:#111827;
+border-radius:8px;
+background:rgba(0,0,0,0.35);
+backdrop-filter:blur(6px);
 color:white;
 cursor:pointer;
 font-size:18px;
-transition:transform .3s ease;
+transition:transform .25s ease, background .25s;
 }
 
 .theme-toggle:hover{
-transform:scale(1.15) rotate(10deg);
+transform:scale(1.15) rotate(8deg);
+background:rgba(0,0,0,0.55);
 }
 
-/* dashboard */
+/* DASHBOARD */
 
 .dashboard{
 display:flex;
@@ -148,7 +149,7 @@ display:block;
 font-size:20px;
 }
 
-/* progress */
+/* PROGRESS */
 
 .progress-wrapper{
 width:260px;
@@ -169,7 +170,7 @@ width:0%;
 transition:width .3s;
 }
 
-/* board */
+/* BOARD */
 
 .board{
 display:flex;
@@ -179,6 +180,8 @@ padding:30px;
 flex-wrap:wrap;
 }
 
+/* COLUMN */
+
 .column{
 background:rgba(255,255,255,0.15);
 border-radius:16px;
@@ -187,7 +190,7 @@ width:300px;
 box-shadow:0 10px 30px rgba(0,0,0,0.35);
 }
 
-/* column titles */
+/* COLUMN TITLES */
 
 .column h3{
 text-align:center;
@@ -215,7 +218,7 @@ border-radius:2px;
 .column[data-column="doing"] h3::after{background:#f1c40f}
 .column[data-column="done"] h3::after{background:#2ecc71}
 
-/* tasks */
+/* TASKS */
 
 .tasks{
 min-height:80px;
@@ -239,13 +242,13 @@ transform:translateY(-2px);
 box-shadow:0 6px 14px rgba(0,0,0,0.25);
 }
 
-/* priority colors */
+/* PRIORITY COLORS */
 
 .task.priority-high{border-left-color:#e74c3c}
 .task.priority-medium{border-left-color:#f1c40f}
 .task.priority-low{border-left-color:#2ecc71}
 
-/* add task */
+/* ADD TASK */
 
 .add-task{
 display:flex;
@@ -282,7 +285,7 @@ border-radius:6px;
 cursor:pointer;
 }
 
-/* buttons */
+/* BUTTONS */
 
 button.delete{
 background:#e84118;
@@ -334,6 +337,8 @@ opacity:.8;
 <h1>TaskFlow Pro</h1>
 <p>Organize your work with a modern Kanban board</p>
 
+<button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">🌙</button>
+
 <div class="dashboard">
 <div class="card">Total Tasks<strong id="totalTasks">0</strong></div>
 <div class="card">Completed<strong id="doneTasks">0</strong></div>
@@ -346,13 +351,12 @@ opacity:.8;
 </div>
 </div>
 
-<button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">🌙</button>
-
 </header>
 
 <div class="board">
 
 <div class="column" data-column="todo">
+
 <h3>📌 To Do</h3>
 
 <div class="tasks"></div>
