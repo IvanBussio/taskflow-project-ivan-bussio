@@ -9,7 +9,9 @@
 
 <style>
 
-*{box-sizing:border-box}
+*{
+box-sizing:border-box;
+}
 
 /* ================= BODY ================= */
 
@@ -23,7 +25,7 @@ overflow-x:hidden;
 transition:color .3s;
 }
 
-/* ===== Elegant Aurora Background ===== */
+/* ===== Animated Aurora Background ===== */
 
 body::before{
 content:"";
@@ -46,10 +48,34 @@ z-index:-1;
 100%{transform:translate(0,0) rotate(360deg)}
 }
 
-/* ===== Light mode (same background) ===== */
+/* ================= LIGHT MODE ================= */
 
 body.light{
 color:#1f2937;
+}
+
+body.light .column{
+background:rgba(255,255,255,0.85);
+box-shadow:0 10px 25px rgba(0,0,0,0.15);
+}
+
+body.light .task{
+background:white;
+color:#1f2937;
+}
+
+body.light .card{
+background:rgba(255,255,255,0.85);
+color:#1f2937;
+}
+
+body.light .progress-bar{
+background:rgba(0,0,0,0.15);
+}
+
+body.light .theme-toggle{
+background:rgba(255,255,255,0.8);
+color:#111;
 }
 
 /* ================= HEADER ================= */
@@ -73,7 +99,7 @@ opacity:.9;
 margin-top:6px;
 }
 
-/* Theme button */
+/* ================= THEME BUTTON ================= */
 
 .theme-toggle{
 position:absolute;
@@ -192,7 +218,7 @@ transform:translateY(-2px);
 box-shadow:0 6px 14px rgba(0,0,0,0.25);
 }
 
-/* Priority colors */
+/* ================= PRIORITY COLORS ================= */
 
 .task.priority-high{border-left-color:#e74c3c}
 .task.priority-medium{border-left-color:#f1c40f}
@@ -236,7 +262,7 @@ border-radius:6px;
 cursor:pointer;
 }
 
-/* Buttons */
+/* ================= BUTTONS ================= */
 
 button.delete{
 background:#ef4444;
@@ -485,7 +511,6 @@ const t=prompt("Edit task",data[col][i])
 if(t) data[col][i]=t
 
 save()
-
 }
 
 render()
