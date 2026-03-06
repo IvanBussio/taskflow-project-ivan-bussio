@@ -232,9 +232,23 @@ save()
 
 function deleteTask(column,index){
 
-data[column].splice(index,1)
+// Si está en To Do pasa a Doing
+if(column === 'todo'){
+ const moved = data.todo.splice(index,1)[0]
+ data.doing.push(moved)
+}
+// Si está en Doing pasa a Done
+else if(column === 'doing'){
+ const moved = data.doing.splice(index,1)[0]
+ data.done.push(moved)
+}
+// Si está en Done se elimina
+else{
+ data.done.splice(index,1)
+}
 
 save()
+
 
 }
 
@@ -274,3 +288,4 @@ render()
 
 </body>
 </html>
+
