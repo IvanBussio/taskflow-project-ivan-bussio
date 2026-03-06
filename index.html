@@ -4,193 +4,72 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TaskFlow Pro</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
 *{box-sizing:border-box}
+body{margin:0;font-family:'Poppins',sans-serif;min-height:100vh;background:linear-gradient(-45deg,#667eea,#764ba2,#6a89cc,#b8e994);background-size:400% 400%;animation:gradientBG 15s ease infinite;color:white}
+body.dark{background:#0f172a;animation:none}
 
-body{
-margin:0;
-font-family:'Poppins',sans-serif;
-min-height:100vh;
-background:linear-gradient(-45deg,#667eea,#764ba2,#6a89cc,#b8e994);
-background-size:400% 400%;
-animation:gradientBG 15s ease infinite;
-color:white;
-transition:background .3s,color .3s;
-}
+@keyframes gradientBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-body.dark{
-background:#0f172a;
-color:#f1f5f9;
-animation:none;
-}
+header{display:flex;flex-direction:column;align-items:center;padding:40px 20px 10px;text-align:center;position:relative}
+header h1{margin:0;font-size:34px}
+header p{opacity:.9;margin-top:6px}
 
-@keyframes gradientBG{
-0%{background-position:0% 50%}
-50%{background-position:100% 50%}
-100%{background-position:0% 50%}
-}
+.theme-toggle{position:absolute;right:20px;top:20px;font-size:22px;cursor:pointer}
 
-header{
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-padding:40px 20px 10px 20px;
-text-align:center;
-position:relative;
-}
-
-header h1{
-margin:0;
-font-size:34px;
-font-weight:600;
-letter-spacing:1px;
-}
-
-header p{
-margin-top:6px;
-opacity:.9;
-}
-
-.theme-toggle{
-position:absolute;
-right:20px;
-top:20px;
-font-size:22px;
-cursor:pointer;
-}
-
-.board{
-display:flex;
-justify-content:center;
-gap:30px;
-padding:30px;
-flex-wrap:wrap;
-}
-
-.column{
+/* DASHBOARD */
+.dashboard{display:flex;gap:15px;margin-top:20px;flex-wrap:wrap;justify-content:center}
+.card{
 background:rgba(255,255,255,0.15);
-backdrop-filter:blur(12px);
-border-radius:16px;
-padding:20px;
-width:300px;
-box-shadow:0 15px 40px rgba(0,0,0,0.25);
-transition:transform .2s,background .3s;
-}
-
-body.dark .column{
-background:#1e293b;
-}
-
-.column:hover{
-transform:translateY(-6px);
-}
-
-.column h3{
-margin-top:0;
-font-weight:600;
-}
-
-.tasks{
-min-height:80px;
-margin-bottom:10px;
-}
-
-.task{
-background:white;
-color:#2f3640;
-padding:12px;
-border-radius:10px;
-margin-bottom:12px;
-box-shadow:0 6px 16px rgba(0,0,0,0.2);
-cursor:grab;
-transition:transform .15s, box-shadow .15s;
-animation:fadeIn .25s ease;
-}
-
-body.dark .task{
-background:#f1f5f9;
-}
-
-@keyframes fadeIn{
-from{opacity:0;transform:translateY(5px)}
-to{opacity:1;transform:translateY(0)}
-}
-
-.task:hover{
-transform:scale(1.03);
-box-shadow:0 10px 20px rgba(0,0,0,0.25);
-}
-
-.add-task{
-display:flex;
-gap:8px;
-width:100%;
-}
-
-.add-task input{
-flex:1;
-padding:10px;
-border-radius:6px;
-border:none;
-outline:none;
-font-family:'Poppins';
-text-align:center;
-min-width:0;
-}
-
-button{
-padding:10px;
-border:none;
-border-radius:6px;
-background:#00a8ff;
-color:white;
-font-weight:500;
-cursor:pointer;
-width:42px;
-flex-shrink:0;
-display:flex;
-align-items:center;
-justify-content:center;
-}
-
-button.delete{
-background:#e84118;
-margin-top:8px;
-width:100%;
-}
-
-.stats{
-text-align:center;
-margin-top:10px;
+backdrop-filter:blur(10px);
+padding:12px 18px;
+border-radius:12px;
 font-size:14px;
-opacity:.9;
+min-width:120px;
 }
+.card strong{display:block;font-size:20px}
 
-footer{
-text-align:center;
-padding:20px;
-font-size:14px;
-opacity:.8;
-}
+.progress-wrapper{width:260px;margin-top:15px}
+.progress-bar{height:10px;background:rgba(255,255,255,0.3);border-radius:10px;overflow:hidden}
+.progress{height:100%;background:#00e676;width:0%;transition:width .3s}
+
+.board{display:flex;justify-content:center;gap:30px;padding:30px;flex-wrap:wrap}
+
+.column{background:rgba(255,255,255,0.15);backdrop-filter:blur(12px);border-radius:16px;padding:20px;width:300px;box-shadow:0 15px 40px rgba(0,0,0,0.25)}
+body.dark .column{background:#1e293b}
+
+.tasks{min-height:80px;margin-bottom:10px}
+
+.task{background:white;color:#2f3640;padding:12px;border-radius:10px;margin-bottom:12px;box-shadow:0 6px 16px rgba(0,0,0,0.2);animation:fadeIn .25s}
+
+.priority{font-size:12px;margin-top:6px;font-weight:500}
+.priority.alta{color:#e84118}
+.priority.media{color:#fbc531}
+.priority.baja{color:#2ecc71}
+
+.date{font-size:12px;margin-top:4px;opacity:.7}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.add-task{display:flex;gap:8px;width:100%}
+.add-task input{flex:1;padding:10px;border-radius:6px;border:none;text-align:center}
+
+button{padding:10px;border:none;border-radius:6px;background:#00a8ff;color:white;font-weight:500;cursor:pointer;width:42px;display:flex;align-items:center;justify-content:center}
+button.delete{background:#e84118;margin-top:8px;width:100%}
+button.complete{background:#2ecc71;margin-top:8px;width:100%}
+
+.clear-done{margin-top:10px;width:100%;background:#ff7675}
+
+.stats{text-align:center;margin-top:10px;font-size:14px}
+footer{text-align:center;padding:20px;font-size:14px;opacity:.8}
 
 @media (max-width:600px){
-
-.board{
-flex-direction:column;
-align-items:center;
-padding:20px;
+.board{flex-direction:column;align-items:center}
+.column{width:90%}
+.dashboard{flex-direction:column;align-items:center}
 }
-
-.column{
-width:90%;
-}
-
-}
-
 </style>
 </head>
 
@@ -200,6 +79,19 @@ width:90%;
 <div class="theme-toggle" onclick="toggleTheme()">🌙</div>
 <h1>TaskFlow Pro</h1>
 <p>Organiza tu trabajo con un tablero Kanban moderno</p>
+
+<div class="dashboard">
+<div class="card">Total tareas<strong id="totalTasks">0</strong></div>
+<div class="card">Completadas<strong id="doneTasks">0</strong></div>
+<div class="card">En progreso<strong id="doingTasks">0</strong></div>
+</div>
+
+<div class="progress-wrapper">
+<div class="progress-bar">
+<div class="progress" id="progress"></div>
+</div>
+</div>
+
 </header>
 
 <div class="board">
@@ -227,10 +119,7 @@ width:90%;
 <div class="column" data-column="done">
 <h3>✅ Done</h3>
 <div class="tasks"></div>
-<div class="add-task">
-<input placeholder="Nueva tarea" />
-<button onclick="addTask(this)">+</button>
-</div>
+<button class="clear-done" onclick="clearDone()">Clear completed</button>
 <div class="stats"></div>
 </div>
 
@@ -250,98 +139,133 @@ render()
 }
 
 function render(){
+
+let total = data.todo.length + data.doing.length + data.done.length
+let progress = total ? (data.done.length / total) * 100 : 0
+
+// dashboard stats
+
+document.getElementById("totalTasks").innerText = total
+document.getElementById("doneTasks").innerText = data.done.length
+document.getElementById("doingTasks").innerText = data.doing.length
+
+// progress bar
+
+document.getElementById("progress").style.width = progress + "%"
+
+
 document.querySelectorAll(".column").forEach(col=>{
+
 const name = col.dataset.column
 const container = col.querySelector(".tasks")
 const stats = col.querySelector(".stats")
+
+if(!container) return
 
 container.innerHTML=""
 
 
 data[name].forEach((task,i)=>{
+
 const div=document.createElement("div")
 div.className="task"
-div.draggable=true
 
-div.innerHTML=`${task}<br><button class="delete" onclick="deleteTask('${name}',${i})">Eliminar</button>`
+let priorityClass = task.priority.toLowerCase()
+
+let button=""
+
+if(name==='doing'){
+button=`<button class="complete" onclick="completeTask(${i})">✔ Completar</button>`
+}else{
+button=`<button class="delete" onclick="deleteTask('${name}',${i})">Eliminar</button>`
+}
+
+
+div.innerHTML=`
+<span ondblclick="editTask('${name}',${i})">${task.text}</span>
+<div class="priority ${priorityClass}">Prioridad: ${task.priority}</div>
+<div class="date">📅 ${task.date || 'Sin fecha'}</div>
+${button}
+`
 
 container.appendChild(div)
+
 })
 
-stats.innerText = data[name].length + " tareas"
+if(stats) stats.innerText = data[name].length + " tareas"
+
 })
 
-initDrag()
 }
 
 function addTask(btn){
+
 const input = btn.parentElement.querySelector("input")
 const column = btn.closest(".column").dataset.column
-const value = input.value.trim()
+const text = input.value.trim()
 
-if(!value) return
+if(!text) return
 
-data[column].push(value)
+let priority = prompt("Prioridad: Alta, Media o Baja","Media") || "Media"
+let date = prompt("Fecha límite (YYYY-MM-DD)","")
+
+const task = {text,priority,date}
+
+data[column].push(task)
 input.value=""
 
 save()
+
+}
+
+function editTask(column,index){
+
+const newText = prompt("Editar tarea", data[column][index].text)
+
+if(newText){
+ data[column][index].text=newText
+}
+
+save()
+
 }
 
 function deleteTask(column,index){
+
 data[column].splice(index,1)
+
 save()
+
+}
+
+function completeTask(index){
+
+const moved = data.doing.splice(index,1)[0]
+
+data.done.push(moved)
+
+save()
+
+}
+
+function clearDone(){
+
+data.done=[]
+
+save()
+
 }
 
 function toggleTheme(){
 
-const body = document.body
-const toggle = document.querySelector('.theme-toggle')
+const body=document.body
+const toggle=document.querySelector('.theme-toggle')
 
 body.classList.toggle('dark')
 
-if(body.classList.contains('dark')){
- toggle.innerText='☀️'
-}else{
- toggle.innerText='🌙'
-}
+if(body.classList.contains('dark')) toggle.innerText='☀️'
+else toggle.innerText='🌙'
 
-}
-
-function initDrag(){
-let dragged
-
-
-document.querySelectorAll(".task").forEach(task=>{
-
-const column = task.closest(".column").dataset.column
-const index = Array.from(task.parentNode.children).indexOf(task)
-
-task.addEventListener("dragstart",()=>{
-dragged = {task,column,index}
-})
-
-})
-
-
-document.querySelectorAll(".tasks").forEach(zone=>{
-
-zone.addEventListener("dragover",e=>{
-e.preventDefault()
-})
-
-zone.addEventListener("drop",()=>{
-
-const newColumn = zone.closest(".column").dataset.column
-
-const moved = data[dragged.column].splice(dragged.index,1)[0]
-
-data[newColumn].push(moved)
-
-save()
-
-})
-
-})
 }
 
 render()
