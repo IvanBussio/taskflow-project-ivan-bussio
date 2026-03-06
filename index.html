@@ -19,10 +19,55 @@ font-family:'Poppins',sans-serif;
 min-height:100vh;
 background:linear-gradient(135deg,#0f172a,#1e293b);
 color:white;
+overflow-x:hidden;
 transition:background .3s,color .3s;
 }
 
-/* LIGHT MODE */
+/* animated background */
+
+body::before,
+body::after{
+content:"";
+position:fixed;
+width:600px;
+height:600px;
+border-radius:50%;
+filter:blur(120px);
+opacity:.35;
+z-index:-1;
+animation:blobMove 20s ease-in-out infinite alternate;
+}
+
+body::before{
+background:#6366f1;
+top:-150px;
+left:-150px;
+}
+
+body::after{
+background:#22c55e;
+bottom:-150px;
+right:-150px;
+animation-duration:26s;
+}
+
+@keyframes blobMove{
+
+0%{
+transform:translate(0,0) scale(1);
+}
+
+50%{
+transform:translate(120px,80px) scale(1.1);
+}
+
+100%{
+transform:translate(-80px,140px) scale(1);
+}
+
+}
+
+/* light mode */
 
 body.light{
 background:#f5f7fb;
@@ -42,7 +87,7 @@ body.light .card{
 background:rgba(0,0,0,0.06);
 }
 
-/* HEADER */
+/* header */
 
 header{
 display:flex;
@@ -62,7 +107,7 @@ opacity:.9;
 margin-top:6px;
 }
 
-/* THEME BUTTON */
+/* theme button */
 
 .theme-toggle{
 margin-top:15px;
@@ -80,7 +125,7 @@ transition:transform .3s ease;
 transform:scale(1.15) rotate(10deg);
 }
 
-/* DASHBOARD */
+/* dashboard */
 
 .dashboard{
 display:flex;
@@ -103,7 +148,7 @@ display:block;
 font-size:20px;
 }
 
-/* PROGRESS */
+/* progress */
 
 .progress-wrapper{
 width:260px;
@@ -124,7 +169,7 @@ width:0%;
 transition:width .3s;
 }
 
-/* BOARD */
+/* board */
 
 .board{
 display:flex;
@@ -142,7 +187,7 @@ width:300px;
 box-shadow:0 10px 30px rgba(0,0,0,0.35);
 }
 
-/* COLUMN TITLES */
+/* column titles */
 
 .column h3{
 text-align:center;
@@ -170,7 +215,7 @@ border-radius:2px;
 .column[data-column="doing"] h3::after{background:#f1c40f}
 .column[data-column="done"] h3::after{background:#2ecc71}
 
-/* TASKS */
+/* tasks */
 
 .tasks{
 min-height:80px;
@@ -194,13 +239,13 @@ transform:translateY(-2px);
 box-shadow:0 6px 14px rgba(0,0,0,0.25);
 }
 
-/* PRIORITY COLORS */
+/* priority colors */
 
 .task.priority-high{border-left-color:#e74c3c}
 .task.priority-medium{border-left-color:#f1c40f}
 .task.priority-low{border-left-color:#2ecc71}
 
-/* ADD TASK */
+/* add task */
 
 .add-task{
 display:flex;
@@ -237,7 +282,7 @@ border-radius:6px;
 cursor:pointer;
 }
 
-/* BUTTONS */
+/* buttons */
 
 button.delete{
 background:#e84118;
