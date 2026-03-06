@@ -1,131 +1,277 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TaskFlow Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-<title>TaskFlow</title>
+<style>
+*{box-sizing:border-box}
 
-<script src="https://cdn.tailwindcss.com"></script>
-
-<script>
-tailwind.config = {
-  darkMode: 'class'
+body{
+margin:0;
+font-family:'Poppins',sans-serif;
+min-height:100vh;
+background:linear-gradient(-45deg,#667eea,#764ba2,#6a89cc,#b8e994);
+background-size:400% 400%;
+animation:gradientBG 15s ease infinite;
+color:white;
+overflow-x:hidden;
 }
-</script>
 
+@keyframes gradientBG{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+header{
+text-align:center;
+padding:50px 20px 20px 20px;
+}
+
+header h1{
+margin:0;
+font-size:36px;
+font-weight:600;
+letter-spacing:1px;
+}
+
+header p{
+margin-top:10px;
+opacity:.9;
+}
+
+.board{
+display:flex;
+justify-content:center;
+gap:30px;
+padding:30px;
+flex-wrap:wrap;
+}
+
+.column{
+background:rgba(255,255,255,0.15);
+backdrop-filter:blur(12px);
+border-radius:16px;
+padding:20px;
+width:300px;
+box-shadow:0 15px 40px rgba(0,0,0,0.25);
+transition:transform .2s;
+}
+
+.column:hover{
+transform:translateY(-6px);
+}
+
+.column h3{
+margin-top:0;
+font-weight:600;
+}
+
+.tasks{
+min-height:80px;
+margin-bottom:10px;
+}
+
+.task{
+background:white;
+color:#2f3640;
+padding:12px;
+border-radius:10px;
+margin-bottom:12px;
+box-shadow:0 6px 16px rgba(0,0,0,0.2);
+cursor:grab;
+transition:transform .15s, box-shadow .15s;
+}
+
+.task:hover{
+transform:scale(1.03);
+box-shadow:0 10px 20px rgba(0,0,0,0.25);
+}
+
+.add-task{
+display:flex;
+gap:6px;
+}
+
+.add-task input{
+flex:1;
+padding:8px;
+border-radius:6px;
+border:none;
+outline:none;
+font-family:'Poppins';
+}
+
+button{
+padding:8px 10px;
+border:none;
+border-radius:6px;
+background:#00a8ff;
+color:white;
+font-weight:500;
+cursor:pointer;
+}
+
+button.delete{
+background:#e84118;
+margin-top:8px;
+width:100%;
+}
+
+.stats{
+text-align:center;
+margin-top:10px;
+font-size:14px;
+opacity:.9;
+}
+
+footer{
+text-align:center;
+padding:20px;
+font-size:14px;
+opacity:.8;
+}
+</style>
 </head>
 
-<body class="bg-gray-100 dark:bg-gray-900 min-h-screen transition-all duration-500 ease-in-out">
+<body>
 
-<div class="max-w-2xl mx-auto p-6">
+<header>
+<h1>TaskFlow Pro</h1>
+<p>Organiza tu trabajo con un tablero Kanban moderno</p>
+</header>
 
-<!-- HEADER -->
+<div class="board">
 
-<div class="flex justify-between items-center mb-8">
-
-<h1 class="text-3xl font-bold text-gray-800 dark:text-white">
-TaskFlow
-</h1>
-
-<button
-id="themeToggle"
-class="p-2 rounded-md bg-gray-200 dark:bg-gray-700 hover:scale-110 transition"
->
-🌙
-</button>
-
+<div class="column" data-column="todo">
+<h3>To Do</h3>
+<div class="tasks"></div>
+<div class="add-task">
+<input placeholder="Nueva tarea" />
+<button onclick="addTask(this)">+</button>
+</div>
+<div class="stats"></div>
 </div>
 
+<div class="column" data-column="doing">
+<h3>Doing</h3>
+<div class="tasks"></div>
+<div class="add-task">
+<input placeholder="Nueva tarea" />
+<button onclick="addTask(this)">+</button>
+</div>
+<div class="stats"></div>
+</div>
 
-<!-- CREAR TAREA -->
-
-<div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow mb-6 transition-colors duration-500">
-
-<h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">
-Nueva tarea
-</h2>
-
-<div class="flex gap-3">
-
-<input
-id="taskInput"
-type="text"
-placeholder="Escribe una tarea..."
-class="flex-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white transition"
-/>
-
-<button
-id="addTask"
-class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:ring-2 focus:ring-blue-400 transition duration-200"
->
-Añadir
-</button>
-
+<div class="column" data-column="done">
+<h3>Done</h3>
+<div class="tasks"></div>
+<div class="add-task">
+<input placeholder="Nueva tarea" />
+<button onclick="addTask(this)">+</button>
+</div>
+<div class="stats"></div>
 </div>
 
 </div>
 
-
-<!-- LISTA DE TAREAS -->
-
-<div id="taskList" class="space-y-4"></div>
-
-</div>
-
+<footer>
+TaskFlow Project • HTML • CSS • JavaScript
+</footer>
 
 <script>
+let data = JSON.parse(localStorage.getItem("kanban") || '{"todo":[],"doing":[],"done":[]}')
 
-/* BOTÓN MODO OSCURO */
-
-const themeToggle = document.getElementById("themeToggle");
-
-themeToggle.addEventListener("click", () => {
-
-document.documentElement.classList.toggle("dark");
-
-if(document.documentElement.classList.contains("dark")){
-themeToggle.textContent="☀️";
-}else{
-themeToggle.textContent="🌙";
+function save(){
+localStorage.setItem("kanban",JSON.stringify(data))
+render()
 }
 
-});
+function render(){
+document.querySelectorAll(".column").forEach(col=>{
+const name = col.dataset.column
+const container = col.querySelector(".tasks")
+const stats = col.querySelector(".stats")
+
+container.innerHTML=""
 
 
-/* TASKFLOW */
+data[name].forEach((task,i)=>{
+const div=document.createElement("div")
+div.className="task"
+div.draggable=true
 
-const addBtn = document.getElementById("addTask");
-const input = document.getElementById("taskInput");
-const list = document.getElementById("taskList");
 
-addBtn.addEventListener("click", () => {
+div.innerHTML=`${task}<br><button class="delete" onclick="deleteTask('${name}',${i})">Eliminar</button>`
 
-const text = input.value.trim();
+container.appendChild(div)
+})
 
-if (!text) return;
+stats.innerText = data[name].length + " tareas"
+})
 
-const task = document.createElement("div");
+initDrag()
+}
 
-task.className =
-"flex justify-between items-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg transition-all duration-500";
+function addTask(btn){
+const input = btn.parentElement.querySelector("input")
+const column = btn.closest(".column").dataset.column
+const value = input.value.trim()
 
-task.innerHTML = `
-<span class="text-gray-800 dark:text-gray-200">${text}</span>
-<button class="text-red-500 hover:text-red-700 transition">Eliminar</button>
-`;
+if(!value) return
 
-task.querySelector("button").addEventListener("click", () => {
-task.remove();
-});
+data[column].push(value)
+input.value=""
 
-list.appendChild(task);
+save()
+}
 
-input.value = "";
+function deleteTask(column,index){
+data[column].splice(index,1)
+save()
+}
 
-});
+function initDrag(){
+let dragged
 
+
+document.querySelectorAll(".task").forEach(task=>{
+
+const column = task.closest(".column").dataset.column
+const index = Array.from(task.parentNode.children).indexOf(task)
+
+task.addEventListener("dragstart",()=>{
+dragged = {task,column,index}
+})
+
+})
+
+
+document.querySelectorAll(".tasks").forEach(zone=>{
+
+zone.addEventListener("dragover",e=>{
+e.preventDefault()
+})
+
+zone.addEventListener("drop",()=>{
+
+const newColumn = zone.closest(".column").dataset.column
+
+const moved = data[dragged.column].splice(dragged.index,1)[0]
+
+data[newColumn].push(moved)
+
+save()
+
+})
+
+})
+}
+
+render()
 </script>
 
 </body>
