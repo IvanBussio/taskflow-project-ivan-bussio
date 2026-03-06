@@ -8,85 +8,14 @@
 
 <style>
 *{box-sizing:border-box}
-body{
-margin:0;
-font-family:'Poppins',sans-serif;
-min-height:100vh;
-background:#0f172a;
-color:white;
-overflow-x:hidden;
-}
+body{margin:0;font-family:'Poppins',sans-serif;min-height:100vh;background:#0f172a;color:white}
 
-/* Premium animated aurora background */
-body::before,
-body::after,
-body::marker{
-content:"";
-position:fixed;
-width:800px;
-height:800px;
-border-radius:50%;
-filter:blur(140px);
-opacity:0.7;
-animation:auroraMove 18s ease-in-out infinite alternate;
-z-index:-1;
-}
-
-/* Purple glow */
-body::before{
-background:radial-gradient(circle,#7f5af0,transparent 60%);
-left:-200px;
-top:-200px;
-}
-
-/* Green glow */
-body::after{
-background:radial-gradient(circle,#2cb67d,transparent 60%);
-right:-200px;
-bottom:-200px;
-animation-duration:22s;
-}
-
-/* Blue glow (third blob) */
-body::marker{
-background:radial-gradient(circle,#3b82f6,transparent 60%);
-left:40%;
-top:60%;
-animation-duration:26s;
-}
-
-body.dark::before{
-background:radial-gradient(circle,#6366f1,transparent 60%);
-}
-
-body.dark::after{
-background:radial-gradient(circle,#22c55e,transparent 60%);
-}
-
-body.dark::marker{
-background:radial-gradient(circle,#38bdf8,transparent 60%);
-}
-
-@keyframes auroraMove{
-0%{transform:translateY(-120px) translateX(0px)}
-50%{transform:translateY(80px) translateX(60px)}
-100%{transform:translateY(-60px) translateX(-40px)}
-}
-50%{transform:translateY(80px) translateX(60px)}
-100%{transform:translateY(-60px) translateX(-40px)}
-}
-body.dark{background:#0f172a;animation:none}
-
-@keyframes gradientBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-
-header{display:flex;flex-direction:column;align-items:center;padding:40px 20px 10px;text-align:center;position:relative}
+header{display:flex;flex-direction:column;align-items:center;padding:40px 20px 10px;text-align:center}
 header h1{margin:0;font-size:34px}
 header p{opacity:.9;margin-top:6px}
 
-.theme-toggle{position:absolute;right:20px;top:20px;font-size:22px;cursor:pointer}
-
 .dashboard{display:flex;gap:15px;margin-top:20px;flex-wrap:wrap;justify-content:center}
-.card{background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);padding:12px 18px;border-radius:12px;font-size:14px;min-width:120px}
+.card{background:rgba(255,255,255,0.15);padding:12px 18px;border-radius:12px;font-size:14px;min-width:120px}
 .card strong{display:block;font-size:20px}
 
 .progress-wrapper{width:260px;margin-top:15px}
@@ -95,49 +24,32 @@ header p{opacity:.9;margin-top:6px}
 
 .board{display:flex;justify-content:center;gap:30px;padding:30px;flex-wrap:wrap}
 
-.column{background:rgba(255,255,255,0.15);backdrop-filter:blur(12px);border-radius:16px;padding:20px;width:300px;box-shadow:0 15px 40px rgba(0,0,0,0.25);transition:transform .2s}
-body.dark .column{background:#1e293b}
-.column:hover{transform:translateY(-4px)}
+.column{background:rgba(255,255,255,0.15);border-radius:16px;padding:20px;width:300px}
 
-.tasks{min-height:80px;margin-bottom:10px;transition:background .2s,border .2s;border-radius:10px}
-.tasks.drag-over{background:rgba(255,255,255,0.2);border:2px dashed white}
+.tasks{min-height:80px;margin-bottom:10px}
 
-.task{background:white;color:#2f3640;padding:12px;border-radius:10px;margin-bottom:12px;box-shadow:0 6px 16px rgba(0,0,0,0.2);animation:fadeIn .25s;cursor:grab;transition:transform .15s}
-.task:hover{transform:scale(1.03)}
-
-.priority{font-size:12px;margin-top:6px;font-weight:500}
-.priority.high{color:#e84118}
-.priority.medium{color:#fbc531}
-.priority.low{color:#2ecc71}
-
-.date{font-size:12px;margin-top:4px;opacity:.7}
-
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.task{background:white;color:#2f3640;padding:12px;border-radius:10px;margin-bottom:12px}
 
 .add-task{display:flex;gap:8px;width:100%}
-.add-task input{flex:1;padding:10px;border-radius:6px;border:none;text-align:center}
+.add-task input{flex:1;padding:10px;border-radius:6px;border:none}
 
 button{padding:10px;border:none;border-radius:6px;background:#00a8ff;color:white;font-weight:500;cursor:pointer;width:42px;display:flex;align-items:center;justify-content:center}
+
 button.delete{background:#e84118;margin-top:8px;width:100%}
+
 button.complete{background:#2ecc71;margin-top:8px;width:100%}
 
-.clear-done{margin-top:10px;width:100%;background:#ff7675}
+.clear-done{margin-top:10px;width:100%;background:#ff7675;padding:10px;border:none;border-radius:6px;color:white;cursor:pointer}
 
 .stats{text-align:center;margin-top:10px;font-size:14px}
-footer{text-align:center;padding:20px;font-size:14px;opacity:.8}
 
-@media (max-width:600px){
-.board{flex-direction:column;align-items:center}
-.column{width:90%}
-.dashboard{flex-direction:column;align-items:center}
-}
+footer{text-align:center;padding:20px;font-size:14px;opacity:.8}
 </style>
 </head>
 
 <body>
 
 <header>
-<div class="theme-toggle" onclick="toggleTheme()">🌙</div>
 <h1>TaskFlow Pro</h1>
 <p>Organize your work with a modern Kanban board</p>
 
@@ -161,8 +73,16 @@ footer{text-align:center;padding:20px;font-size:14px;opacity:.8}
 <h3>📌 To Do</h3>
 <div class="tasks"></div>
 <div class="add-task">
-<input placeholder="New task" />
+<input class="task-input" placeholder="New task" />
+<button onclick="toggleDate(this)">📅</button>
+<button onclick="togglePriority(this)">⚑</button>
 <button onclick="addTask(this)">+</button>
+<input type="date" class="date-picker" style="display:none" />
+<select class="priority-picker" style="display:none">
+<option value="Low">Low</option>
+<option value="Medium" selected>Medium</option>
+<option value="High">High</option>
+</select>
 </div>
 <div class="stats"></div>
 </div>
@@ -183,26 +103,15 @@ footer{text-align:center;padding:20px;font-size:14px;opacity:.8}
 </div>
 
 <footer>
-© 2026 TaskFlow • Developed by Ivan Bussio • FCT at <a href="https://www.corner-estudios.com" target="_blank" style="color:#ffffff;text-decoration:underline">www.corner-estudios.com</a> • All rights reserved.
+© 2026 TaskFlow • Developed by Ivan Bussio • FCT at www.corner-estudios.com • All rights reserved.
 </footer>
 
 <script>
 
+let pendingDate = ""
+let pendingPriority = ""
+
 let data = JSON.parse(localStorage.getItem("kanban") || '{"todo":[],"doing":[],"done":[]}')
-
-function normalizeTasks(){
-  ['todo','doing','done'].forEach(col=>{
-    data[col] = data[col].map(task=>({
-      text: task.text || task,
-      priority: (task.priority || 'Medium'),
-      date: task.date || ''
-    }))
-  })
-}
-
-normalizeTasks()
-
-let dragged = null
 
 function save(){
 localStorage.setItem("kanban",JSON.stringify(data))
@@ -214,7 +123,9 @@ function render(){
 let total = data.todo.length + data.doing.length + data.done.length
 let progress = total ? (data.done.length / total) * 100 : 0
 
+
 document.getElementById("totalTasks").innerText = total
+
 document.getElementById("doneTasks").innerText = data.done.length
 
 document.getElementById("doingTasks").innerText = data.doing.length
@@ -237,21 +148,17 @@ const div=document.createElement("div")
 div.className="task"
 div.draggable=true
 
-const priority = (task.priority || 'Medium').toLowerCase()
-
 let button=""
 
 if(name==='doing'){
-button=`<button class="complete" onclick="completeTask(${i})">✔ Complete</button>`
+button=`<button class="complete" onclick="completeTask(${i})">Complete</button>`
 }else{
 button=`<button class="delete" onclick="deleteTask('${name}',${i})">Move</button>`
 }
 
 
 div.innerHTML=`
-<span ondblclick="editTask('${name}',${i})">${task.text}</span>
-<div class="priority ${priority}">Priority: ${task.priority || 'Medium'}</div>
-<div class="date">📅 ${task.date || 'No date'}</div>
+<span ondblclick="editTask('${name}',${i})">${task}</span>
 ${button}
 `
 
@@ -269,29 +176,89 @@ initDrag()
 
 function addTask(btn){
 
-const input = btn.parentElement.querySelector("input")
+const container = btn.parentElement
 const column = btn.closest(".column").dataset.column
-const text = input.value.trim()
+const input = container.querySelector(".task-input")
+const datePicker = container.querySelector('.date-picker')
+const priorityPicker = container.querySelector('.priority-picker')
 
+const text = input.value.trim()
 if(!text) return
 
-let priority = prompt("Priority: High, Medium or Low","Medium") || "Medium"
-let date = prompt("Due date (YYYY-MM-DD)","")
+let taskText = text
 
-const task = {text,priority,date}
+if(priorityPicker && priorityPicker.value){
+ taskText += " [" + priorityPicker.value + "]"
+}
 
-data[column].push(task)
-input.value=""
+if(datePicker && datePicker.value){
+ taskText += " (" + datePicker.value + ")"
+}
+
+if(!data[column]) data[column] = []
+
+data[column].push(taskText)
+
+input.value = ""
+if(datePicker) datePicker.value = ""
 
 save()
 
 }
 
+function toggleDate(btn){
+const container = btn.parentElement
+const picker = container.querySelector('.date-picker')
+picker.style.display = picker.style.display === 'none' ? 'block' : 'none'
+}
+
+function togglePriority(btn){
+const container = btn.parentElement
+const picker = container.querySelector('.priority-picker')
+picker.style.display = picker.style.display === 'none' ? 'block' : 'none'
+}
+
+if(pendingDate){
+ text += " (" + pendingDate + ")"
+}
+
+ data[column].push(text)
+
+ input.value=""
+ pendingDate=""
+ pendingPriority=""
+
+ save()
+
+}
+
+}
+
+function setDate(btn){
+
+const date = prompt("Due date (YYYY-MM-DD)")
+
+if(date){
+ pendingDate = date
+}
+
+}
+
+function setPriority(btn){
+
+const priority = prompt("Priority: High, Medium or Low")
+
+if(priority){
+ pendingPriority = priority
+}
+
+}
+
 function editTask(column,index){
 
-const newText = prompt("Edit task", data[column][index].text)
+const newText = prompt("Edit task", data[column][index])
 
-if(newText){data[column][index].text=newText}
+if(newText){data[column][index]=newText}
 
 save()
 
@@ -333,24 +300,12 @@ save()
 
 }
 
-function toggleTheme(){
-
-const body=document.body
-const toggle=document.querySelector('.theme-toggle')
-
-body.classList.toggle('dark')
-
-if(body.classList.contains('dark')) toggle.innerText='☀️'
-else toggle.innerText='🌙'
-
-}
-
 function initDrag(){
 
-const tasks=document.querySelectorAll(".task")
+let dragged
 
 
-tasks.forEach((task,index)=>{
+document.querySelectorAll(".task").forEach((task,index)=>{
 
 const column = task.closest(".column").dataset.column
 
@@ -366,16 +321,9 @@ document.querySelectorAll(".tasks").forEach(zone=>{
 
 zone.addEventListener("dragover",e=>{
  e.preventDefault()
- zone.classList.add("drag-over")
-})
-
-zone.addEventListener("dragleave",()=>{
- zone.classList.remove("drag-over")
 })
 
 zone.addEventListener("drop",()=>{
-
-zone.classList.remove("drag-over")
 
 if(!dragged) return
 
@@ -402,3 +350,4 @@ render()
 
 </body>
 </html>
+
