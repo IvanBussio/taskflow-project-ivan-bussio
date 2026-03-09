@@ -56,8 +56,6 @@ opacity:0.8;
 margin-bottom:30px;
 }
 
-/* toggle */
-
 .toggle{
 margin:20px auto;
 width:60px;
@@ -70,8 +68,6 @@ justify-content:center;
 cursor:pointer;
 font-size:18px;
 }
-
-/* estadísticas */
 
 .stats{
 display:flex;
@@ -99,8 +95,6 @@ background:white;
 box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
-/* barra progreso */
-
 .progress-container{
 width:70%;
 height:10px;
@@ -120,8 +114,6 @@ width:0%;
 background:#4dabf7;
 transition:0.3s;
 }
-
-/* input */
 
 .input-area{
 margin:25px;
@@ -150,8 +142,6 @@ transform:translateY(-3px);
 box-shadow:0 8px 20px rgba(0,0,0,0.25);
 }
 
-/* tablero */
-
 .board{
 display:flex;
 justify-content:center;
@@ -179,8 +169,6 @@ background:white;
 box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
-/* tareas */
-
 .task{
 background:white;
 color:black;
@@ -190,7 +178,6 @@ margin-top:10px;
 cursor:pointer;
 font-weight:500;
 transition:0.2s;
-animation:appear 0.25s ease;
 }
 
 .task:hover{
@@ -198,79 +185,34 @@ transform:scale(1.04);
 box-shadow:0 5px 15px rgba(0,0,0,0.2);
 }
 
-@keyframes appear{
-from{
-opacity:0;
-transform:translateY(-10px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-
 .dragging{
 opacity:0.5;
 }
 
-/* ===== DISEÑO MÓVIL ===== */
+/* móvil */
 
 @media (max-width:768px){
-
-h1{
-font-size:30px;
-margin-top:25px;
-}
-
-.subtitle{
-font-size:14px;
-margin-bottom:20px;
-}
 
 .stats{
 flex-direction:column;
 align-items:center;
-gap:15px;
 }
 
 .card{
 width:80%;
 }
 
-.progress-container{
-width:85%;
-}
-
-.input-area{
-display:flex;
-flex-direction:column;
-align-items:center;
-gap:10px;
-}
-
-input{
-width:85%;
-}
-
-button{
-width:85%;
-}
-
 .board{
 flex-direction:column;
 align-items:center;
-gap:20px;
-padding:20px;
 }
 
 .column{
 width:90%;
-min-height:200px;
 }
 
-.task{
-font-size:15px;
-padding:14px;
+input,button{
+width:85%;
 }
 
 }
@@ -312,7 +254,7 @@ padding:14px;
 <p id="progressText">0% completado</p>
 
 <div class="input-area">
-<input id="taskInput" placeholder="Nueva tarea">
+<input id="taskInput" placeholder="Nueva tarea..." autocomplete="off">
 <button onclick="addTask()">Añadir</button>
 </div>
 
@@ -337,8 +279,6 @@ padding:14px;
 
 <script>
 
-/* modo oscuro */
-
 function toggleMode(){
 
 const body=document.body
@@ -346,11 +286,9 @@ const btn=document.getElementById("modeBtn")
 
 body.classList.toggle("light")
 
-btn.innerHTML=body.classList.contains("light") ? "☀️" : "🌙"
+btn.innerHTML=body.classList.contains("light")?"☀️":"🌙"
 
 }
-
-/* crear tarea */
 
 function createTask(text,column){
 
@@ -370,11 +308,30 @@ guardar()
 updateStats()
 })
 
+task.addEventListener("click",()=>{
+
+const parent=task.parentElement.id
+
+if(parent==="todo"){
+document.getElementById("progress").appendChild(task)
+
+}else if(parent==="progress"){
+document.getElementById("done").appendChild(task)
+
+}else{
+document.getElementById("progress").appendChild(task)
+}
+
+guardar()
+updateStats()
+
+})
+
 task.addEventListener("dblclick",()=>{
 
 const nuevo=prompt("Editar tarea:",task.innerText)
 
-if(nuevo!==null && nuevo.trim()!==""){
+if(nuevo && nuevo.trim()!==""){
 task.innerText=nuevo.trim()
 guardar()
 }
@@ -397,8 +354,6 @@ document.getElementById(column).appendChild(task)
 
 }
 
-/* añadir tarea */
-
 function addTask(){
 
 const input=document.getElementById("taskInput")
@@ -415,7 +370,13 @@ updateStats()
 
 }
 
-/* drag columnas */
+document.getElementById("taskInput").addEventListener("keypress",function(e){
+
+if(e.key==="Enter"){
+addTask()
+}
+
+})
 
 document.querySelectorAll(".column").forEach(column=>{
 
@@ -437,8 +398,6 @@ updateStats()
 })
 
 })
-
-/* estadísticas */
 
 function updateStats(){
 
@@ -463,8 +422,6 @@ document.getElementById("progressText").innerText=percent+"% completado"
 
 }
 
-/* guardar */
-
 function guardar(){
 
 const data={
@@ -476,8 +433,6 @@ done:[...document.querySelectorAll("#done .task")].map(t=>t.innerText)
 localStorage.setItem("taskflow",JSON.stringify(data))
 
 }
-
-/* cargar */
 
 function cargar(){
 
