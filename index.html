@@ -2,15 +2,24 @@
 <html lang="es">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>TaskFlow Pro</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
 
-body{
+*{
+box-sizing:border-box;
 margin:0;
-font-family:Arial, Helvetica, sans-serif;
+padding:0;
+}
+
+body{
+font-family:'Inter', sans-serif;
 min-height:100vh;
 color:white;
 text-align:center;
@@ -21,6 +30,17 @@ radial-gradient(circle at 20% 20%, #4f46e5, transparent 40%),
 radial-gradient(circle at 80% 30%, #06b6d4, transparent 40%),
 radial-gradient(circle at 40% 80%, #9333ea, transparent 40%),
 #020617;
+
+background-size:200% 200%;
+animation:auroraMove 12s ease infinite;
+}
+
+@keyframes auroraMove{
+
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+
 }
 
 body.light{
@@ -38,6 +58,8 @@ opacity:0.8;
 margin-bottom:30px;
 }
 
+/* toggle */
+
 .toggle{
 margin:20px auto;
 width:60px;
@@ -50,6 +72,8 @@ justify-content:center;
 cursor:pointer;
 font-size:18px;
 }
+
+/* stats */
 
 .stats{
 display:flex;
@@ -64,12 +88,20 @@ background:rgba(255,255,255,0.2);
 padding:20px;
 border-radius:12px;
 width:140px;
+transition:0.25s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+box-shadow:0 10px 25px rgba(0,0,0,0.3);
 }
 
 body.light .card{
 background:white;
 box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
+
+/* progress */
 
 .progress-container{
 width:70%;
@@ -91,6 +123,8 @@ background:#4dabf7;
 transition:0.3s;
 }
 
+/* input */
+
 .input-area{
 margin:25px;
 }
@@ -109,7 +143,16 @@ border-radius:8px;
 background:#4dabf7;
 color:white;
 cursor:pointer;
+font-weight:500;
+transition:0.25s;
 }
+
+button:hover{
+transform:translateY(-3px);
+box-shadow:0 8px 20px rgba(0,0,0,0.25);
+}
+
+/* board */
 
 .board{
 display:flex;
@@ -125,6 +168,12 @@ padding:20px;
 border-radius:15px;
 width:250px;
 min-height:300px;
+transition:0.25s;
+}
+
+.column:hover{
+transform:translateY(-6px);
+box-shadow:0 10px 30px rgba(0,0,0,0.35);
 }
 
 body.light .column{
@@ -132,21 +181,45 @@ background:white;
 box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
+/* tareas */
+
 .task{
 background:white;
 color:black;
-padding:10px;
-border-radius:8px;
+padding:12px;
+border-radius:10px;
 margin-top:10px;
 cursor:pointer;
+font-weight:500;
 transition:0.2s;
+animation:appear 0.3s ease;
 }
 
 .task:hover{
-transform:scale(1.05);
+transform:scale(1.04);
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+@keyframes appear{
+
+from{
+opacity:0;
+transform:translateY(-10px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+.dragging{
+opacity:0.5;
 }
 
 </style>
+
 </head>
 
 <body>
@@ -207,7 +280,7 @@ transform:scale(1.05);
 
 <script>
 
-/* modo claro / oscuro */
+/* modo oscuro */
 
 function toggleMode(){
 
@@ -220,32 +293,25 @@ btn.innerHTML=body.classList.contains("light") ? "☀️" : "🌙"
 
 }
 
-/* agregar tarea */
-
-function addTask(){
-
-const input=document.getElementById("taskInput")
-const text=input.value.trim()
-
-if(text==="") return
-
-createTask(text,"todo")
-
-input.value=""
-
-guardar()
-
-updateStats()
-
-}
-
 /* crear tarea */
 
 function createTask(text,column){
 
 const task=document.createElement("div")
+
 task.className="task"
 task.innerText=text
+task.draggable=true
+
+task.addEventListener("dragstart",()=>{
+task.classList.add("dragging")
+})
+
+task.addEventListener("dragend",()=>{
+task.classList.remove("dragging")
+guardar()
+updateStats()
+})
 
 task.onclick=function(){
 
@@ -266,9 +332,52 @@ updateStats()
 
 }
 
+task.addEventListener("contextmenu",function(e){
+
+e.preventDefault()
+
+task.remove()
+
+guardar()
+updateStats()
+
+})
+
 document.getElementById(column).appendChild(task)
 
 }
+
+/* añadir tarea */
+
+function addTask(){
+
+const input=document.getElementById("taskInput")
+
+const text=input.value.trim()
+
+if(text==="") return
+
+createTask(text,"todo")
+
+input.value=""
+
+guardar()
+
+updateStats()
+
+}
+
+/* drag columnas */
+
+document.querySelectorAll(".column div").forEach(column=>{
+
+column.addEventListener("dragover",e=>{
+e.preventDefault()
+const dragging=document.querySelector(".dragging")
+column.appendChild(dragging)
+})
+
+})
 
 /* estadísticas */
 
@@ -295,7 +404,7 @@ document.getElementById("progressText").innerText=percent+"% completado"
 
 }
 
-/* guardar en localStorage */
+/* guardar */
 
 function guardar(){
 
@@ -309,7 +418,7 @@ localStorage.setItem("taskflow",JSON.stringify(data))
 
 }
 
-/* cargar tareas */
+/* cargar */
 
 function cargar(){
 
