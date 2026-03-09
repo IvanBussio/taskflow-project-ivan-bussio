@@ -2,7 +2,6 @@
 <html lang="es">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -41,7 +40,7 @@ animation:auroraMove 15s ease infinite;
 100%{background-position:0% 50%;}
 }
 
-/* AURORA CLARA */
+/* MODO CLARO */
 
 body.light{
 color:#222;
@@ -96,17 +95,7 @@ background:rgba(255,255,255,0.2);
 padding:20px;
 border-radius:12px;
 width:150px;
-transition:0.25s;
 backdrop-filter:blur(10px);
-}
-
-.card:hover{
-transform:translateY(-5px);
-box-shadow:0 10px 25px rgba(0,0,0,0.3);
-}
-
-body.light .card{
-background:white;
 }
 
 /* progress */
@@ -151,16 +140,9 @@ border-radius:8px;
 background:#4dabf7;
 color:white;
 cursor:pointer;
-font-weight:500;
-transition:0.25s;
 }
 
-button:hover{
-transform:translateY(-3px);
-box-shadow:0 8px 20px rgba(0,0,0,0.25);
-}
-
-/* BOARD */
+/* board */
 
 .board{
 display:flex;
@@ -170,29 +152,21 @@ flex-wrap:wrap;
 padding-bottom:50px;
 }
 
-/* COLUMNAS GLASSMORPHISM */
-
 .column{
 background:rgba(255,255,255,0.1);
 padding:20px;
 border-radius:18px;
 width:260px;
 min-height:300px;
-transition:0.25s;
 backdrop-filter:blur(15px);
 border:1px solid rgba(255,255,255,0.15);
-}
-
-.column:hover{
-transform:translateY(-6px);
-box-shadow:0 10px 30px rgba(0,0,0,0.35);
 }
 
 body.light .column{
 background:rgba(255,255,255,0.65);
 }
 
-/* TASK */
+/* tareas */
 
 .task{
 background:white;
@@ -200,20 +174,11 @@ color:black;
 padding:12px;
 border-radius:10px;
 margin-top:10px;
-cursor:pointer;
-font-weight:500;
 display:flex;
 justify-content:space-between;
 align-items:center;
-transition:0.2s;
+cursor:pointer;
 }
-
-.task:hover{
-transform:scale(1.03);
-box-shadow:0 5px 15px rgba(0,0,0,0.2);
-}
-
-/* tareas oscuras en modo claro */
 
 body.light .task{
 background:#111827;
@@ -233,23 +198,8 @@ color:white;
 }
 
 body.light .back-btn{
-background:rgba(255,255,255,0.2);
-}
-
-.dragging{
-opacity:0.5;
-}
-
-/* feedback movimiento */
-
-.move-feedback{
-animation:moveFeedback 0.25s ease;
-}
-
-@keyframes moveFeedback{
-0%{transform:scale(1);}
-50%{transform:scale(1.08);}
-100%{transform:scale(1);}
+background:#e5e7eb;
+color:#111;
 }
 
 /* móvil */
@@ -304,7 +254,7 @@ width:85%;
 </div>
 
 <div class="card">
-<p>En Progreso</p>
+<p>En Curso</p>
 <h2 id="progressTasks">0</h2>
 </div>
 
@@ -329,7 +279,7 @@ width:85%;
 </div>
 
 <div class="column">
-<h3>⚙️ EN PROGRESO</h3>
+<h3>⚙️ EN CURSO</h3>
 <div id="progress"></div>
 </div>
 
@@ -343,31 +293,23 @@ width:85%;
 <script>
 
 function toggleMode(){
-
 document.body.classList.toggle("light")
-
 modeBtn.innerHTML=document.body.classList.contains("light")?"☀️":"🌙"
-
-}
-
-function feedback(task){
-
-task.classList.add("move-feedback")
-
-setTimeout(()=>{
-task.classList.remove("move-feedback")
-},250)
-
 }
 
 function createTask(text,column){
 
 const task=document.createElement("div")
 task.className="task"
-task.draggable=true
 
 const label=document.createElement("span")
 label.innerText=text
+
+task.appendChild(label)
+
+/* botón volver SOLO si no está en POR HACER */
+
+if(column!=="todo"){
 
 const back=document.createElement("button")
 back.innerText="← Volver"
@@ -378,43 +320,11 @@ e.stopPropagation()
 moveBack(task)
 }
 
-task.appendChild(label)
 task.appendChild(back)
 
-/* drag */
-
-task.addEventListener("dragstart",()=>{
-task.classList.add("dragging")
-})
-
-task.addEventListener("dragend",()=>{
-task.classList.remove("dragging")
-guardar()
-updateStats()
-})
-
-/* tap */
+}
 
 task.addEventListener("click",()=>moveForward(task))
-
-/* swipe móvil */
-
-let startX=0
-
-task.addEventListener("touchstart",(e)=>{
-startX=e.touches[0].clientX
-})
-
-task.addEventListener("touchend",(e)=>{
-
-let endX=e.changedTouches[0].clientX
-
-if(endX-startX>80) moveBack(task)
-if(startX-endX>80) moveForward(task)
-
-})
-
-/* editar */
 
 label.addEventListener("dblclick",()=>{
 
@@ -426,8 +336,6 @@ guardar()
 }
 
 })
-
-/* eliminar */
 
 task.addEventListener("contextmenu",(e)=>{
 
@@ -452,7 +360,6 @@ const parent=task.parentElement.id
 if(parent==="todo") progress.appendChild(task)
 else if(parent==="progress") done.appendChild(task)
 
-feedback(task)
 guardar()
 updateStats()
 
@@ -465,7 +372,6 @@ const parent=task.parentElement.id
 if(parent==="done") progress.appendChild(task)
 else if(parent==="progress") todo.appendChild(task)
 
-feedback(task)
 guardar()
 updateStats()
 
@@ -488,26 +394,6 @@ updateStats()
 
 taskInput.addEventListener("keypress",(e)=>{
 if(e.key==="Enter") addTask()
-})
-
-document.querySelectorAll(".column").forEach(column=>{
-
-column.addEventListener("dragover",(e)=>e.preventDefault())
-
-column.addEventListener("drop",()=>{
-
-const dragging=document.querySelector(".dragging")
-
-if(!dragging) return
-
-column.querySelector("div").appendChild(dragging)
-
-feedback(dragging)
-guardar()
-updateStats()
-
-})
-
 })
 
 function updateStats(){
