@@ -13,9 +13,9 @@
 <style>
 
 *{
-box-sizing:border-box;
 margin:0;
 padding:0;
+box-sizing:border-box;
 }
 
 body{
@@ -36,11 +36,9 @@ animation:auroraMove 12s ease infinite;
 }
 
 @keyframes auroraMove{
-
 0%{background-position:0% 50%;}
 50%{background-position:100% 50%;}
 100%{background-position:0% 50%;}
-
 }
 
 body.light{
@@ -73,7 +71,7 @@ cursor:pointer;
 font-size:18px;
 }
 
-/* stats */
+/* estadísticas */
 
 .stats{
 display:flex;
@@ -87,7 +85,7 @@ flex-wrap:wrap;
 background:rgba(255,255,255,0.2);
 padding:20px;
 border-radius:12px;
-width:140px;
+width:150px;
 transition:0.25s;
 }
 
@@ -101,7 +99,7 @@ background:white;
 box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
-/* progress */
+/* barra progreso */
 
 .progress-container{
 width:70%;
@@ -133,7 +131,7 @@ input{
 padding:10px;
 border:none;
 border-radius:8px;
-width:200px;
+width:220px;
 }
 
 button{
@@ -152,7 +150,7 @@ transform:translateY(-3px);
 box-shadow:0 8px 20px rgba(0,0,0,0.25);
 }
 
-/* board */
+/* tablero */
 
 .board{
 display:flex;
@@ -166,7 +164,7 @@ padding-bottom:50px;
 background:rgba(255,255,255,0.15);
 padding:20px;
 border-radius:15px;
-width:250px;
+width:260px;
 min-height:300px;
 transition:0.25s;
 }
@@ -192,7 +190,7 @@ margin-top:10px;
 cursor:pointer;
 font-weight:500;
 transition:0.2s;
-animation:appear 0.3s ease;
+animation:appear 0.25s ease;
 }
 
 .task:hover{
@@ -201,17 +199,14 @@ box-shadow:0 5px 15px rgba(0,0,0,0.2);
 }
 
 @keyframes appear{
-
 from{
 opacity:0;
 transform:translateY(-10px);
 }
-
 to{
 opacity:1;
 transform:translateY(0);
 }
-
 }
 
 .dragging{
@@ -313,33 +308,30 @@ guardar()
 updateStats()
 })
 
-task.onclick=function(){
+/* editar */
 
-const parent=task.parentElement.id
+task.addEventListener("dblclick",()=>{
 
-if(parent==="todo"){
-document.getElementById("progress").appendChild(task)
+const nuevo=prompt("Editar tarea:",task.innerText)
 
-}else if(parent==="progress"){
-document.getElementById("done").appendChild(task)
-
-}else if(parent==="done"){
-document.getElementById("progress").appendChild(task)
-}
-
+if(nuevo!==null && nuevo.trim()!==""){
+task.innerText=nuevo.trim()
 guardar()
-updateStats()
-
 }
 
-task.addEventListener("contextmenu",function(e){
+})
+
+/* eliminar */
+
+task.addEventListener("contextmenu",(e)=>{
 
 e.preventDefault()
 
+if(confirm("¿Eliminar tarea?")){
 task.remove()
-
 guardar()
 updateStats()
+}
 
 })
 
@@ -352,7 +344,6 @@ document.getElementById(column).appendChild(task)
 function addTask(){
 
 const input=document.getElementById("taskInput")
-
 const text=input.value.trim()
 
 if(text==="") return
@@ -362,19 +353,29 @@ createTask(text,"todo")
 input.value=""
 
 guardar()
-
 updateStats()
 
 }
 
 /* drag columnas */
 
-document.querySelectorAll(".column div").forEach(column=>{
+document.querySelectorAll(".column").forEach(column=>{
 
-column.addEventListener("dragover",e=>{
+column.addEventListener("dragover",(e)=>{
 e.preventDefault()
+})
+
+column.addEventListener("drop",()=>{
+
 const dragging=document.querySelector(".dragging")
-column.appendChild(dragging)
+
+if(!dragging) return
+
+column.querySelector("div").appendChild(dragging)
+
+guardar()
+updateStats()
+
 })
 
 })
