@@ -22,7 +22,6 @@ font-family:'Inter', sans-serif;
 min-height:100vh;
 color:white;
 text-align:center;
-transition:0.4s;
 
 background:
 radial-gradient(circle at 20% 20%, #4f46e5, transparent 40%),
@@ -39,8 +38,6 @@ animation:auroraMove 15s ease infinite;
 50%{background-position:100% 50%;}
 100%{background-position:0% 50%;}
 }
-
-/* MODO CLARO */
 
 body.light{
 color:#222;
@@ -65,8 +62,6 @@ opacity:0.8;
 margin-bottom:25px;
 }
 
-/* toggle */
-
 .toggle{
 margin:20px auto;
 width:60px;
@@ -77,10 +72,7 @@ display:flex;
 align-items:center;
 justify-content:center;
 cursor:pointer;
-font-size:18px;
 }
-
-/* stats */
 
 .stats{
 display:flex;
@@ -95,10 +87,11 @@ background:rgba(255,255,255,0.2);
 padding:20px;
 border-radius:12px;
 width:150px;
-backdrop-filter:blur(10px);
 }
 
-/* progress */
+body.light .card{
+background:white;
+}
 
 .progress-container{
 width:70%;
@@ -117,10 +110,7 @@ background:#ddd;
 height:100%;
 width:0%;
 background:#4dabf7;
-transition:0.3s;
 }
-
-/* input */
 
 .input-area{
 margin:25px;
@@ -142,8 +132,6 @@ color:white;
 cursor:pointer;
 }
 
-/* board */
-
 .board{
 display:flex;
 justify-content:center;
@@ -158,15 +146,11 @@ padding:20px;
 border-radius:18px;
 width:260px;
 min-height:300px;
-backdrop-filter:blur(15px);
-border:1px solid rgba(255,255,255,0.15);
 }
 
 body.light .column{
 background:rgba(255,255,255,0.65);
 }
-
-/* tareas */
 
 .task{
 background:white;
@@ -185,8 +169,6 @@ background:#111827;
 color:white;
 }
 
-/* boton volver */
-
 .back-btn{
 border:none;
 padding:4px 8px;
@@ -200,34 +182,6 @@ color:white;
 body.light .back-btn{
 background:#e5e7eb;
 color:#111;
-}
-
-/* móvil */
-
-@media (max-width:768px){
-
-.stats{
-flex-direction:column;
-align-items:center;
-}
-
-.card{
-width:80%;
-}
-
-.board{
-flex-direction:column;
-align-items:center;
-}
-
-.column{
-width:90%;
-}
-
-input,button{
-width:85%;
-}
-
 }
 
 </style>
@@ -304,10 +258,7 @@ task.className="task"
 
 const label=document.createElement("span")
 label.innerText=text
-
 task.appendChild(label)
-
-/* botón volver SOLO si no está en POR HACER */
 
 if(column!=="todo"){
 
@@ -324,30 +275,7 @@ task.appendChild(back)
 
 }
 
-task.addEventListener("click",()=>moveForward(task))
-
-label.addEventListener("dblclick",()=>{
-
-const nuevo=prompt("Editar tarea:",label.innerText)
-
-if(nuevo && nuevo.trim()!==""){
-label.innerText=nuevo.trim()
-guardar()
-}
-
-})
-
-task.addEventListener("contextmenu",(e)=>{
-
-e.preventDefault()
-
-if(confirm("¿Eliminar tarea?")){
-task.remove()
-guardar()
-updateStats()
-}
-
-})
+task.onclick=()=>moveForward(task)
 
 document.getElementById(column).appendChild(task)
 
@@ -355,10 +283,13 @@ document.getElementById(column).appendChild(task)
 
 function moveForward(task){
 
+const text=task.querySelector("span").innerText
 const parent=task.parentElement.id
 
-if(parent==="todo") progress.appendChild(task)
-else if(parent==="progress") done.appendChild(task)
+task.remove()
+
+if(parent==="todo") createTask(text,"progress")
+else if(parent==="progress") createTask(text,"done")
 
 guardar()
 updateStats()
@@ -367,10 +298,13 @@ updateStats()
 
 function moveBack(task){
 
+const text=task.querySelector("span").innerText
 const parent=task.parentElement.id
 
-if(parent==="done") progress.appendChild(task)
-else if(parent==="progress") todo.appendChild(task)
+task.remove()
+
+if(parent==="done") createTask(text,"progress")
+else if(parent==="progress") createTask(text,"todo")
 
 guardar()
 updateStats()
@@ -380,7 +314,6 @@ updateStats()
 function addTask(){
 
 const text=taskInput.value.trim()
-
 if(!text) return
 
 createTask(text,"todo")
@@ -418,9 +351,9 @@ progressText.innerText=percent+"% completado"
 function guardar(){
 
 const data={
-todo:[...document.querySelectorAll("#todo .task span")].map(t=>t.innerText),
-progress:[...document.querySelectorAll("#progress .task span")].map(t=>t.innerText),
-done:[...document.querySelectorAll("#done .task span")].map(t=>t.innerText)
+todo:[...document.querySelectorAll("#todo span")].map(t=>t.innerText),
+progress:[...document.querySelectorAll("#progress span")].map(t=>t.innerText),
+done:[...document.querySelectorAll("#done span")].map(t=>t.innerText)
 }
 
 localStorage.setItem("taskflow",JSON.stringify(data))
@@ -430,7 +363,6 @@ localStorage.setItem("taskflow",JSON.stringify(data))
 function cargar(){
 
 const data=JSON.parse(localStorage.getItem("taskflow"))
-
 if(!data) return
 
 data.todo.forEach(t=>createTask(t,"todo"))
