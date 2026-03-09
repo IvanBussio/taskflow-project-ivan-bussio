@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,13 +17,13 @@ color:white;
 text-align:center;
 transition:0.4s;
 
-background:linear-gradient(
-to bottom,
-#2e3b6b,
-#344c8c,
-#2f6f7d,
-#2a8a6b
-);
+/* fondo aurora */
+
+background:
+radial-gradient(circle at 20% 20%, #4f46e5, transparent 40%),
+radial-gradient(circle at 80% 30%, #06b6d4, transparent 40%),
+radial-gradient(circle at 40% 80%, #9333ea, transparent 40%),
+#020617;
 }
 
 body.light{
@@ -151,6 +152,13 @@ padding:10px;
 border-radius:8px;
 margin-top:10px;
 cursor:pointer;
+transition:0.2s;
+}
+
+/* efecto hover */
+
+.task:hover{
+transform:scale(1.05);
 }
 
 </style>
@@ -159,7 +167,7 @@ cursor:pointer;
 <body>
 
 <h1>TaskFlow Pro</h1>
-<p class="subtitle">Organize your work with a modern Kanban board</p>
+<p class="subtitle">Organiza tu trabajo con un tablero Kanban moderno</p>
 
 <div class="toggle" onclick="toggleMode()" id="modeBtn">
 🌙
@@ -191,8 +199,8 @@ cursor:pointer;
 <p id="progressText">0% Completed</p>
 
 <div class="input-area">
-<input id="taskInput" placeholder="New task">
-<button onclick="addTask()">Add</button>
+<input id="taskInput" placeholder="Nueva tarea">
+<button onclick="addTask()">Añadir</button>
 </div>
 
 <div class="board">
@@ -231,8 +239,6 @@ btn.innerHTML="🌙"
 
 }
 
-/* agregar tarea */
-
 function addTask(){
 
 const input=document.getElementById("taskInput")
@@ -267,8 +273,6 @@ input.value=""
 updateStats()
 
 }
-
-/* actualizar estadísticas */
 
 function updateStats(){
 
