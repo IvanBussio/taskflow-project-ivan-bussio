@@ -32,7 +32,7 @@ radial-gradient(circle at 40% 80%, #9333ea, transparent 40%),
 #020617;
 
 background-size:200% 200%;
-animation:auroraMove 12s ease infinite;
+animation:auroraMove 15s ease infinite;
 }
 
 @keyframes auroraMove{
@@ -41,9 +41,19 @@ animation:auroraMove 12s ease infinite;
 100%{background-position:0% 50%;}
 }
 
+/* AURORA PASTEL MODO CLARO */
+
 body.light{
-background:#f4f6fb;
 color:#222;
+
+background:
+radial-gradient(circle at 20% 20%, #ffd6e7, transparent 40%),
+radial-gradient(circle at 80% 30%, #d6f0ff, transparent 40%),
+radial-gradient(circle at 40% 80%, #e6d6ff, transparent 40%),
+#f6f8ff;
+
+background-size:200% 200%;
+animation:auroraMove 15s ease infinite;
 }
 
 h1{
@@ -279,6 +289,8 @@ width:85%;
 
 <script>
 
+/* modo claro oscuro */
+
 function toggleMode(){
 
 const body=document.body
@@ -290,6 +302,8 @@ btn.innerHTML=body.classList.contains("light")?"☀️":"🌙"
 
 }
 
+/* crear tarea */
+
 function createTask(text,column){
 
 const task=document.createElement("div")
@@ -297,6 +311,8 @@ const task=document.createElement("div")
 task.className="task"
 task.innerText=text
 task.draggable=true
+
+/* drag PC */
 
 task.addEventListener("dragstart",()=>{
 task.classList.add("dragging")
@@ -307,6 +323,8 @@ task.classList.remove("dragging")
 guardar()
 updateStats()
 })
+
+/* tap mover */
 
 task.addEventListener("click",()=>{
 
@@ -327,6 +345,30 @@ updateStats()
 
 })
 
+/* swipe móvil */
+
+let startX=0
+
+task.addEventListener("touchstart",(e)=>{
+startX=e.touches[0].clientX
+})
+
+task.addEventListener("touchend",(e)=>{
+
+let endX=e.changedTouches[0].clientX
+
+if(endX-startX>80){
+moveBack(task)
+}
+
+if(startX-endX>80){
+moveForward(task)
+}
+
+})
+
+/* editar */
+
 task.addEventListener("dblclick",()=>{
 
 const nuevo=prompt("Editar tarea:",task.innerText)
@@ -337,6 +379,8 @@ guardar()
 }
 
 })
+
+/* eliminar */
 
 task.addEventListener("contextmenu",(e)=>{
 
@@ -351,6 +395,38 @@ updateStats()
 })
 
 document.getElementById(column).appendChild(task)
+
+}
+
+function moveForward(task){
+
+const parent=task.parentElement.id
+
+if(parent==="todo"){
+progress.appendChild(task)
+}
+else if(parent==="progress"){
+done.appendChild(task)
+}
+
+guardar()
+updateStats()
+
+}
+
+function moveBack(task){
+
+const parent=task.parentElement.id
+
+if(parent==="done"){
+progress.appendChild(task)
+}
+else if(parent==="progress"){
+todo.appendChild(task)
+}
+
+guardar()
+updateStats()
 
 }
 
@@ -407,9 +483,9 @@ const done=document.querySelectorAll("#done .task").length
 
 const total=todo+progress+done
 
-document.getElementById("totalTasks").innerText=total
-document.getElementById("completedTasks").innerText=done
-document.getElementById("progressTasks").innerText=progress
+totalTasks.innerText=total
+completedTasks.innerText=done
+progressTasks.innerText=progress
 
 let percent=0
 
@@ -417,8 +493,8 @@ if(total>0){
 percent=Math.round((done/total)*100)
 }
 
-document.getElementById("progressBar").style.width=percent+"%"
-document.getElementById("progressText").innerText=percent+"% completado"
+progressBar.style.width=percent+"%"
+progressText.innerText=percent+"% completado"
 
 }
 
