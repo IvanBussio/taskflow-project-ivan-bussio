@@ -41,14 +41,16 @@ animation:auroraMove 15s ease infinite;
 100%{background-position:0% 50%;}
 }
 
+/* AURORA CLARA */
+
 body.light{
 color:#222;
 
 background:
-radial-gradient(circle at 20% 20%, #ffd6e7, transparent 40%),
-radial-gradient(circle at 80% 30%, #d6f0ff, transparent 40%),
-radial-gradient(circle at 40% 80%, #e6d6ff, transparent 40%),
-#f6f8ff;
+radial-gradient(circle at 20% 20%, #86efac, transparent 40%),
+radial-gradient(circle at 80% 30%, #f9a8d4, transparent 40%),
+radial-gradient(circle at 40% 80%, #7dd3fc, transparent 40%),
+#f8fafc;
 
 background-size:200% 200%;
 animation:auroraMove 15s ease infinite;
@@ -61,35 +63,7 @@ font-size:40px;
 
 .subtitle{
 opacity:0.8;
-margin-bottom:20px;
-}
-
-/* swipe demo */
-
-.swipe-demo{
-display:flex;
-justify-content:center;
-margin-bottom:20px;
-}
-
-.swipe-card{
-background:white;
-color:black;
-padding:12px 18px;
-border-radius:10px;
-font-weight:500;
-animation:swipeDemo 2.5s ease-in-out infinite;
-box-shadow:0 5px 15px rgba(0,0,0,0.2);
-}
-
-@keyframes swipeDemo{
-
-0%{transform:translateX(0);}
-25%{transform:translateX(40px);}
-50%{transform:translateX(-40px);}
-75%{transform:translateX(20px);}
-100%{transform:translateX(0);}
-
+margin-bottom:25px;
 }
 
 /* toggle */
@@ -123,6 +97,7 @@ padding:20px;
 border-radius:12px;
 width:150px;
 transition:0.25s;
+backdrop-filter:blur(10px);
 }
 
 .card:hover{
@@ -132,7 +107,6 @@ box-shadow:0 10px 25px rgba(0,0,0,0.3);
 
 body.light .card{
 background:white;
-box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
 /* progress */
@@ -186,7 +160,7 @@ transform:translateY(-3px);
 box-shadow:0 8px 20px rgba(0,0,0,0.25);
 }
 
-/* board */
+/* BOARD */
 
 .board{
 display:flex;
@@ -196,13 +170,17 @@ flex-wrap:wrap;
 padding-bottom:50px;
 }
 
+/* COLUMNAS GLASSMORPHISM */
+
 .column{
-background:rgba(255,255,255,0.15);
+background:rgba(255,255,255,0.1);
 padding:20px;
-border-radius:15px;
+border-radius:18px;
 width:260px;
 min-height:300px;
 transition:0.25s;
+backdrop-filter:blur(15px);
+border:1px solid rgba(255,255,255,0.15);
 }
 
 .column:hover{
@@ -211,11 +189,10 @@ box-shadow:0 10px 30px rgba(0,0,0,0.35);
 }
 
 body.light .column{
-background:white;
-box-shadow:0 5px 15px rgba(0,0,0,0.1);
+background:rgba(255,255,255,0.65);
 }
 
-/* task */
+/* TASK */
 
 .task{
 background:white;
@@ -225,19 +202,45 @@ border-radius:10px;
 margin-top:10px;
 cursor:pointer;
 font-weight:500;
+display:flex;
+justify-content:space-between;
+align-items:center;
 transition:0.2s;
 }
 
 .task:hover{
-transform:scale(1.04);
+transform:scale(1.03);
 box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* tareas oscuras en modo claro */
+
+body.light .task{
+background:#111827;
+color:white;
+}
+
+/* boton volver */
+
+.back-btn{
+border:none;
+padding:4px 8px;
+border-radius:6px;
+cursor:pointer;
+font-size:12px;
+background:rgba(0,0,0,0.2);
+color:white;
+}
+
+body.light .back-btn{
+background:rgba(255,255,255,0.2);
 }
 
 .dragging{
 opacity:0.5;
 }
 
-/* feedback */
+/* feedback movimiento */
 
 .move-feedback{
 animation:moveFeedback 0.25s ease;
@@ -285,10 +288,6 @@ width:85%;
 
 <h1>TaskFlow Pro</h1>
 <p class="subtitle">Organiza tu trabajo con un tablero Kanban</p>
-
-<div class="swipe-demo">
-<div class="swipe-card">Desliza tareas ↔</div>
-</div>
 
 <div class="toggle" onclick="toggleMode()" id="modeBtn">🌙</div>
 
@@ -364,10 +363,25 @@ task.classList.remove("move-feedback")
 function createTask(text,column){
 
 const task=document.createElement("div")
-
 task.className="task"
-task.innerText=text
 task.draggable=true
+
+const label=document.createElement("span")
+label.innerText=text
+
+const back=document.createElement("button")
+back.innerText="← Volver"
+back.className="back-btn"
+
+back.onclick=(e)=>{
+e.stopPropagation()
+moveBack(task)
+}
+
+task.appendChild(label)
+task.appendChild(back)
+
+/* drag */
 
 task.addEventListener("dragstart",()=>{
 task.classList.add("dragging")
@@ -379,7 +393,11 @@ guardar()
 updateStats()
 })
 
+/* tap */
+
 task.addEventListener("click",()=>moveForward(task))
+
+/* swipe móvil */
 
 let startX=0
 
@@ -396,16 +414,20 @@ if(startX-endX>80) moveForward(task)
 
 })
 
-task.addEventListener("dblclick",()=>{
+/* editar */
 
-const nuevo=prompt("Editar tarea:",task.innerText)
+label.addEventListener("dblclick",()=>{
+
+const nuevo=prompt("Editar tarea:",label.innerText)
 
 if(nuevo && nuevo.trim()!==""){
-task.innerText=nuevo.trim()
+label.innerText=nuevo.trim()
 guardar()
 }
 
 })
+
+/* eliminar */
 
 task.addEventListener("contextmenu",(e)=>{
 
@@ -510,9 +532,9 @@ progressText.innerText=percent+"% completado"
 function guardar(){
 
 const data={
-todo:[...document.querySelectorAll("#todo .task")].map(t=>t.innerText),
-progress:[...document.querySelectorAll("#progress .task")].map(t=>t.innerText),
-done:[...document.querySelectorAll("#done .task")].map(t=>t.innerText)
+todo:[...document.querySelectorAll("#todo .task span")].map(t=>t.innerText),
+progress:[...document.querySelectorAll("#progress .task span")].map(t=>t.innerText),
+done:[...document.querySelectorAll("#done .task span")].map(t=>t.innerText)
 }
 
 localStorage.setItem("taskflow",JSON.stringify(data))
@@ -532,10 +554,6 @@ data.done.forEach(t=>createTask(t,"done"))
 updateStats()
 
 }
-
-setTimeout(()=>{
-document.querySelector(".swipe-demo").style.opacity="0"
-},6000)
 
 cargar()
 
