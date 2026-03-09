@@ -75,6 +75,7 @@ display:flex;
 align-items:center;
 justify-content:center;
 cursor:pointer;
+font-size:18px;
 }
 
 /* stats */
@@ -176,8 +177,6 @@ justify-content:space-between;
 align-items:center;
 cursor:pointer;
 }
-
-/* GRIS CLARO EN MODO CLARO */
 
 body.light .task{
 background:#f1f5f9;
@@ -291,4 +290,148 @@ width:85%;
 
 <script>
 
-function
+function toggleMode(){
+
+document.body.classList.toggle("light")
+
+const btn=document.getElementById("modeBtn")
+
+if(document.body.classList.contains("light")){
+btn.innerHTML="☀️"
+}else{
+btn.innerHTML="🌙"
+}
+
+}
+
+function createTask(text,column){
+
+const task=document.createElement("div")
+task.className="task"
+
+const label=document.createElement("span")
+label.innerText=text
+
+task.appendChild(label)
+
+if(column!=="todo"){
+
+const back=document.createElement("button")
+back.innerText="← Volver"
+back.className="back-btn"
+
+back.onclick=(e)=>{
+e.stopPropagation()
+moveBack(task)
+}
+
+task.appendChild(back)
+
+}
+
+task.onclick=()=>moveForward(task)
+
+document.getElementById(column).appendChild(task)
+
+}
+
+function moveForward(task){
+
+const text=task.querySelector("span").innerText
+const parent=task.parentElement.id
+
+task.remove()
+
+if(parent==="todo") createTask(text,"progress")
+else if(parent==="progress") createTask(text,"done")
+
+guardar()
+updateStats()
+
+}
+
+function moveBack(task){
+
+const text=task.querySelector("span").innerText
+const parent=task.parentElement.id
+
+task.remove()
+
+if(parent==="done") createTask(text,"progress")
+else if(parent==="progress") createTask(text,"todo")
+
+guardar()
+updateStats()
+
+}
+
+function addTask(){
+
+const text=taskInput.value.trim()
+
+if(!text) return
+
+createTask(text,"todo")
+
+taskInput.value=""
+
+guardar()
+updateStats()
+
+}
+
+taskInput.addEventListener("keypress",(e)=>{
+if(e.key==="Enter") addTask()
+})
+
+function updateStats(){
+
+const todoCount=document.querySelectorAll("#todo .task").length
+const progressCount=document.querySelectorAll("#progress .task").length
+const doneCount=document.querySelectorAll("#done .task").length
+
+const total=todoCount+progressCount+doneCount
+
+totalTasks.innerText=total
+completedTasks.innerText=doneCount
+progressTasks.innerText=progressCount
+
+let percent=total?Math.round(doneCount/total*100):0
+
+progressBar.style.width=percent+"%"
+progressText.innerText=percent+"% completado"
+
+}
+
+function guardar(){
+
+const data={
+todo:[...document.querySelectorAll("#todo span")].map(t=>t.innerText),
+progress:[...document.querySelectorAll("#progress span")].map(t=>t.innerText),
+done:[...document.querySelectorAll("#done span")].map(t=>t.innerText)
+}
+
+localStorage.setItem("taskflow",JSON.stringify(data))
+
+}
+
+function cargar(){
+
+const data=JSON.parse(localStorage.getItem("taskflow"))
+
+if(!data) return
+
+data.todo.forEach(t=>createTask(t,"todo"))
+data.progress.forEach(t=>createTask(t,"progress"))
+data.done.forEach(t=>createTask(t,"done"))
+
+updateStats()
+
+}
+
+cargar()
+
+</script>
+
+</body>
+</html>
