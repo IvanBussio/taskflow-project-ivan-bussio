@@ -1,33 +1,487 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
 <meta charset="UTF-8">
-<title>TaskFlow</title>
-<link rel="stylesheet" href="output.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TaskFlow Pro</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
+body{
+
+text-transform:uppercase;
+
+min-height:100vh;
+color:white;
+text-align:center;
+
+background:
+radial-gradient(circle at 20% 20%, #4f46e5, transparent 40%),
+radial-gradient(circle at 80% 30%, #06b6d4, transparent 40%),
+radial-gradient(circle at 40% 80%, #9333ea, transparent 40%),
+#020617;
+
+background-size:200% 200%;
+animation:auroraMove 15s ease infinite;
+
+}
+
+@keyframes auroraMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+body.light{
+
+color:#222;
+
+background:
+radial-gradient(circle at 20% 20%, #86efac, transparent 40%),
+radial-gradient(circle at 80% 30%, #f9a8d4, transparent 40%),
+radial-gradient(circle at 40% 80%, #7dd3fc, transparent 40%),
+#f8fafc;
+
+background-size:200% 200%;
+animation:auroraMove 15s ease infinite;
+
+}
+
+h1{
+margin-top:40px;
+font-size:40px;
+}
+
+.subtitle{
+opacity:0.8;
+margin-bottom:25px;
+}
+
+.toggle{
+margin:20px auto;
+width:60px;
+height:35px;
+border-radius:20px;
+background:#111;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+font-size:18px;
+}
+
+.stats{
+display:flex;
+justify-content:center;
+gap:20px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+.card{
+
+background:rgba(255,255,255,0.2);
+padding:20px;
+border-radius:12px;
+width:150px;
+
+}
+
+body.light .card{
+background:white;
+}
+
+.progress-container{
+
+width:70%;
+height:10px;
+background:rgba(255,255,255,0.3);
+margin:20px auto;
+border-radius:10px;
+overflow:hidden;
+
+}
+
+body.light .progress-container{
+background:#ddd;
+}
+
+.progress-bar{
+height:100%;
+width:0%;
+background:#4dabf7;
+}
+
+.input-area{
+margin:25px;
+}
+
+input{
+
+padding:10px;
+border:none;
+border-radius:8px;
+width:220px;
+
+}
+
+button{
+
+padding:10px 16px;
+border:none;
+border-radius:8px;
+background:#4dabf7;
+color:white;
+cursor:pointer;
+
+}
+
+.board{
+
+display:flex;
+justify-content:center;
+gap:30px;
+flex-wrap:wrap;
+padding-bottom:50px;
+
+}
+
+.column{
+
+background:rgba(255,255,255,0.1);
+padding:20px;
+border-radius:18px;
+width:260px;
+min-height:300px;
+
+}
+
+body.light .column{
+background:#e5e7eb;
+}
+
+.task{
+
+background:#374151;
+color:white;
+
+padding:12px;
+border-radius:10px;
+
+margin-top:10px;
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+cursor:pointer;
+
+box-shadow:0 5px 15px rgba(0,0,0,0.25);
+
+transition:all 0.2s ease;
+
+}
+
+body.light .task{
+
+background:#e5e7eb;
+color:#111;
+
+}
+
+.task:hover{
+
+transform:translateY(-4px) scale(1.02);
+
+box-shadow:0 10px 25px rgba(0,0,0,0.35);
+
+}
+
+.back-btn{
+
+border:none;
+padding:4px 8px;
+border-radius:6px;
+cursor:pointer;
+font-size:12px;
+
+background:#1f2937;
+color:white;
+
+}
+
+body.light .back-btn{
+
+background:#d1d5db;
+color:#111;
+
+}
+
+@media (max-width:768px){
+
+.stats{
+flex-direction:column;
+align-items:center;
+}
+
+.card{
+width:80%;
+}
+
+.board{
+flex-direction:column;
+align-items:center;
+}
+
+.column{
+width:90%;
+}
+
+input,button{
+width:85%;
+}
+
+}
+
+</style>
+
 </head>
 
-<body class="bg-gray-900 text-white min-h-screen p-10">
+<body>
 
-<h1 class="text-4xl font-bold mb-8 text-blue-400">TaskFlow 🚀</h1>
+<h1>TASKFLOW PRO</h1>
+<p class="subtitle">ORGANIZA TU TRABAJO CON UN TABLERO KANBAN</p>
 
-<div class="max-w-xl">
+<div class="toggle" onclick="toggleMode()" id="modeBtn">🌙</div>
 
-<div class="flex gap-2 mb-6">
-<input id="taskInput" type="text"
-placeholder="Nueva tarea..."
-class="flex-1 p-3 rounded-lg bg-gray-800 border border-gray-700">
+<div class="stats">
 
-<button onclick="addTask()"
-class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg">
-Agregar
-</button>
+<div class="card">
+<p>TAREAS TOTALES</p>
+<h2 id="totalTasks">0</h2>
 </div>
 
-<ul id="taskList" class="space-y-3"></ul>
+<div class="card">
+<p>COMPLETADAS</p>
+<h2 id="completedTasks">0</h2>
+</div>
+
+<div class="card">
+<p>EN CURSO</p>
+<h2 id="progressTasks">0</h2>
+</div>
 
 </div>
 
-<script src="script.js"></script>
+<div class="progress-container">
+<div class="progress-bar" id="progressBar"></div>
+</div>
+
+<p id="progressText">0% COMPLETADO</p>
+
+<div class="input-area">
+<input id="taskInput" placeholder="NUEVA TAREA..." autocomplete="off">
+<button onclick="addTask()">AÑADIR</button>
+</div>
+
+<div class="board">
+
+<div class="column">
+<h3>📌 POR HACER</h3>
+<div id="todo"></div>
+</div>
+
+<div class="column">
+<h3>⚙️ EN CURSO</h3>
+<div id="progress"></div>
+</div>
+
+<div class="column">
+<h3>✅ COMPLETADO</h3>
+<div id="done"></div>
+</div>
+
+</div>
+
+<script>
+
+function toggleMode(){
+
+document.body.classList.toggle("light")
+
+const btn=document.getElementById("modeBtn")
+
+if(document.body.classList.contains("light")){
+btn.innerHTML="☀️"
+}else{
+btn.innerHTML="🌙"
+}
+
+}
+
+function createTask(text,column){
+
+const task=document.createElement("div")
+task.className="task"
+
+const label=document.createElement("span")
+label.innerText=text
+
+task.appendChild(label)
+
+if(column!=="todo"){
+
+const back=document.createElement("button")
+back.innerText="← VOLVER"
+back.className="back-btn"
+
+back.onclick=(e)=>{
+e.stopPropagation()
+moveBack(task)
+}
+
+task.appendChild(back)
+
+}
+
+task.onclick=()=>moveForward(task)
+
+label.ondblclick=()=>{
+
+const nuevo=prompt("EDITAR TAREA:",label.innerText)
+
+if(nuevo){
+label.innerText=nuevo.toUpperCase()
+guardar()
+}
+
+}
+
+task.oncontextmenu=(e)=>{
+
+e.preventDefault()
+
+if(confirm("ELIMINAR TAREA?")){
+task.remove()
+guardar()
+updateStats()
+}
+
+}
+
+document.getElementById(column).appendChild(task)
+
+}
+
+function moveForward(task){
+
+const text=task.querySelector("span").innerText
+const parent=task.parentElement.id
+
+task.remove()
+
+if(parent==="todo") createTask(text,"progress")
+else if(parent==="progress") createTask(text,"done")
+
+guardar()
+updateStats()
+
+}
+
+function moveBack(task){
+
+const text=task.querySelector("span").innerText
+const parent=task.parentElement.id
+
+task.remove()
+
+if(parent==="done") createTask(text,"progress")
+else if(parent==="progress") createTask(text,"todo")
+
+guardar()
+updateStats()
+
+}
+
+function addTask(){
+
+const text=taskInput.value.trim()
+
+if(!text) return
+
+createTask(text.toUpperCase(),"todo")
+
+taskInput.value=""
+
+guardar()
+updateStats()
+
+}
+
+taskInput.addEventListener("keypress",(e)=>{
+if(e.key==="Enter") addTask()
+})
+
+function updateStats(){
+
+const todoCount=document.querySelectorAll("#todo .task").length
+const progressCount=document.querySelectorAll("#progress .task").length
+const doneCount=document.querySelectorAll("#done .task").length
+
+const total=todoCount+progressCount+doneCount
+
+totalTasks.innerText=total
+completedTasks.innerText=doneCount
+progressTasks.innerText=progressCount
+
+let percent=total?Math.round(doneCount/total*100):0
+
+progressBar.style.width=percent+"%"
+progressText.innerText=percent+"% COMPLETADO"
+
+}
+
+function guardar(){
+
+const data={
+todo:[...document.querySelectorAll("#todo span")].map(t=>t.innerText),
+progress:[...document.querySelectorAll("#progress span")].map(t=>t.innerText),
+done:[...document.querySelectorAll("#done span")].map(t=>t.innerText)
+}
+
+localStorage.setItem("taskflow",JSON.stringify(data))
+
+}
+
+function cargar(){
+
+const data=JSON.parse(localStorage.getItem("taskflow"))
+
+if(!data) return
+
+data.todo.forEach(t=>createTask(t,"todo"))
+data.progress.forEach(t=>createTask(t,"progress"))
+data.done.forEach(t=>createTask(t,"done"))
+
+updateStats()
+
+}
+
+cargar()
+
+</script>
 
 </body>
 </html>
