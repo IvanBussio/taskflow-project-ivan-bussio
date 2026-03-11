@@ -20,6 +20,7 @@ font-family:'Inter',sans-serif;
 }
 
 body{
+
 text-transform:uppercase;
 min-height:100vh;
 color:white;
@@ -33,6 +34,7 @@ radial-gradient(circle at 40% 80%, #9333ea, transparent 40%),
 
 background-size:200% 200%;
 animation:auroraMove 15s ease infinite;
+
 }
 
 @keyframes auroraMove{
@@ -42,6 +44,7 @@ animation:auroraMove 15s ease infinite;
 }
 
 body.light{
+
 color:#222;
 
 background:
@@ -52,6 +55,7 @@ radial-gradient(circle at 40% 80%, #7dd3fc, transparent 40%),
 
 background-size:200% 200%;
 animation:auroraMove 15s ease infinite;
+
 }
 
 h1{
@@ -97,12 +101,14 @@ background:white;
 }
 
 .progress-container{
+
 width:70%;
 height:10px;
 background:rgba(255,255,255,0.3);
 margin:20px auto;
 border-radius:10px;
 overflow:hidden;
+
 }
 
 body.light .progress-container{
@@ -156,6 +162,7 @@ background:#e5e7eb;
 }
 
 .task{
+
 background:#374151;
 color:white;
 padding:12px;
@@ -167,6 +174,7 @@ align-items:center;
 cursor:pointer;
 box-shadow:0 5px 15px rgba(0,0,0,0.25);
 transition:all 0.2s ease;
+
 }
 
 body.light .task{
@@ -307,23 +315,6 @@ task.appendChild(back)
 }
 
 task.onclick=()=>moveForward(task)
-
-label.ondblclick=()=>{
-const nuevo=prompt("EDITAR TAREA:",label.innerText)
-if(nuevo){
-label.innerText=nuevo.toUpperCase()
-guardar()
-}
-}
-
-task.oncontextmenu=(e)=>{
-e.preventDefault()
-if(confirm("ELIMINAR TAREA?")){
-task.remove()
-guardar()
-updateStats()
-}
-}
 
 document.getElementById(column).appendChild(task)
 
