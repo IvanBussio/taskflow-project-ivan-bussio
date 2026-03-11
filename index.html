@@ -85,6 +85,7 @@ color:#60a5fa;
 margin:0 10px;
 color:#cbd5f5;
 text-decoration:none;
+cursor:pointer;
 
 }
 
@@ -96,19 +97,13 @@ color:white;
 
 /* BOTON MODO */
 
-.mode-toggle{
-
-display:flex;
-gap:10px;
-
-}
-
 .mode-toggle button{
 
 border:none;
 padding:6px 10px;
 border-radius:6px;
 cursor:pointer;
+margin-left:5px;
 
 }
 
@@ -136,12 +131,6 @@ box-shadow:0 10px 25px rgba(0,0,0,0.3);
 
 body.light .card{
 background:white;
-}
-
-.card h2{
-
-margin-bottom:10px;
-
 }
 
 /* INPUTS */
@@ -225,12 +214,12 @@ padding:5px 10px;
 
 <div class="navbar">
 
-<div class="logo">TaskFlow Project</div>
+<div class="logo">TaskFlow</div>
 
 <div class="menu">
-<a href="#">Inicio</a>
-<a href="#">Tareas</a>
-<a href="#">Perfil</a>
+<a onclick="showSection('home')">Inicio</a>
+<a onclick="showSection('tasks')">Tareas</a>
+<a onclick="showSection('profile')">Perfil</a>
 </div>
 
 <div class="mode-toggle">
@@ -242,13 +231,23 @@ padding:5px 10px;
 
 <div class="container">
 
+<!-- HOME -->
+
+<div id="home">
+
 <div class="card">
 
 <h2>Bienvenido a TaskFlow</h2>
 
-<p>Gestiona tus tareas, organiza tu flujo de trabajo y mantén todo bajo control con una interfaz clara y moderna.</p>
+<p>Gestiona tus tareas y mantén tu productividad bajo control.</p>
 
 </div>
+
+</div>
+
+<!-- TASKS -->
+
+<div id="tasks" style="display:none">
 
 <div class="card">
 
@@ -266,13 +265,42 @@ padding:5px 10px;
 
 <h2>Tus tareas</h2>
 
-<div id="tasks"></div>
+<div id="taskList"></div>
+
+</div>
+
+</div>
+
+<!-- PROFILE -->
+
+<div id="profile" style="display:none">
+
+<div class="card">
+
+<h2>Perfil</h2>
+
+<p>Usuario: Ivan</p>
+<p>Aplicación: TaskFlow</p>
+
+</div>
 
 </div>
 
 </div>
 
 <script>
+
+/* NAVEGACION */
+
+function showSection(section){
+
+document.getElementById("home").style.display="none"
+document.getElementById("tasks").style.display="none"
+document.getElementById("profile").style.display="none"
+
+document.getElementById(section).style.display="block"
+
+}
 
 /* MODOS */
 
@@ -318,7 +346,7 @@ task.innerHTML=`
 
 `
 
-document.getElementById("tasks").appendChild(task)
+document.getElementById("taskList").appendChild(task)
 
 document.getElementById("title").value=""
 document.getElementById("desc").value=""
