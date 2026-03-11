@@ -2,10 +2,8 @@
 <html lang="es">
 
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>TaskFlow Pro</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -20,7 +18,6 @@ font-family:'Inter',sans-serif;
 }
 
 body{
-
 text-transform:uppercase;
 min-height:100vh;
 color:white;
@@ -34,7 +31,6 @@ radial-gradient(circle at 40% 80%, #9333ea, transparent 40%),
 
 background-size:200% 200%;
 animation:auroraMove 15s ease infinite;
-
 }
 
 @keyframes auroraMove{
@@ -44,7 +40,6 @@ animation:auroraMove 15s ease infinite;
 }
 
 body.light{
-
 color:#222;
 
 background:
@@ -55,7 +50,6 @@ radial-gradient(circle at 40% 80%, #7dd3fc, transparent 40%),
 
 background-size:200% 200%;
 animation:auroraMove 15s ease infinite;
-
 }
 
 h1{
@@ -101,14 +95,12 @@ background:white;
 }
 
 .progress-container{
-
 width:70%;
 height:10px;
 background:rgba(255,255,255,0.3);
 margin:20px auto;
 border-radius:10px;
 overflow:hidden;
-
 }
 
 body.light .progress-container{
@@ -162,7 +154,6 @@ background:#e5e7eb;
 }
 
 .task{
-
 background:#374151;
 color:white;
 padding:12px;
@@ -174,7 +165,6 @@ align-items:center;
 cursor:pointer;
 box-shadow:0 5px 15px rgba(0,0,0,0.25);
 transition:all 0.2s ease;
-
 }
 
 body.light .task{
@@ -229,18 +219,16 @@ width:85%;
 }
 
 </style>
-
 </head>
 
 <body>
 
 <h1>TASKFLOW PRO</h1>
-<p class="subtitle">ORGANIZA TU TRABAJO CON UN TABLERO KANBAN</p>
+<p class="subtitle">ORGANIZA TU TRABAJO CON UN TABLERO SIMPLE</p>
 
 <div class="toggle" onclick="toggleMode()" id="modeBtn">🌙</div>
 
 <div class="stats">
-
 <div class="card">
 <p>TAREAS TOTALES</p>
 <h2 id="totalTasks">0</h2>
@@ -250,7 +238,6 @@ width:85%;
 <p>COMPLETADAS</p>
 <h2 id="completedTasks">0</h2>
 </div>
-
 </div>
 
 <div class="progress-container">
@@ -269,11 +256,6 @@ width:85%;
 <div class="column">
 <h3>📌 POR HACER</h3>
 <div id="todo"></div>
-</div>
-
-<div class="column">
-<h3>⚙️ EN CURSO</h3>
-<div id="progress"></div>
 </div>
 
 <div class="column">
@@ -302,6 +284,7 @@ label.innerText=text
 task.appendChild(label)
 
 if(column!=="todo"){
+
 const back=document.createElement("button")
 back.innerText="← VOLVER"
 back.className="back-btn"
@@ -316,8 +299,24 @@ task.appendChild(back)
 
 task.onclick=()=>moveForward(task)
 
-document.getElementById(column).appendChild(task)
+label.ondblclick=()=>{
+const nuevo=prompt("EDITAR TAREA:",label.innerText)
+if(nuevo){
+label.innerText=nuevo.toUpperCase()
+guardar()
+}
+}
 
+task.oncontextmenu=(e)=>{
+e.preventDefault()
+if(confirm("ELIMINAR TAREA?")){
+task.remove()
+guardar()
+updateStats()
+}
+}
+
+document.getElementById(column).appendChild(task)
 }
 
 function moveForward(task){
@@ -327,27 +326,22 @@ const parent=task.parentElement.id
 
 task.remove()
 
-if(parent==="todo") createTask(text,"progress")
-else if(parent==="progress") createTask(text,"done")
+if(parent==="todo") createTask(text,"done")
 
 guardar()
 updateStats()
-
 }
 
 function moveBack(task){
 
 const text=task.querySelector("span").innerText
-const parent=task.parentElement.id
 
 task.remove()
 
-if(parent==="done") createTask(text,"progress")
-else if(parent==="progress") createTask(text,"todo")
+createTask(text,"todo")
 
 guardar()
 updateStats()
-
 }
 
 function addTask(){
@@ -362,7 +356,6 @@ taskInput.value=""
 
 guardar()
 updateStats()
-
 }
 
 taskInput.addEventListener("keypress",(e)=>{
@@ -372,10 +365,9 @@ if(e.key==="Enter") addTask()
 function updateStats(){
 
 const todoCount=document.querySelectorAll("#todo .task").length
-const progressCount=document.querySelectorAll("#progress .task").length
 const doneCount=document.querySelectorAll("#done .task").length
 
-const total=todoCount+progressCount+doneCount
+const total=todoCount+doneCount
 
 totalTasks.innerText=total
 completedTasks.innerText=doneCount
@@ -384,19 +376,16 @@ let percent=total?Math.round(doneCount/total*100):0
 
 progressBar.style.width=percent+"%"
 progressText.innerText=percent+"% COMPLETADO"
-
 }
 
 function guardar(){
 
 const data={
 todo:[...document.querySelectorAll("#todo span")].map(t=>t.innerText),
-progress:[...document.querySelectorAll("#progress span")].map(t=>t.innerText),
 done:[...document.querySelectorAll("#done span")].map(t=>t.innerText)
 }
 
 localStorage.setItem("taskflow",JSON.stringify(data))
-
 }
 
 function cargar(){
@@ -406,11 +395,9 @@ const data=JSON.parse(localStorage.getItem("taskflow"))
 if(!data) return
 
 data.todo.forEach(t=>createTask(t,"todo"))
-data.progress.forEach(t=>createTask(t,"progress"))
 data.done.forEach(t=>createTask(t,"done"))
 
 updateStats()
-
 }
 
 cargar()
