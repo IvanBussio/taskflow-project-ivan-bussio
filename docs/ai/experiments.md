@@ -18,58 +18,90 @@ Se evaluaron los siguientes aspectos:
 
 Primero intenté implementar la función manualmente.
 
-Tiempo aproximado: 10 minutos.
+Tiempo aproximado: 15 minutos.
 
 El código funcionaba, pero era más largo y menos optimizado.
 
-## Con IA
+Ejemplo de código:
+
+```javascript
+function filterCompleted(tasks) {
+  const result = [];
+  for (let i = 0; i < tasks.length; i++) {
+    if (tasks[i].completed) {
+      result.push(tasks[i]);
+    }
+  }
+  return result;
+
+}Con IA
 
 Utilicé un asistente de IA para generar la función.
 
-Tiempo aproximado: 2 minutos.
+Tiempo aproximado: 4 minutos.
 
-La función generada fue más corta y utilizó el método `filter` de JavaScript.
+La función generada fue más corta y utilizó el método filter de JavaScript.
 
-## Conclusión
+Ejemplo de código: 
 
-La IA ayudó a encontrar una solución más rápida y eficiente.
+function filterCompleted(tasks) {
+  return tasks.filter(task => task.completed);
+}
+Conclusión
 
----
+La IA ayudó a encontrar una solución más rápida y eficiente, utilizando métodos modernos de JavaScript.
 
-# Experimento 2: Ordenar tareas
+⸻
 
-## Sin IA
+Experimento 2: Ordenar tareas
+
+Sin IA
 
 Implementé una función para ordenar tareas manualmente.
 
 Tiempo aproximado: 12 minutos.
 
-## Con IA
+Fue necesario revisar la documentación de JavaScript para recordar cómo ordenar arrays.
+
+Con IA
 
 Pedí a la IA que generara una función para ordenar tareas alfabéticamente.
 
 Tiempo aproximado: 3 minutos.
 
-## Conclusión
+La IA sugirió utilizar el método sort().
 
-La IA aceleró el proceso de desarrollo.
+Ejemplo de código:
 
----
+function sortTasks(tasks) {
+  return tasks.sort((a, b) => a.title.localeCompare(b.title));
+}
+Experimento 3: Comprensión de código
 
-# Experimento 3: Explicación de código
-
-## Sin IA
+Sin IA
 
 Intenté analizar manualmente una función compleja.
 
 Tiempo aproximado: 15 minutos.
 
-## Con IA
+Fue necesario revisar varias partes del código para entender cómo funcionaba.
+
+Con IA
 
 Pedí a la IA que explicara el código paso a paso.
 
 Tiempo aproximado: 2 minutos.
 
-## Conclusión
+La explicación permitió entender el funcionamiento de la función mucho más rápido.
+
+Conclusión
 
 La IA facilita mucho la comprensión de código existente.
+
+⸻
+
+Conclusión general
+
+Los experimentos muestran que la inteligencia artificial puede acelerar significativamente el desarrollo de software.
+
+Sin embargo, también es importante comprender el código generado y revisar las soluciones antes de utilizarlas en un proyecto real.
