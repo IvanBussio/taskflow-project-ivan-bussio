@@ -5,10 +5,9 @@ let tasks = [];
 const input = document.getElementById("taskInput");
 const button = document.getElementById("addTaskBtn");
 const list = document.getElementById("taskList");
+const sortBtn = document.getElementById("sortBtn");
 
-/* ======================
-   STORAGE TAREAS
-====================== */
+/* STORAGE */
 
 function loadTasks(){
 const saved = localStorage.getItem("tasks");
@@ -21,9 +20,7 @@ function saveTasks(){
 localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-/* ======================
-   RENDER
-====================== */
+/* RENDER */
 
 function render(){
 
@@ -34,7 +31,7 @@ tasks.forEach((task,index)=>{
 const li = document.createElement("li");
 
 li.className =
-"flex justify-between items-center bg-white/90 p-3 rounded shadow hover:shadow-lg transition";
+"flex justify-between items-center bg-white/90 dark:bg-gray-700 p-3 rounded shadow hover:shadow-lg transition";
 
 const text = document.createElement("span");
 
@@ -44,7 +41,7 @@ if(task.completed){
 text.classList.add("completed");
 }
 
-/* BOTÓN COMPLETAR */
+/* COMPLETAR */
 
 const complete = document.createElement("button");
 
@@ -62,7 +59,7 @@ render();
 
 };
 
-/* BOTÓN ELIMINAR */
+/* ELIMINAR */
 
 const del = document.createElement("button");
 
@@ -94,9 +91,7 @@ list.appendChild(li);
 
 }
 
-/* ======================
-   AÑADIR TAREA
-====================== */
+/* AÑADIR TAREA */
 
 button.addEventListener("click", () => {
 
@@ -116,19 +111,28 @@ render();
 
 });
 
-/* ======================
-   MODO OSCURO / CLARO
-====================== */
+/* ORDENAR */
+
+sortBtn.addEventListener("click", () => {
+
+tasks.sort((a,b)=> a.title.localeCompare(b.title));
+
+saveTasks();
+render();
+
+});
+
+/* MODO OSCURO */
 
 const toggle = document.getElementById("themeToggle");
 
 function loadTheme(){
 
-const savedTheme = localStorage.getItem("theme");
+const saved = localStorage.getItem("theme");
 
-if(savedTheme){
-document.body.className = savedTheme;
-toggle.textContent = savedTheme === "dark" ? "☀️" : "🌙";
+if(saved){
+document.body.className = saved;
+toggle.textContent = saved === "dark" ? "☀️" : "🌙";
 }
 
 }
@@ -140,7 +144,7 @@ if(document.body.classList.contains("light")){
 document.body.classList.remove("light");
 document.body.classList.add("dark");
 
-toggle.textContent = "☀️";
+toggle.textContent="☀️";
 
 localStorage.setItem("theme","dark");
 
@@ -149,7 +153,7 @@ localStorage.setItem("theme","dark");
 document.body.classList.remove("dark");
 document.body.classList.add("light");
 
-toggle.textContent = "🌙";
+toggle.textContent="🌙";
 
 localStorage.setItem("theme","light");
 
@@ -157,9 +161,7 @@ localStorage.setItem("theme","light");
 
 });
 
-/* ======================
-   INIT
-====================== */
+/* INIT */
 
 loadTasks();
 loadTheme();

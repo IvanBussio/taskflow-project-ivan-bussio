@@ -17,7 +17,7 @@ darkMode: "class"
 
 <style>
 
-/* AURORA BACKGROUND */
+/* FONDO AURORA */
 
 body.light{
 background:linear-gradient(270deg,#74ebd5,#ACB6E5,#74ebd5);
@@ -82,7 +82,7 @@ color:#ef4444;
 
 </head>
 
-<body class="light min-h-screen flex flex-col items-center p-10">
+<body class="light min-h-screen flex flex-col items-center p-10 transition-all">
 
 <!-- INTRO -->
 
@@ -102,7 +102,9 @@ color:#ef4444;
 
 </header>
 
-<div class="w-full max-w-xl space-y-4">
+<div class="w-full max-w-xl mx-auto space-y-4">
+
+<!-- CREAR TAREA -->
 
 <div class="bg-white/80 dark:bg-gray-800/80 p-5 rounded-xl shadow">
 
@@ -122,9 +124,17 @@ Añadir tarea
 
 </div>
 
+<!-- LISTA -->
+
 <div class="bg-white/80 dark:bg-gray-800/80 p-5 rounded-xl shadow">
 
 <h2 class="text-xl mb-3 font-semibold">Tus tareas</h2>
+
+<button
+id="sortBtn"
+class="bg-indigo-500 text-white px-3 py-1 rounded mb-3">
+Ordenar A-Z
+</button>
 
 <ul id="taskList" class="space-y-2"></ul>
 
@@ -136,12 +146,8 @@ Añadir tarea
 
 <script>
 
-/* INTRO */
-
 function startApp(){
-
 document.getElementById("intro").style.display="none";
-
 }
 
 </script>
