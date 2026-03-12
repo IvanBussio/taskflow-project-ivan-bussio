@@ -5,38 +5,116 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TaskFlow Project</title>
+<title>TaskFlow</title>
 
 <style>
+
+/* BASE */
 
 body{
 margin:0;
 font-family:Arial, Helvetica, sans-serif;
 min-height:100vh;
-transition:0.3s;
+transition:0.6s;
+overflow-x:hidden;
 }
 
-/* fondo animado */
+/* AURORA BACKGROUND */
+
+.aurora-background{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:-1;
+overflow:hidden;
+}
+
+.aurora{
+position:absolute;
+width:120%;
+height:120%;
+filter:blur(120px);
+animation:auroraMove 20s infinite alternate ease-in-out;
+}
+
+@keyframes auroraMove{
+
+0%{transform:translate(-20%,-20%) scale(1);}
+50%{transform:translate(20%,10%) scale(1.2);}
+100%{transform:translate(-10%,20%) scale(1);}
+
+}
+
+/* PARTICLES */
+
+.particles::before,
+.particles::after{
+
+content:"";
+position:absolute;
+width:200%;
+height:200%;
+
+background-image:
+radial-gradient(2px 2px at 20% 30%,white,transparent),
+radial-gradient(2px 2px at 60% 70%,white,transparent),
+radial-gradient(2px 2px at 80% 20%,white,transparent),
+radial-gradient(2px 2px at 40% 80%,white,transparent);
+
+animation:particlesMove 60s linear infinite;
+
+opacity:0.35;
+
+}
+
+@keyframes particlesMove{
+
+from{transform:translateY(0);}
+to{transform:translateY(-800px);}
+
+}
+
+/* LIGHT MODE */
 
 body.light{
-background:linear-gradient(270deg,#0f2027,#203a43,#2c5364);
-background-size:600% 600%;
-animation:bg 15s ease infinite;
-color:white;
+background:#f7f9fc;
+color:#1f2937;
 }
+
+body.light .aurora:nth-child(1){
+background:radial-gradient(circle,rgba(255,182,193,0.4),transparent);
+}
+
+body.light .aurora:nth-child(2){
+background:radial-gradient(circle,rgba(173,216,230,0.4),transparent);
+}
+
+body.light .aurora:nth-child(3){
+background:radial-gradient(circle,rgba(221,160,221,0.4),transparent);
+}
+
+/* DARK MODE */
 
 body.dark{
-background:linear-gradient(270deg,#000000,#232526,#414345);
-background-size:600% 600%;
-animation:bg 15s ease infinite;
+background:#0f172a;
 color:white;
 }
 
-@keyframes bg{
-0%{background-position:0% 50%;}
-50%{background-position:100% 50%;}
-100%{background-position:0% 50%;}
+body.dark .aurora:nth-child(1){
+background:radial-gradient(circle,rgba(0,255,200,0.35),transparent);
 }
+
+body.dark .aurora:nth-child(2){
+background:radial-gradient(circle,rgba(0,150,255,0.35),transparent);
+}
+
+body.dark .aurora:nth-child(3){
+background:radial-gradient(circle,rgba(140,0,255,0.35),transparent);
+}
+
+/* HEADER */
 
 header{
 display:flex;
@@ -47,17 +125,54 @@ font-size:22px;
 font-weight:bold;
 }
 
+.toggle{
+cursor:pointer;
+font-size:22px;
+transition:0.3s;
+}
+
+.toggle:hover{
+transform:rotate(20deg) scale(1.1);
+}
+
+/* CONTAINER */
+
 .container{
 max-width:700px;
 margin:40px auto;
 }
 
+/* CARDS */
+
 .card{
-background:rgba(20,30,40,0.8);
+
 padding:25px;
-border-radius:10px;
+border-radius:14px;
 margin-bottom:20px;
+
+backdrop-filter:blur(14px);
+
+transition:0.3s;
+
 }
+
+body.light .card{
+background:rgba(255,255,255,0.75);
+color:#111;
+box-shadow:0 10px 30px rgba(0,0,0,0.15);
+}
+
+body.dark .card{
+background:rgba(20,30,40,0.7);
+color:white;
+box-shadow:0 10px 30px rgba(0,0,0,0.6);
+}
+
+.card:hover{
+transform:translateY(-5px);
+}
+
+/* INPUT */
 
 input,textarea{
 width:100%;
@@ -65,9 +180,9 @@ padding:10px;
 margin-top:10px;
 border-radius:6px;
 border:none;
-background:#3a4452;
-color:white;
 }
+
+/* BUTTON */
 
 button{
 padding:8px 14px;
@@ -75,22 +190,19 @@ border:none;
 border-radius:6px;
 cursor:pointer;
 margin-top:10px;
+transition:0.25s;
+}
+
+button:hover{
+transform:translateY(-2px) scale(1.02);
 }
 
 .primary{
-background:#3b82f6;
+background:linear-gradient(135deg,#3b82f6,#6366f1);
 color:white;
 }
 
-.filters button{
-background:#4b5563;
-color:white;
-margin-right:5px;
-}
-
-.filters button.active{
-background:#3b82f6;
-}
+/* TASK */
 
 .task{
 display:flex;
@@ -104,9 +216,31 @@ text-decoration:line-through;
 opacity:0.6;
 }
 
-.toggle{
-cursor:pointer;
-font-size:20px;
+/* INTRO */
+
+#intro{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+z-index:10;
+}
+
+#intro h1{
+font-size:60px;
+}
+
+#intro button{
+padding:12px 24px;
+font-size:18px;
+background:#3b82f6;
+color:white;
 }
 
 </style>
@@ -115,22 +249,33 @@ font-size:20px;
 
 <body class="light">
 
+<div class="aurora-background">
+<div class="aurora"></div>
+<div class="aurora"></div>
+<div class="aurora"></div>
+<div class="particles"></div>
+</div>
+
+<div id="intro">
+
+<h1>TaskFlow</h1>
+<p>Organiza tus tareas y mantén el control de tu flujo de trabajo</p>
+
+<button onclick="startApp()">Comenzar</button>
+
+</div>
+
+<div id="app" style="display:none;">
+
 <header>
 
-TaskFlow Project
+TaskFlow
 
 <div class="toggle" id="themeToggle">🌙</div>
 
 </header>
 
 <div class="container">
-
-<div class="card">
-
-<h3>Bienvenido a TaskFlow</h3>
-<p>Gestiona tus tareas, organiza tu flujo de trabajo y mantén todo bajo control con una interfaz clara y moderna.</p>
-
-</div>
 
 <div class="card">
 
@@ -152,9 +297,9 @@ TaskFlow Project
 
 <div class="filters">
 
-<button onclick="filterTasks('all', this)" class="active">Todas</button>
-<button onclick="filterTasks('pending', this)">Pendientes</button>
-<button onclick="filterTasks('completed', this)">Completadas</button>
+<button onclick="filterTasks('all',this)" class="active">Todas</button>
+<button onclick="filterTasks('pending',this)">Pendientes</button>
+<button onclick="filterTasks('completed',this)">Completadas</button>
 
 <button onclick="sortTasks()">Orden A-Z</button>
 
@@ -166,30 +311,41 @@ TaskFlow Project
 
 </div>
 
+</div>
+
 <script>
 
 let tasks=[];
 let currentFilter="all";
 
+/* START APP */
+
+function startApp(){
+
+document.getElementById("intro").style.display="none";
+document.getElementById("app").style.display="block";
+
+}
+
+/* ADD TASK */
+
 function addTask(){
 
 const title=document.getElementById("taskTitle").value.trim();
-const desc=document.getElementById("taskDescription").value.trim();
 
 if(title==="") return;
 
 tasks.push({
-title,
-desc,
+title:title,
 completed:false
 });
 
 document.getElementById("taskTitle").value="";
-document.getElementById("taskDescription").value="";
-
 renderTasks();
 
 }
+
+/* RENDER */
 
 function renderTasks(){
 
@@ -246,17 +402,21 @@ list.appendChild(div);
 
 document.getElementById("searchTask").addEventListener("input",renderTasks);
 
-function filterTasks(type){
+/* FILTER */
+
+function filterTasks(type,btn){
 
 currentFilter=type;
 
 document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
 
-event.target.classList.add("active");
+btn.classList.add("active");
 
 renderTasks();
 
 }
+
+/* SORT */
 
 function sortTasks(){
 
@@ -266,7 +426,7 @@ renderTasks();
 
 }
 
-/* dark / light toggle */
+/* THEME */
 
 const toggle=document.getElementById("themeToggle");
 
