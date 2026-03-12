@@ -20,7 +20,7 @@ tasks = JSON.parse(saved);
 }
 
 /* ============================= */
-/* INICIAR */
+/* INICIO */
 /* ============================= */
 
 loadTasks();
@@ -48,7 +48,7 @@ renderTasks();
 }
 
 /* ============================= */
-/* RENDERIZAR */
+/* RENDER TAREAS */
 /* ============================= */
 
 function renderTasks(){
@@ -93,7 +93,6 @@ const actions = document.createElement("div");
 const completeBtn = document.createElement("button");
 
 completeBtn.textContent = task.completed ? "↩" : "✔";
-
 completeBtn.style.background = task.completed ? "#6b7280" : "#22c55e";
 
 completeBtn.onclick = () => {
@@ -190,6 +189,7 @@ tasks.sort((a,b)=>
 a.title.localeCompare(b.title)
 );
 
+saveTasks();
 renderTasks();
 
 }
@@ -224,7 +224,7 @@ toggle.textContent = "🌙";
 };
 
 /* ============================= */
-/* CARGAR TAREAS AL INICIAR */
+/* CARGAR TAREAS */
 /* ============================= */
 
 renderTasks();
