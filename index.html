@@ -21,30 +21,37 @@ tailwind.config = { darkMode: "class" }
 
 body{
 font-family:"Inter",sans-serif;
-transition:background 0.6s ease,color 0.6s ease;
 min-height:100vh;
+display:flex;
+justify-content:center;
+padding:60px 20px;
+transition:all 0.4s ease;
 }
+
+/* pastel background */
 
 body.light{
 background:
-radial-gradient(circle at 20% 30%, #ffd6e7 0%, transparent 50%),
-radial-gradient(circle at 80% 40%, #cce4ff 0%, transparent 50%),
-radial-gradient(circle at 50% 90%, #e5d4ff 0%, transparent 50%),
-#f6f9ff;
+radial-gradient(circle at 20% 30%, #ffe4ec, transparent 50%),
+radial-gradient(circle at 80% 40%, #e0f2ff, transparent 50%),
+radial-gradient(circle at 50% 90%, #f3e8ff, transparent 50%),
+#f8fafc;
 }
+
+/* dark background */
 
 body.dark{
 background:
-radial-gradient(circle at 20% 30%, #00ffc8 0%, transparent 50%),
-radial-gradient(circle at 80% 40%, #0099ff 0%, transparent 50%),
-radial-gradient(circle at 50% 90%, #7c3aed 0%, transparent 50%),
-#0f172a;
+radial-gradient(circle at 20% 30%, #0ea5e9, transparent 50%),
+radial-gradient(circle at 80% 40%, #6366f1, transparent 50%),
+radial-gradient(circle at 50% 90%, #9333ea, transparent 50%),
+#020617;
 }
 
 .task-enter{
 opacity:0;
 transform:translateY(10px);
-animation:taskAppear 0.3s ease forwards;
+animation:taskAppear .3s ease forwards;
 }
 
 @keyframes taskAppear{
@@ -63,17 +70,19 @@ color:#ef4444;
 
 </head>
 
-<body class="light flex flex-col items-center p-10">
+<body class="light">
 
 <div id="themeToggle" class="fixed top-6 right-6 text-2xl cursor-pointer">
 🌙
 </div>
 
-<h1 class="text-4xl font-bold mb-10">TaskFlow</h1>
-
 <div class="w-full max-w-xl space-y-6">
 
-<div class="bg-white p-5 rounded shadow">
+<h1 class="text-4xl font-bold mb-6">TaskFlow</h1>
+
+<!-- crear tarea -->
+
+<div class="bg-white/70 backdrop-blur-lg p-6 rounded-xl shadow">
 
 <label for="taskInput" class="block mb-2 font-medium">
 Nueva tarea
@@ -85,17 +94,17 @@ placeholder="Escribe una tarea..."
 class="w-full border rounded p-2 mb-3"
 />
 
-<div class="flex gap-2">
+<div class="flex gap-2 flex-wrap">
 
-<button id="addTaskBtn" class="bg-blue-500 text-white px-4 py-2 rounded">
+<button id="addTaskBtn" class="bg-indigo-500 text-white px-4 py-2 rounded">
 Añadir
 </button>
 
-<button id="completeAllBtn" class="bg-green-600 text-white px-4 py-2 rounded">
+<button id="completeAllBtn" class="bg-emerald-500 text-white px-4 py-2 rounded">
 Completar todas
 </button>
 
-<button id="clearCompletedBtn" class="bg-red-600 text-white px-4 py-2 rounded">
+<button id="clearCompletedBtn" class="bg-rose-500 text-white px-4 py-2 rounded">
 Borrar completadas
 </button>
 
@@ -103,7 +112,9 @@ Borrar completadas
 
 </div>
 
-<div class="bg-white p-5 rounded shadow">
+<!-- lista -->
+
+<div class="bg-white/70 backdrop-blur-lg p-6 rounded-xl shadow">
 
 <div class="flex justify-between mb-3">
 
@@ -113,7 +124,7 @@ placeholder="Buscar tarea..."
 class="border rounded p-2 w-2/3"
 />
 
-<button id="sortBtn" class="bg-indigo-500 text-white px-3 py-1 rounded">
+<button id="sortBtn" class="bg-indigo-400 text-white px-3 py-1 rounded">
 Ordenar
 </button>
 
@@ -125,11 +136,11 @@ Ordenar
 Todas
 </button>
 
-<button id="filterPending" class="bg-yellow-400 px-2 py-1 rounded">
+<button id="filterPending" class="bg-yellow-300 px-2 py-1 rounded">
 Pendientes
 </button>
 
-<button id="filterDone" class="bg-green-400 px-2 py-1 rounded">
+<button id="filterDone" class="bg-emerald-300 px-2 py-1 rounded">
 Completadas
 </button>
 
@@ -138,7 +149,7 @@ Completadas
 <div id="taskStats" class="text-sm mb-2"></div>
 
 <div class="w-full bg-gray-300 rounded h-3 mb-3">
-<div id="progressBar" class="bg-green-500 h-3 rounded" style="width:0%"></div>
+<div id="progressBar" class="bg-emerald-500 h-3 rounded" style="width:0%"></div>
 </div>
 
 <ul id="taskList" class="space-y-2"></ul>

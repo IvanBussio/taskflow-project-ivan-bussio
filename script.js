@@ -11,7 +11,7 @@ const sortBtn=document.getElementById("sortBtn");
 const stats=document.getElementById("taskStats");
 const progressBar=document.getElementById("progressBar");
 
-/* STORAGE */
+/* storage */
 
 function loadTasks(){
 const saved=localStorage.getItem("tasks");
@@ -22,7 +22,7 @@ function saveTasks(){
 localStorage.setItem("tasks",JSON.stringify(tasks));
 }
 
-/* RENDER */
+/* render */
 
 function render(){
 
@@ -40,7 +40,7 @@ filtered=filtered.filter(t=>t.title.toLowerCase().includes(query));
 filtered.forEach((task,index)=>{
 
 const li=document.createElement("li");
-li.className="flex justify-between items-center bg-white p-3 rounded shadow task-enter";
+li.className="flex justify-between items-center bg-white/80 backdrop-blur p-3 rounded shadow task-enter";
 
 const text=document.createElement("span");
 text.textContent=task.title;
@@ -51,7 +51,7 @@ const actions=document.createElement("div");
 
 const complete=document.createElement("button");
 complete.innerHTML='<i class="fa-solid fa-check"></i>';
-complete.className="bg-green-500 text-white px-2 py-1 rounded";
+complete.className="bg-emerald-500 text-white px-2 py-1 rounded";
 
 complete.onclick=()=>{
 task.completed=!task.completed;
@@ -74,7 +74,7 @@ render();
 
 const del=document.createElement("button");
 del.innerHTML='<i class="fa-solid fa-trash"></i>';
-del.className="bg-red-500 text-white px-2 py-1 rounded ml-2";
+del.className="bg-rose-500 text-white px-2 py-1 rounded ml-2";
 
 del.onclick=()=>{
 tasks.splice(index,1);
@@ -97,7 +97,7 @@ updateStats();
 
 }
 
-/* STATS */
+/* stats */
 
 function updateStats(){
 
@@ -111,7 +111,7 @@ progressBar.style.width=percent+"%";
 
 }
 
-/* ADD */
+/* add */
 
 addBtn.onclick=()=>{
 
@@ -133,24 +133,24 @@ render();
 
 };
 
-/* SORT */
+/* sort */
 
 sortBtn.onclick=()=>{
 tasks.sort((a,b)=>a.title.localeCompare(b.title));
 render();
 };
 
-/* FILTER */
+/* filter */
 
 document.getElementById("filterAll").onclick=()=>{filter="all";render();}
 document.getElementById("filterPending").onclick=()=>{filter="pending";render();}
 document.getElementById("filterDone").onclick=()=>{filter="done";render();}
 
-/* SEARCH */
+/* search */
 
 search.addEventListener("input",render);
 
-/* COMPLETE ALL */
+/* complete all */
 
 document.getElementById("completeAllBtn").onclick=()=>{
 tasks.forEach(task=>task.completed=true);
@@ -158,7 +158,7 @@ saveTasks();
 render();
 };
 
-/* CLEAR COMPLETED */
+/* clear completed */
 
 document.getElementById("clearCompletedBtn").onclick=()=>{
 tasks=tasks.filter(task=>!task.completed);
@@ -166,7 +166,7 @@ saveTasks();
 render();
 };
 
-/* DARK MODE */
+/* dark mode */
 
 const toggle=document.getElementById("themeToggle");
 
@@ -192,7 +192,7 @@ localStorage.setItem("theme","light");
 
 };
 
-/* INIT */
+/* init */
 
 loadTasks();
 loadTheme();
