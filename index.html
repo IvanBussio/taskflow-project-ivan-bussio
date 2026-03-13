@@ -8,7 +8,7 @@
 
 <title>TaskFlow</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
 
@@ -23,160 +23,205 @@ body{
 
 min-height:100vh;
 
-background:
-radial-gradient(circle at 20% 30%, #2dd4bf, transparent 40%),
-radial-gradient(circle at 80% 20%, #1e3a8a, transparent 40%),
-radial-gradient(circle at 50% 90%, #7c3aed, transparent 50%),
-#0f172a;
+background: linear-gradient(135deg,#0f172a,#1e3a8a,#7c3aed);
 
 display:flex;
-flex-direction:column;
-align-items:center;
-padding:40px 20px;
+justify-content:center;
+align-items:flex-start;
+
+padding:20px;
 
 color:white;
-
-}
-
-h1{
-
-font-size:48px;
-margin-bottom:10px;
-
-}
-
-.welcome{
-
-margin-bottom:30px;
-font-size:20px;
-opacity:0.9;
 
 }
 
 .container{
 
-max-width:420px;
 width:100%;
+max-width:500px;
+
+}
+
+header{
+
+text-align:center;
+margin-bottom:25px;
+position:relative;
+
+}
+
+header h1{
+
+font-size:38px;
+font-weight:600;
+
+}
+
+header p{
+
+opacity:0.8;
+margin-top:5px;
+
+}
+
+.theme{
+
+position:absolute;
+right:0;
+top:0;
+font-size:26px;
+cursor:pointer;
 
 }
 
 .card{
 
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(10px);
+background:rgba(255,255,255,0.12);
+backdrop-filter:blur(15px);
 
 border-radius:20px;
 
-padding:25px;
+padding:20px;
 
 margin-bottom:20px;
 
-box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+.input-container{
+
+display:flex;
+gap:10px;
+flex-wrap:wrap;
 
 }
 
-input{
+.input-container input{
 
-width:100%;
-padding:15px;
+flex:1;
+padding:12px;
 
+border:none;
 border-radius:12px;
+
+outline:none;
+
+}
+
+.add-btn{
+
+background:linear-gradient(135deg,#3b82f6,#6366f1);
+
+border:none;
+border-radius:12px;
+
+padding:12px 18px;
+
+color:white;
+font-weight:500;
+
+cursor:pointer;
+
+}
+
+.search-container{
+
+display:flex;
+gap:10px;
+margin-bottom:15px;
+
+}
+
+.search-container input{
+
+flex:1;
+padding:10px;
+
+border:none;
+border-radius:10px;
+
+}
+
+.sort-btn{
+
+padding:10px 14px;
+
 border:none;
 
-font-size:16px;
+border-radius:10px;
+
+background:white;
+
+cursor:pointer;
+
+}
+
+.filters{
+
+display:grid;
+
+grid-template-columns:repeat(3,1fr);
+
+gap:10px;
 
 margin-bottom:15px;
 
 }
 
-button{
+.filter-btn{
+
+padding:10px;
 
 border:none;
 
-padding:14px 18px;
-
-border-radius:12px;
-
-font-size:16px;
+border-radius:10px;
 
 cursor:pointer;
 
-transition:all .2s ease;
+font-weight:500;
 
 }
 
-button:hover{
+.all{
 
-transform:scale(1.05);
+background:#e5e7eb;
 
 }
 
-.add{
+.pending{
 
-background:#3b82f6;
+background:linear-gradient(135deg,#3b82f6,#6366f1);
+
 color:white;
 
 }
 
-.row{
+.done{
 
-display:flex;
-gap:10px;
+background:linear-gradient(135deg,#8b5cf6,#a78bfa);
 
-margin-top:10px;
-
-}
-
-.row input{
-
-flex:1;
+color:white;
 
 }
 
-.btn{
+.counter{
 
-padding:10px 16px;
-border-radius:10px;
+opacity:0.8;
+
 font-size:14px;
-
-}
-
-.btn-all{
-
-background:#d1d5db;
-color:#111;
-
-}
-
-.btn-pending{
-
-background:#3b82f6;
-color:white;
-
-}
-
-.btn-done{
-
-background:#8b5cf6;
-color:white;
-
-}
-
-.tasks{
-
-margin-top:15px;
 
 }
 
 .task{
 
-background:rgba(255,255,255,0.1);
+background:white;
+
+color:#111;
 
 padding:12px;
 
 border-radius:10px;
 
-margin-bottom:8px;
+margin-bottom:10px;
 
 display:flex;
 
@@ -186,27 +231,19 @@ align-items:center;
 
 }
 
-.task.completed{
+.task button{
 
-text-decoration:line-through;
-opacity:.6;
+background:#22c55e;
 
-}
+border:none;
 
-.stats{
+padding:6px 10px;
 
-margin-top:10px;
-font-size:14px;
-opacity:.8;
+border-radius:8px;
 
-}
+color:white;
 
-.sun{
-
-position:absolute;
-top:25px;
-right:25px;
-font-size:30px;
+cursor:pointer;
 
 }
 
@@ -216,45 +253,54 @@ font-size:30px;
 
 <body>
 
-<div class="sun">☀️</div>
-
-<h1>TaskFlow</h1>
-
-<div class="welcome">Bienvenido a TaskFlow</div>
-
 <div class="container">
 
+<header>
+
+<h1>TaskFlow</h1>
+<p>Bienvenido a TaskFlow</p>
+
+<div class="theme">☀️</div>
+
+</header>
+
 <div class="card">
+
+<div class="input-container">
 
 <input id="taskInput" placeholder="Nueva tarea...">
 
-<button class="add" onclick="addTask()">Añadir tarea</button>
+<button class="add-btn" onclick="addTask()">Añadir tarea</button>
+
+</div>
 
 </div>
 
 <div class="card">
 
-<div class="row">
+<div class="search-container">
 
-<input id="search" placeholder="Buscar tarea..." onkeyup="renderTasks()">
+<input placeholder="Buscar tarea...">
 
-<button onclick="sortTasks()">Ordenar</button>
-
-</div>
-
-<div class="row">
-
-<button class="btn btn-all" onclick="filter='all';renderTasks()">Todas</button>
-
-<button class="btn btn-pending" onclick="filter='pending';renderTasks()">Pendientes</button>
-
-<button class="btn btn-done" onclick="filter='done';renderTasks()">Completadas</button>
+<button class="sort-btn">Ordenar</button>
 
 </div>
 
-<div class="tasks" id="tasks"></div>
+<div class="filters">
 
-<div class="stats" id="stats">Completadas 0 de 0</div>
+<button class="filter-btn all">Todas</button>
+<button class="filter-btn pending">Pendientes</button>
+<button class="filter-btn done">Completadas</button>
+
+</div>
+
+<div class="counter">
+
+Completadas <span id="done">0</span> de <span id="total">0</span>
+
+</div>
+
+<div id="taskList"></div>
 
 </div>
 
@@ -264,99 +310,63 @@ font-size:30px;
 
 let tasks=[]
 
-let filter='all'
-
 function addTask(){
 
-const input=document.getElementById('taskInput')
+let input=document.getElementById("taskInput")
 
-if(!input.value.trim()) return
+if(input.value==="")return
 
 tasks.push({
-
 text:input.value,
-
 done:false
-
 })
 
-input.value=''
+input.value=""
 
-renderTasks()
-
-}
-
-function toggleTask(index){
-
-tasks[index].done=!tasks[index].done
-
-renderTasks()
+render()
 
 }
 
-function deleteTask(index){
+function render(){
 
-tasks.splice(index,1)
+let list=document.getElementById("taskList")
 
-renderTasks()
+list.innerHTML=""
 
-}
+let doneCount=0
 
-function sortTasks(){
+tasks.forEach((task,index)=>{
 
-tasks.sort((a,b)=>a.done-b.done)
+if(task.done)doneCount++
 
-renderTasks()
+let div=document.createElement("div")
 
-}
-
-function renderTasks(){
-
-const list=document.getElementById('tasks')
-
-const search=document.getElementById('search').value.toLowerCase()
-
-list.innerHTML=''
-
-let visible=tasks.filter(task=>task.text.toLowerCase().includes(search))
-
-if(filter==='pending') visible=visible.filter(t=>!t.done)
-
-if(filter==='done') visible=visible.filter(t=>t.done)
-
-visible.forEach((task,i)=>{
-
-const div=document.createElement('div')
-
-div.className='task'+(task.done?' completed':'')
+div.className="task"
 
 div.innerHTML=`
-
-<span onclick="toggleTask(${i})">${task.text}</span>
-
-<button onclick="deleteTask(${i})">❌</button>
-
+${task.text}
+<button onclick="toggle(${index})">✔</button>
 `
 
 list.appendChild(div)
 
 })
 
-updateStats()
+document.getElementById("done").innerText=doneCount
+document.getElementById("total").innerText=tasks.length
 
 }
 
-function updateStats(){
+function toggle(i){
 
-const total=tasks.length
+tasks[i].done=!tasks[i].done
 
-const done=tasks.filter(t=>t.done).length
-
-document.getElementById('stats').innerText=`Completadas ${done} de ${total}`
+render()
 
 }
 
 </script>
 
 </body>
+
 </html>
