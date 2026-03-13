@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
 
 <meta charset="UTF-8">
@@ -8,301 +7,100 @@
 
 <title>TaskFlow</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
+body{
 font-family:'Poppins',sans-serif;
 }
 
-body{
-
-min-height:100vh;
-
-background: linear-gradient(135deg,#0f172a,#1e3a8a,#7c3aed);
-
-display:flex;
-justify-content:center;
-align-items:flex-start;
-
-padding:20px;
-
-color:white;
-
+.gradient{
+background:linear-gradient(135deg,#1e3a8a,#6d28d9);
 }
 
-.container{
-
-width:100%;
-max-width:500px;
-
-}
-
-header{
-
-text-align:center;
-margin-bottom:25px;
-position:relative;
-
-}
-
-header h1{
-
-font-size:38px;
-font-weight:600;
-
-}
-
-header p{
-
-opacity:0.8;
-margin-top:5px;
-
-}
-
-.theme{
-
-position:absolute;
-right:0;
-top:0;
-font-size:26px;
-cursor:pointer;
-
-}
-
-.card{
-
-background:rgba(255,255,255,0.12);
-backdrop-filter:blur(15px);
-
-border-radius:20px;
-
-padding:20px;
-
-margin-bottom:20px;
-
-}
-
-.input-container{
-
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-
-}
-
-.input-container input{
-
-flex:1;
-padding:12px;
-
-border:none;
-border-radius:12px;
-
-outline:none;
-
-}
-
-.add-btn{
-
-background:linear-gradient(135deg,#3b82f6,#6366f1);
-
-border:none;
-border-radius:12px;
-
-padding:12px 18px;
-
-color:white;
-font-weight:500;
-
-cursor:pointer;
-
-}
-
-.search-container{
-
-display:flex;
-gap:10px;
-margin-bottom:15px;
-
-}
-
-.search-container input{
-
-flex:1;
-padding:10px;
-
-border:none;
-border-radius:10px;
-
-}
-
-.sort-btn{
-
-padding:10px 14px;
-
-border:none;
-
-border-radius:10px;
-
-background:white;
-
-cursor:pointer;
-
-}
-
-.filters{
-
-display:grid;
-
-grid-template-columns:repeat(3,1fr);
-
-gap:10px;
-
-margin-bottom:15px;
-
-}
-
-.filter-btn{
-
-padding:10px;
-
-border:none;
-
-border-radius:10px;
-
-cursor:pointer;
-
-font-weight:500;
-
-}
-
-.all{
-
-background:#e5e7eb;
-
-}
-
-.pending{
-
-background:linear-gradient(135deg,#3b82f6,#6366f1);
-
-color:white;
-
-}
-
-.done{
-
-background:linear-gradient(135deg,#8b5cf6,#a78bfa);
-
-color:white;
-
-}
-
-.counter{
-
-opacity:0.8;
-
-font-size:14px;
-
-}
-
-.task{
-
-background:white;
-
-color:#111;
-
-padding:12px;
-
-border-radius:10px;
-
-margin-bottom:10px;
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-}
-
-.task button{
-
-background:#22c55e;
-
-border:none;
-
-padding:6px 10px;
-
-border-radius:8px;
-
-color:white;
-
-cursor:pointer;
-
+.darkmode{
+background:#0f172a;
 }
 
 </style>
 
 </head>
 
-<body>
+<body class="gradient min-h-screen flex flex-col items-center p-6 text-white transition-all">
 
-<div class="container">
+<!-- HEADER -->
 
-<header>
+<div class="flex justify-between items-center w-full max-w-md mb-8">
 
-<h1>TaskFlow</h1>
-<p>Bienvenido a TaskFlow</p>
+<h1 class="text-4xl font-semibold">TaskFlow</h1>
 
-<div class="theme">☀️</div>
-
-</header>
-
-<div class="card">
-
-<div class="input-container">
-
-<input id="taskInput" placeholder="Nueva tarea...">
-
-<button class="add-btn" onclick="addTask()">Añadir tarea</button>
+<button id="modeBtn" class="text-2xl">
+☀️
+</button>
 
 </div>
 
-</div>
+<p class="mb-6 text-lg opacity-80">Bienvenido a TaskFlow</p>
 
-<div class="card">
+<!-- ADD TASK -->
 
-<div class="search-container">
+<div class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 w-full max-w-md mb-6">
 
-<input placeholder="Buscar tarea...">
+<input 
+id="taskInput"
+placeholder="Nueva tarea..."
+class="w-full p-3 rounded-xl text-black mb-4"
+/>
 
-<button class="sort-btn">Ordenar</button>
-
-</div>
-
-<div class="filters">
-
-<button class="filter-btn all">Todas</button>
-<button class="filter-btn pending">Pendientes</button>
-<button class="filter-btn done">Completadas</button>
-
-</div>
-
-<div class="counter">
-
-Completadas <span id="done">0</span> de <span id="total">0</span>
+<button
+id="addBtn"
+class="bg-blue-500 hover:bg-blue-600 w-full p-3 rounded-xl">
+Añadir tarea
+</button>
 
 </div>
 
-<div id="taskList"></div>
+<!-- FILTER -->
+
+<div class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 w-full max-w-md">
+
+<div class="flex gap-2 mb-4">
+
+<input
+id="searchInput"
+placeholder="Buscar tarea..."
+class="flex-1 p-2 rounded-lg text-black"
+/>
+
+<button id="sortBtn" class="bg-white text-black px-3 rounded-lg">
+Ordenar
+</button>
 
 </div>
+
+<div class="flex gap-2 mb-4">
+
+<button id="allBtn" class="flex-1 bg-gray-200 text-black rounded-lg p-2">
+Todas
+</button>
+
+<button id="pendingBtn" class="flex-1 bg-blue-500 rounded-lg p-2">
+Pendientes
+</button>
+
+<button id="doneBtn" class="flex-1 bg-purple-500 rounded-lg p-2">
+Completadas
+</button>
+
+</div>
+
+<p id="counter" class="mb-4 opacity-80">
+Completadas 0 de 0
+</p>
+
+<ul id="taskList" class="space-y-3"></ul>
 
 </div>
 
@@ -310,11 +108,60 @@ Completadas <span id="done">0</span> de <span id="total">0</span>
 
 let tasks=[]
 
-function addTask(){
+const input=document.getElementById("taskInput")
+const addBtn=document.getElementById("addBtn")
+const list=document.getElementById("taskList")
+const counter=document.getElementById("counter")
+const search=document.getElementById("searchInput")
 
-let input=document.getElementById("taskInput")
+let filter="all"
 
-if(input.value==="")return
+function render(){
+
+list.innerHTML=""
+
+let filtered=tasks.filter(t=>{
+if(filter==="pending") return !t.done
+if(filter==="done") return t.done
+return true
+})
+
+filtered=filtered.filter(t=>t.text.toLowerCase().includes(search.value.toLowerCase()))
+
+filtered.forEach((task,index)=>{
+
+const li=document.createElement("li")
+
+li.className="flex justify-between items-center bg-white text-black p-3 rounded-xl"
+
+li.innerHTML=`
+<span class="${task.done ? 'line-through opacity-50':''}">
+${task.text}
+</span>
+
+<button class="bg-green-500 text-white px-3 py-1 rounded">
+✔
+</button>
+`
+
+li.querySelector("button").onclick=()=>{
+task.done=!task.done
+render()
+}
+
+list.appendChild(li)
+
+})
+
+const doneCount=tasks.filter(t=>t.done).length
+
+counter.innerText=`Completadas ${doneCount} de ${tasks.length}`
+
+}
+
+addBtn.onclick=()=>{
+
+if(input.value.trim()==="") return
 
 tasks.push({
 text:input.value,
@@ -327,46 +174,57 @@ render()
 
 }
 
-function render(){
+document.getElementById("allBtn").onclick=()=>{
+filter="all"
+render()
+}
 
-let list=document.getElementById("taskList")
+document.getElementById("pendingBtn").onclick=()=>{
+filter="pending"
+render()
+}
 
-list.innerHTML=""
+document.getElementById("doneBtn").onclick=()=>{
+filter="done"
+render()
+}
 
-let doneCount=0
+search.oninput=render
 
-tasks.forEach((task,index)=>{
+document.getElementById("sortBtn").onclick=()=>{
+tasks.sort((a,b)=>a.text.localeCompare(b.text))
+render()
+}
 
-if(task.done)doneCount++
+const modeBtn=document.getElementById("modeBtn")
 
-let div=document.createElement("div")
+let dark=false
 
-div.className="task"
+modeBtn.onclick=()=>{
 
-div.innerHTML=`
-${task.text}
-<button onclick="toggle(${index})">✔</button>
-`
+dark=!dark
 
-list.appendChild(div)
+if(dark){
 
-})
+document.body.classList.remove("gradient")
+document.body.classList.add("darkmode")
 
-document.getElementById("done").innerText=doneCount
-document.getElementById("total").innerText=tasks.length
+modeBtn.innerText="🌙"
+
+}else{
+
+document.body.classList.add("gradient")
+document.body.classList.remove("darkmode")
+
+modeBtn.innerText="☀️"
 
 }
 
-function toggle(i){
-
-tasks[i].done=!tasks[i].done
+}
 
 render()
-
-}
 
 </script>
 
 </body>
-
 </html>
