@@ -1,115 +1,20 @@
-document.addEventListener("DOMContentLoaded",()=>{
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let filter = "all";
 
-let tasks=[];
-let filter="all";
+/* guardar */
 
-const input=document.getElementById("taskInput");
-const addBtn=document.getElementById("addTaskBtn");
-const list=document.getElementById("taskList");
-const search=document.getElementById("searchInput");
-const stats=document.getElementById("taskStats");
-const progress=document.getElementById("progressBar");
-
-function loadTasks(){
-const saved=localStorage.getItem("tasks");
-if(saved) tasks=JSON.parse(saved);
-}
-
-function saveTasks(){
+function save(){
 localStorage.setItem("tasks",JSON.stringify(tasks));
 }
 
-function render(){
+/* añadir */
 
-list.innerHTML="";
+function addTask(){
 
-let filtered=[...tasks];
-
-if(filter==="pending") filtered=filtered.filter(t=>!t.completed);
-if(filter==="done") filtered=filtered.filter(t=>t.completed);
-
-const q=search.value.toLowerCase();
-
-filtered=filtered.filter(t=>t.title.toLowerCase().includes(q));
-
-filtered.forEach((task,index)=>{
-
-const li=document.createElement("li");
-li.className="flex justify-between items-center bg-slate-100/70 p-3 rounded task-enter";
-
-const text=document.createElement("span");
-text.textContent=task.title;
-
-if(task.completed) text.classList.add("completed");
-
-const actions=document.createElement("div");
-
-const complete=document.createElement("button");
-complete.innerHTML='<i class="fa-solid fa-check"></i>';
-complete.className="px-2 py-1";
-
-complete.onclick=()=>{
-task.completed=!task.completed;
-saveTasks();
-render();
-};
-
-const edit=document.createElement("button");
-edit.innerHTML='<i class="fa-solid fa-pen"></i>';
-edit.className="px-2 py-1";
-
-edit.onclick=()=>{
-const nuevo=prompt("Editar tarea:",task.title);
-if(nuevo){
-task.title=nuevo;
-saveTasks();
-render();
-}
-};
-
-const del=document.createElement("button");
-del.innerHTML='<i class="fa-solid fa-trash"></i>';
-del.className="px-2 py-1";
-
-del.onclick=()=>{
-tasks.splice(index,1);
-saveTasks();
-render();
-};
-
-actions.appendChild(complete);
-actions.appendChild(edit);
-actions.appendChild(del);
-
-li.appendChild(text);
-li.appendChild(actions);
-
-list.appendChild(li);
-
-});
-
-updateStats();
-
-}
-
-function updateStats(){
-
-const total=tasks.length;
-const done=tasks.filter(t=>t.completed).length;
-
-stats.textContent=`Completadas ${done} de ${total}`;
-
-const percent=total?(done/total)*100:0;
-
-progress.style.width=percent+"%";
-
-}
-
-addBtn.onclick=()=>{
-
+const input=document.getElementById("taskInput");
 const title=input.value.trim();
 
-if(title==="") return;
+if(!title) return;
 
 tasks.push({
 id:Date.now(),
@@ -118,36 +23,160 @@ completed:false
 });
 
 input.value="";
-
-saveTasks();
+save();
 render();
 
+}
+
+/* render */
+
+function render(){
+
+const list=document.getElementById("taskList");
+list.innerHTML="";
+
+let filtered=[...tasks];
+
+if(filter==="completed") filtered=tasks.filter(t=>t.completed);
+if(filter==="pending") filtered=tasks.filter(t=>!t.completed);
+
+const search=document.getElementById("search").value?.toLowerCase() || "";
+
+filtered=filtered.filter(t=>t.title.toLowerCase().includes(search));
+
+filtered.forEach(task=>{
+
+const div=document.createElement("div");
+
+div.className="flex justify-between items-center p-3 rounded bg-white/40 dark:bg-slate-700";
+
+const text=document.createElement("span");
+
+text.textContent=task.title;
+
+if(task.completed){
+text.style.textDecoration="line-through";
+text.style.opacity=".6";
+}
+
+const actions=document.createElement("div");
+actions.className="flex gap-2";
+
+const done=document.createElement("button");
+done.textContent="✔";
+done.className="btn";
+
+done.onclick=()=>{
+task.completed=!task.completed;
+save();
+render();
 };
 
-document.getElementById("completeAllBtn").onclick=()=>{
-tasks.forEach(t=>t.completed=true);
-saveTasks();
+const edit=document.createElement("button");
+edit.textContent="✏";
+edit.className="btn";
+
+edit.onclick=()=>{
+const newTitle=prompt("Editar tarea",task.title);
+if(newTitle){
+task.title=newTitle;
+save();
+render();
+}
+};
+
+const del=document.createElement("button");
+del.textContent="🗑";
+del.className="btn";
+
+del.onclick=()=>{
+tasks=tasks.filter(t=>t.id!==task.id);
+save();
 render();
 };
 
-document.getElementById("clearCompletedBtn").onclick=()=>{
-tasks=tasks.filter(t=>!t.completed);
-saveTasks();
-render();
-};
-
-search.addEventListener("input",render);
-
-document.getElementById("filterAll").onclick=()=>{filter="all";render()}
-document.getElementById("filterPending").onclick=()=>{filter="pending";render()}
-document.getElementById("filterDone").onclick=()=>{filter="done";render()}
-
-document.getElementById("sortBtn").onclick=()=>{
-tasks.sort((a,b)=>a.title.localeCompare(b.title));
-render();
-};
-
-loadTasks();
-render();
+actions.append(done,edit,del);
+div.append(text,actions);
+list.appendChild(div);
 
 });
+
+updateStats();
+
+}
+
+/* estadísticas */
+
+function updateStats(){
+
+const total=tasks.length;
+const completed=tasks.filter(t=>t.completed).length;
+
+document.getElementById("stats").textContent=
+`Completadas ${completed} de ${total}`;
+
+const percent=total?completed/total*100:0;
+
+document.getElementById("progressBar").style.width=percent+"%";
+
+}
+
+/* filtros */
+
+function setFilter(type){
+filter=type;
+render();
+}
+
+/* buscar */
+
+document.getElementById("search").addEventListener("input",render);
+
+/* ordenar */
+
+function sortTasks(){
+tasks.sort((a,b)=>a.title.localeCompare(b.title));
+save();
+render();
+}
+
+/* completar todas */
+
+function completeAll(){
+tasks.forEach(t=>t.completed=true);
+save();
+render();
+}
+
+/* borrar completadas */
+
+function deleteCompleted(){
+tasks=tasks.filter(t=>!t.completed);
+save();
+render();
+}
+
+/* modo oscuro */
+
+const toggle=document.getElementById("themeToggle");
+
+toggle.onclick=()=>{
+
+document.body.classList.toggle("dark");
+document.body.classList.toggle("light");
+
+toggle.textContent=document.body.classList.contains("dark")?"☀":"🌙";
+
+};
+
+/* modal */
+
+function openWelcome(){
+document.getElementById("welcomeModal").classList.remove("hidden");
+}
+
+function closeWelcome(){
+document.getElementById("welcomeModal").classList.add("hidden");
+}
+
+render();

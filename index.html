@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 
 <meta charset="UTF-8">
@@ -7,503 +8,217 @@
 
 <title>TaskFlow</title>
 
-<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
 
 <style>
 
 body{
-font-family:"Inter",sans-serif;
-min-height:100vh;
-display:flex;
-justify-content:center;
-align-items:flex-start;
-padding:80px 20px;
-transition:all .6s ease;
+font-family:'Poppins',sans-serif;
+transition:background .6s;
 }
 
-/* ---------- LIGHT MODE ---------- */
+/* fondo claro */
 
 body.light{
-background:linear-gradient(135deg,#fbcfe8,#e9d5ff,#ddd6fe);
-background-size:400% 400%;
-animation:lightFlow 18s ease infinite;
+background:linear-gradient(120deg,#ffd1dc,#ffe5ec,#f1c0e8);
+background-size:300% 300%;
+animation:bgmove 18s infinite alternate;
 }
 
-@keyframes lightFlow{
-0%{background-position:0% 50%;}
-50%{background-position:100% 50%;}
-100%{background-position:0% 50%;}
-}
-
-/* ---------- DARK MODE ---------- */
+/* fondo oscuro */
 
 body.dark{
-background:linear-gradient(135deg,#020617,#1e1b4b,#020617);
-background-size:400% 400%;
-animation:darkFlow 22s ease infinite;
-color:#e5e7eb;
-}
-
-@keyframes darkFlow{
-0%{background-position:0% 50%;}
-50%{background-position:100% 50%;}
-100%{background-position:0% 50%;}
-}
-
-/* ---------- INPUT ---------- */
-
-input{
-background:rgba(255,255,255,.95);
-color:#1f2937;
-border-radius:10px;
-padding:10px;
-border:1px solid rgba(0,0,0,.1);
-width:100%;
-}
-
-input::placeholder{
-color:#6b7280;
-}
-
-input:focus{
-outline:none;
-border:1px solid #8b5cf6;
-box-shadow:0 0 0 2px rgba(139,92,246,.3);
-}
-
-/* ---------- CARD ---------- */
-
-.card{
-background:rgba(255,255,255,.18);
-backdrop-filter:blur(18px);
-border-radius:18px;
-padding:24px;
-box-shadow:0 15px 40px rgba(0,0,0,.15);
-}
-
-/* ---------- BUTTON ---------- */
-
-button{
-background:rgba(255,255,255,.25);
-backdrop-filter:blur(10px);
-border:1px solid rgba(255,255,255,.35);
+background:linear-gradient(120deg,#0f172a,#1e293b,#020617);
+background-size:300% 300%;
+animation:bgmove 18s infinite alternate;
 color:white;
+}
+
+@keyframes bgmove{
+0%{background-position:0% 50%;}
+100%{background-position:100% 50%;}
+}
+
+/* contenedores */
+
+.glass{
+background:rgba(255,255,255,.25);
+backdrop-filter:blur(14px);
+border-radius:18px;
+padding:25px;
+box-shadow:0 15px 35px rgba(0,0,0,.2);
+}
+
+.dark .glass{
+background:rgba(30,41,59,.7);
+}
+
+/* botones */
+
+.btn{
 padding:8px 16px;
 border-radius:10px;
-transition:all .25s ease;
+background:rgba(255,255,255,.35);
+transition:.25s;
 }
 
-button:hover{
-transform:translateY(-2px) scale(1.05);
+.btn:hover{
+transform:translateY(-3px) scale(1.05);
+background:rgba(255,255,255,.6);
+}
+
+.dark .btn{
+background:rgba(255,255,255,.1);
+}
+
+/* input */
+
+input{
+color:#111;
+}
+
+.dark input{
+color:white;
+background:rgba(255,255,255,.1);
+}
+
+/* barra progreso */
+
+.progress{
+height:8px;
+border-radius:6px;
 background:rgba(255,255,255,.4);
-box-shadow:0 8px 20px rgba(0,0,0,.2);
 }
 
-button:active{
-transform:scale(.95);
+.progressbar{
+height:8px;
+border-radius:6px;
+background:#34d399;
 }
 
-/* ---------- TASK ---------- */
+/* modal */
 
-.task{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:12px;
-border-radius:12px;
-background:rgba(255,255,255,.25);
-}
-
-.completed{
-text-decoration:line-through;
-opacity:.5;
-}
-
-/* ---------- ACTION BUTTONS ---------- */
-
-.action-btn{
-width:34px;
-height:34px;
-display:flex;
-align-items:center;
-justify-content:center;
-border-radius:50%;
-background:rgba(255,255,255,.25);
-backdrop-filter:blur(10px);
-border:1px solid rgba(255,255,255,.35);
-font-size:16px;
-cursor:pointer;
-}
-
-.action-btn:hover{
-transform:scale(1.15);
-background:rgba(255,255,255,.45);
-}
-
-/* ---------- WELCOME SCREEN ---------- */
-
-.welcome-screen{
+.modal{
 position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
+inset:0;
+background:rgba(0,0,0,.5);
 display:flex;
 align-items:center;
 justify-content:center;
-background:rgba(0,0,0,.6);
-backdrop-filter:blur(20px);
-z-index:999;
 }
 
-.welcome-card{
-background:rgba(255,255,255,.15);
-backdrop-filter:blur(20px);
+.modal-box{
+background:white;
 padding:40px;
 border-radius:20px;
 max-width:500px;
 text-align:center;
-box-shadow:0 20px 60px rgba(0,0,0,.4);
-animation:welcomeFade .7s ease;
 }
 
-@keyframes welcomeFade{
-from{opacity:0; transform:translateY(30px);}
-to{opacity:1; transform:translateY(0);}
-}
-
-/* ---------- LOGO ---------- */
-
-.logo{
-width:70px;
-height:70px;
-border-radius:20px;
-background:linear-gradient(135deg,#8b5cf6,#ec4899);
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:32px;
-font-weight:700;
+.dark .modal-box{
+background:#1e293b;
 color:white;
-margin:0 auto 20px;
-animation:logoFloat 3s ease-in-out infinite;
-}
-
-@keyframes logoFloat{
-0%{transform:translateY(0)}
-50%{transform:translateY(-6px)}
-100%{transform:translateY(0)}
 }
 
 </style>
+
 </head>
 
-<body class="light">
+<body class="light min-h-screen flex flex-col items-center p-8">
 
-<div id="themeToggle" class="fixed top-6 right-6 text-2xl cursor-pointer">
-🌙
-</div>
+<header class="w-full max-w-3xl flex justify-between items-center mb-8">
 
-<!-- WELCOME -->
+<h1 class="text-4xl font-semibold">TaskFlow</h1>
 
-<div id="welcomeScreen" class="welcome-screen">
+<button id="themeToggle" class="btn">🌙</button>
 
-<div class="welcome-card">
+</header>
 
-<div class="logo">✓</div>
+<button onclick="openWelcome()" class="btn mb-6">ℹ Sobre TaskFlow</button>
 
-<h1 class="text-3xl font-semibold mb-2">
-TaskFlow
-</h1>
+<!-- NUEVA TAREA -->
 
-<p class="opacity-80">
-Organiza tu día. Simplifica tu vida.
-</p>
+<div class="glass w-full max-w-3xl mb-6">
 
-<div class="mt-4 text-sm opacity-90">
+<h2 class="text-xl mb-3">Nueva tarea</h2>
 
-<h2 class="font-semibold mb-1">
-Quiénes somos
-</h2>
-
-<p>
-TaskFlow es una aplicación diseñada para ayudarte a organizar
-tus tareas diarias de forma simple, elegante y eficiente.
-Nuestro objetivo es ofrecer una herramienta minimalista
-para mejorar tu productividad.
-</p>
-
-</div>
-
-<button onclick="startApp()" class="mt-4">
-Entrar a TaskFlow
-</button>
-
-</div>
-
-</div>
-
-<!-- APP -->
-
-<div class="w-full max-w-xl space-y-6">
-
-<h1 class="text-4xl font-bold text-center">
-TaskFlow
-</h1>
-
-<div class="flex justify-center">
-<button onclick="openWelcome()">
-Sobre TaskFlow
-</button>
-</div>
-
-<div class="card space-y-4">
-
-<input id="taskInput" placeholder="Escribe una tarea...">
+<input
+id="taskInput"
+placeholder="Escribe una tarea..."
+class="w-full p-2 rounded mb-3"
+/>
 
 <div class="flex gap-2 flex-wrap">
 
-<button onclick="addTask()">Añadir</button>
-<button onclick="completeAll()">Completar todas</button>
-<button onclick="deleteCompleted()">Borrar completadas</button>
+<button onclick="addTask()" class="btn">Añadir</button>
+<button onclick="completeAll()" class="btn">Completar todas</button>
+<button onclick="deleteCompleted()" class="btn">Borrar completadas</button>
 
 </div>
 
 </div>
 
-<div class="card space-y-4">
+<!-- LISTA -->
 
-<div class="flex gap-2">
+<div class="glass w-full max-w-3xl">
 
-<input id="searchInput" placeholder="Buscar tarea...">
+<div class="flex gap-2 mb-3">
 
-<button onclick="sortTasks()">Ordenar</button>
+<input
+id="search"
+placeholder="Buscar tarea..."
+class="flex-1 p-2 rounded"
+/>
 
-</div>
-
-<div class="flex gap-2">
-
-<button onclick="setFilter('all')">Todas</button>
-<button onclick="setFilter('pending')">Pendientes</button>
-<button onclick="setFilter('completed')">Completadas</button>
+<button onclick="sortTasks()" class="btn">Ordenar</button>
 
 </div>
 
-<div id="stats" class="text-sm opacity-80"></div>
+<div class="flex gap-2 mb-2 flex-wrap">
 
-<div class="w-full bg-gray-300 rounded-full h-2 overflow-hidden">
-<div id="progressBar" class="bg-purple-500 h-full"></div>
+<button onclick="setFilter('all')" class="btn">Todas</button>
+<button onclick="setFilter('pending')" class="btn">Pendientes</button>
+<button onclick="setFilter('completed')" class="btn">Completadas</button>
+
+</div>
+
+<p id="stats" class="text-sm mb-2"></p>
+
+<div class="progress mb-4">
+<div id="progressBar" class="progressbar"></div>
 </div>
 
 <div id="taskList" class="space-y-3"></div>
 
 </div>
 
-</div>
+<!-- MODAL -->
 
-<script>
+<div id="welcomeModal" class="modal hidden">
 
-let tasks=[]
-let filter="all"
+<div class="modal-box">
 
-const taskInput=document.getElementById("taskInput")
-const taskList=document.getElementById("taskList")
-const searchInput=document.getElementById("searchInput")
+<h2 class="text-2xl mb-4">Bienvenido a TaskFlow</h2>
 
-function saveTasks(){
-localStorage.setItem("tasks",JSON.stringify(tasks))
-}
+<p class="mb-4">
+TaskFlow es una aplicación para organizar tus tareas diarias de forma simple,
+visual y eficiente.
+</p>
 
-function loadTasks(){
-const saved=localStorage.getItem("tasks")
-if(saved){tasks=JSON.parse(saved)}
-}
+<p class="mb-4">
+Puedes crear tareas, completarlas, filtrarlas, buscarlas y mantener
+tu productividad bajo control.
+</p>
 
-loadTasks()
-
-function addTask(){
-
-const title=taskInput.value.trim()
-
-if(!title)return
-
-tasks.push({
-id:Date.now(),
-title,
-completed:false
-})
-
-taskInput.value=""
-
-saveTasks()
-renderTasks()
-
-}
-
-function renderTasks(){
-
-taskList.innerHTML=""
-
-let filtered=[...tasks]
-
-if(filter==="completed")filtered=filtered.filter(t=>t.completed)
-if(filter==="pending")filtered=filtered.filter(t=>!t.completed)
-
-const search=searchInput.value.toLowerCase()
-
-filtered=filtered.filter(t=>t.title.toLowerCase().includes(search))
-
-filtered.forEach(task=>{
-
-const div=document.createElement("div")
-
-div.className="task"
-
-if(task.completed)div.classList.add("completed")
-
-div.innerHTML=`
-
-<span>${task.title}</span>
-
-<div class="flex gap-2">
-
-<button class="action-btn" onclick="toggleTask(${task.id})">✔</button>
-<button class="action-btn" onclick="editTask(${task.id})">✏</button>
-<button class="action-btn" onclick="deleteTask(${task.id})">🗑</button>
+<button onclick="closeWelcome()" class="btn">Cerrar</button>
 
 </div>
-`
 
-taskList.appendChild(div)
+</div>
 
-})
-
-updateStats()
-
-}
-
-function toggleTask(id){
-tasks=tasks.map(t=>{
-if(t.id===id)t.completed=!t.completed
-return t
-})
-saveTasks()
-renderTasks()
-}
-
-function deleteTask(id){
-tasks=tasks.filter(t=>t.id!==id)
-saveTasks()
-renderTasks()
-}
-
-function editTask(id){
-
-const task=tasks.find(t=>t.id===id)
-
-const newTitle=prompt("Editar tarea",task.title)
-
-if(newTitle){
-task.title=newTitle
-saveTasks()
-renderTasks()
-}
-
-}
-
-function completeAll(){
-tasks=tasks.map(t=>({...t,completed:true}))
-saveTasks()
-renderTasks()
-}
-
-function deleteCompleted(){
-tasks=tasks.filter(t=>!t.completed)
-saveTasks()
-renderTasks()
-}
-
-function setFilter(type){
-filter=type
-renderTasks()
-}
-
-searchInput.addEventListener("input",renderTasks)
-
-function sortTasks(){
-tasks.sort((a,b)=>a.title.localeCompare(b.title))
-saveTasks()
-renderTasks()
-}
-
-function updateStats(){
-
-const total=tasks.length
-const completed=tasks.filter(t=>t.completed).length
-
-document.getElementById("stats").innerHTML=
-`Completadas ${completed} de ${total}`
-
-const progress=total?completed/total*100:0
-
-document.getElementById("progressBar").style.width=progress+"%"
-
-}
-
-/* DARK MODE */
-
-const toggle=document.getElementById("themeToggle")
-
-function loadTheme(){
-
-const saved=localStorage.getItem("theme")
-
-if(saved){
-document.body.className=saved
-toggle.textContent=saved==="dark"?"☀️":"🌙"
-}else{
-document.body.classList.add("light")
-}
-
-}
-
-toggle.onclick=()=>{
-
-if(document.body.classList.contains("light")){
-
-document.body.classList.replace("light","dark")
-toggle.textContent="☀️"
-localStorage.setItem("theme","dark")
-
-}else{
-
-document.body.classList.replace("dark","light")
-toggle.textContent="🌙"
-localStorage.setItem("theme","light")
-
-}
-
-}
-
-function startApp(){
-document.getElementById("welcomeScreen").style.display="none"
-localStorage.setItem("visited","true")
-}
-
-function openWelcome(){
-document.getElementById("welcomeScreen").style.display="flex"
-}
-
-if(localStorage.getItem("visited")){
-document.getElementById("welcomeScreen").style.display="none"
-}
-
-loadTheme()
-renderTasks()
-
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
