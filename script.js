@@ -1,8 +1,6 @@
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 let filter = "all";
 
-/* guardar */
-
 function save(){
 localStorage.setItem("tasks",JSON.stringify(tasks));
 }
@@ -23,6 +21,7 @@ completed:false
 });
 
 input.value="";
+
 save();
 render();
 
@@ -47,11 +46,9 @@ filtered=filtered.filter(t=>t.title.toLowerCase().includes(search));
 filtered.forEach(task=>{
 
 const div=document.createElement("div");
-
-div.className="flex justify-between items-center p-3 rounded bg-white/40 dark:bg-slate-700";
+div.className="task";
 
 const text=document.createElement("span");
-
 text.textContent=task.title;
 
 if(task.completed){

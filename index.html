@@ -19,20 +19,20 @@ font-family:'Poppins',sans-serif;
 transition:background .6s;
 }
 
-/* fondo claro */
+/* fondo claro pastel */
 
 body.light{
-background:linear-gradient(120deg,#ffd1dc,#ffe5ec,#f1c0e8);
+background:linear-gradient(120deg,#ffd1dc,#f1c0e8,#e0c3fc);
 background-size:300% 300%;
-animation:bgmove 18s infinite alternate;
+animation:bgmove 20s infinite alternate;
 }
 
 /* fondo oscuro */
 
 body.dark{
-background:linear-gradient(120deg,#0f172a,#1e293b,#020617);
+background:linear-gradient(120deg,#0f172a,#020617,#1e293b);
 background-size:300% 300%;
-animation:bgmove 18s infinite alternate;
+animation:bgmove 20s infinite alternate;
 color:white;
 }
 
@@ -41,18 +41,18 @@ color:white;
 100%{background-position:100% 50%;}
 }
 
-/* contenedores */
+/* tarjetas glass */
 
 .glass{
-background:rgba(255,255,255,.25);
+background:rgba(255,255,255,.35);
 backdrop-filter:blur(14px);
 border-radius:18px;
 padding:25px;
-box-shadow:0 15px 35px rgba(0,0,0,.2);
+box-shadow:0 15px 35px rgba(0,0,0,.15);
 }
 
 .dark .glass{
-background:rgba(30,41,59,.7);
+background:rgba(30,41,59,.65);
 }
 
 /* botones */
@@ -60,28 +60,38 @@ background:rgba(30,41,59,.7);
 .btn{
 padding:8px 16px;
 border-radius:10px;
-background:rgba(255,255,255,.35);
+background:rgba(255,255,255,.4);
 transition:.25s;
 }
 
 .btn:hover{
 transform:translateY(-3px) scale(1.05);
-background:rgba(255,255,255,.6);
+background:rgba(255,255,255,.65);
 }
 
 .dark .btn{
 background:rgba(255,255,255,.1);
 }
 
-/* input */
+/* tareas */
 
-input{
-color:#111;
+.task{
+background:rgba(255,255,255,.55);
+padding:14px;
+border-radius:12px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+transition:.25s;
 }
 
-.dark input{
-color:white;
-background:rgba(255,255,255,.1);
+.task:hover{
+transform:translateY(-2px);
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+.dark .task{
+background:rgba(30,41,59,.7);
 }
 
 /* barra progreso */
@@ -103,7 +113,7 @@ background:#34d399;
 .modal{
 position:fixed;
 inset:0;
-background:rgba(0,0,0,.5);
+background:rgba(0,0,0,.55);
 display:flex;
 align-items:center;
 justify-content:center;
@@ -147,7 +157,7 @@ color:white;
 <input
 id="taskInput"
 placeholder="Escribe una tarea..."
-class="w-full p-2 rounded mb-3"
+class="w-full p-2 rounded mb-3 text-black"
 />
 
 <div class="flex gap-2 flex-wrap">
@@ -169,7 +179,7 @@ class="w-full p-2 rounded mb-3"
 <input
 id="search"
 placeholder="Buscar tarea..."
-class="flex-1 p-2 rounded"
+class="flex-1 p-2 rounded text-black"
 />
 
 <button onclick="sortTasks()" class="btn">Ordenar</button>
@@ -194,25 +204,38 @@ class="flex-1 p-2 rounded"
 
 </div>
 
-<!-- MODAL -->
+<!-- MODAL SOBRE TASKFLOW -->
 
 <div id="welcomeModal" class="modal hidden">
 
 <div class="modal-box">
 
-<h2 class="text-2xl mb-4">Bienvenido a TaskFlow</h2>
+<h2 class="text-3xl mb-4">Bienvenido a TaskFlow</h2>
 
 <p class="mb-4">
-TaskFlow es una aplicación para organizar tus tareas diarias de forma simple,
-visual y eficiente.
+TaskFlow es una aplicación diseñada para ayudarte a organizar tus tareas
+diarias de forma clara, simple y visual.
 </p>
+
+<h3 class="text-xl mt-6 mb-2">¿Qué puedes hacer?</h3>
 
 <p class="mb-4">
-Puedes crear tareas, completarlas, filtrarlas, buscarlas y mantener
-tu productividad bajo control.
+✔ Crear tareas  
+✔ Marcar tareas completadas  
+✔ Buscar y filtrar tareas  
+✔ Ordenar alfabéticamente  
+✔ Mantener tu productividad bajo control
 </p>
 
-<button onclick="closeWelcome()" class="btn">Cerrar</button>
+<h3 class="text-xl mt-6 mb-2">Quiénes somos</h3>
+
+<p>
+TaskFlow es un proyecto creado durante el bootcamp de desarrollo web
+para aprender JavaScript, diseño de interfaces modernas y gestión de datos
+en aplicaciones reales.
+</p>
+
+<button onclick="closeWelcome()" class="btn mt-6">Cerrar</button>
 
 </div>
 
