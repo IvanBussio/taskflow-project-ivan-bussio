@@ -19,25 +19,37 @@ font-family:"Inter",sans-serif;
 min-height:100vh;
 display:flex;
 justify-content:center;
+align-items:flex-start;
 padding:80px 20px;
-transition:all .4s ease;
+transition:all .5s ease;
 }
 
-/* modo claro */
+/* ---------- MODO CLARO ---------- */
 
 body.light{
-background:
-radial-gradient(circle at 20% 30%,#dbeafe,transparent 50%),
-radial-gradient(circle at 80% 40%,#e9d5ff,transparent 50%),
-#f1f5f9;
+
+background:linear-gradient(135deg,#fbcfe8,#e9d5ff,#ddd6fe);
+background-size:400% 400%;
+
+animation:pastelMove 15s ease infinite;
+
 }
 
-/* modo oscuro */
+@keyframes pastelMove{
+
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+
+}
+
+/* ---------- MODO OSCURO ---------- */
 
 body.dark{
-background:#020617;
-color:#e2e8f0;
-overflow:hidden;
+
+background:radial-gradient(circle at 20% 20%,#1e1b4b,#020617 60%);
+color:#e5e7eb;
+
 }
 
 /* estrellas */
@@ -51,62 +63,85 @@ left:0;
 width:100%;
 height:100%;
 
-background-image:
-radial-gradient(white 1px,transparent 1px);
+background-image:radial-gradient(white 1px,transparent 1px);
 
 background-size:3px 3px;
 
 opacity:.2;
 
-animation:starsMove 60s linear infinite;
+animation:stars 70s linear infinite;
 
 }
 
-@keyframes starsMove{
+@keyframes stars{
 
 from{transform:translateY(0);}
 to{transform:translateY(-2000px);}
 
 }
 
-/* tarjetas */
+/* tarjeta */
 
 .card{
-background:rgba(255,255,255,.25);
-backdrop-filter:blur(14px);
-border-radius:14px;
-box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+background:rgba(255,255,255,.18);
+
+backdrop-filter:blur(18px);
+
+border-radius:18px;
+
+box-shadow:0 15px 40px rgba(0,0,0,.15);
+
+padding:24px;
+
 }
 
-/* animación tareas */
-
-.task-enter{
-opacity:0;
-transform:translateY(8px);
-animation:fadeTask .3s ease forwards;
-}
-
-@keyframes fadeTask{
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-
-/* hover botones */
+/* botones */
 
 button{
-transition:all .2s ease;
+
+background:#8b5cf6;
+
+color:white;
+
+padding:8px 16px;
+
+border-radius:10px;
+
+transition:all .25s ease;
+
 }
 
 button:hover{
+
 transform:translateY(-2px) scale(1.05);
-box-shadow:0 6px 14px rgba(0,0,0,.15);
+
+box-shadow:0 6px 18px rgba(0,0,0,.2);
+
+}
+
+/* tareas */
+
+.task{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+padding:10px;
+
+border-radius:10px;
+
+background:rgba(255,255,255,.3);
+
 }
 
 .completed{
+
 text-decoration:line-through;
+
 opacity:.5;
+
 }
 
 </style>
@@ -121,13 +156,13 @@ opacity:.5;
 
 <div class="w-full max-w-xl space-y-6">
 
-<h1 class="text-4xl font-bold text-center">TaskFlow</h1>
+<h1 class="text-4xl font-bold text-center">
+TaskFlow
+</h1>
 
-<!-- Crear tarea -->
+<!-- crear tarea -->
 
-<div class="card p-6 space-y-4">
-
-<h2 class="font-semibold text-lg">Nueva tarea</h2>
+<div class="card space-y-4">
 
 <input
 id="taskInput"
@@ -137,15 +172,15 @@ class="w-full p-2 rounded-lg border"
 
 <div class="flex gap-2 flex-wrap">
 
-<button onclick="addTask()" class="bg-blue-500 text-white px-4 py-2 rounded-lg">
+<button onclick="addTask()">
 Añadir
 </button>
 
-<button onclick="completeAll()" class="bg-green-500 text-white px-4 py-2 rounded-lg">
+<button onclick="completeAll()">
 Completar todas
 </button>
 
-<button onclick="deleteCompleted()" class="bg-red-500 text-white px-4 py-2 rounded-lg">
+<button onclick="deleteCompleted()">
 Borrar completadas
 </button>
 
@@ -155,7 +190,7 @@ Borrar completadas
 
 <!-- lista -->
 
-<div class="card p-6 space-y-4">
+<div class="card space-y-4">
 
 <div class="flex gap-2">
 
@@ -165,7 +200,7 @@ placeholder="Buscar tarea..."
 class="flex-1 p-2 rounded-lg border"
 />
 
-<button onclick="sortTasks()" class="bg-indigo-500 text-white px-4 py-2 rounded-lg">
+<button onclick="sortTasks()">
 Ordenar
 </button>
 
@@ -173,24 +208,16 @@ Ordenar
 
 <div class="flex gap-2">
 
-<button onclick="setFilter('all')" class="bg-gray-300 px-3 py-1 rounded">
-Todas
-</button>
-
-<button onclick="setFilter('pending')" class="bg-yellow-300 px-3 py-1 rounded">
-Pendientes
-</button>
-
-<button onclick="setFilter('completed')" class="bg-green-300 px-3 py-1 rounded">
-Completadas
-</button>
+<button onclick="setFilter('all')">Todas</button>
+<button onclick="setFilter('pending')">Pendientes</button>
+<button onclick="setFilter('completed')">Completadas</button>
 
 </div>
 
 <div id="stats" class="text-sm opacity-70"></div>
 
 <div class="w-full bg-gray-300 rounded-full h-2 overflow-hidden">
-<div id="progressBar" class="bg-green-500 h-full"></div>
+<div id="progressBar" class="bg-purple-500 h-full"></div>
 </div>
 
 <div id="taskList" class="space-y-3"></div>
@@ -271,7 +298,7 @@ filtered.forEach(task=>{
 
 const div=document.createElement("div");
 
-div.className="task-enter flex justify-between items-center p-3 rounded bg-white/60";
+div.className="task";
 
 if(task.completed)
 div.classList.add("completed");
@@ -283,9 +310,7 @@ div.innerHTML=`
 <div class="flex gap-2">
 
 <button onclick="toggleTask(${task.id})">✔</button>
-
-<button onclick="editTask(${task.id})">✏️</button>
-
+<button onclick="editTask(${task.id})">✏</button>
 <button onclick="deleteTask(${task.id})">🗑</button>
 
 </div>
