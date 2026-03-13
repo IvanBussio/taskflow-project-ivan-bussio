@@ -12,6 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
+
 body{
 font-family:'Poppins',sans-serif;
 }
@@ -32,17 +33,21 @@ background:#0f172a;
 
 <!-- HEADER -->
 
-<div class="flex justify-between items-center w-full max-w-md mb-8">
+<div class="flex justify-between items-center w-full max-w-md mb-6">
 
-<h1 class="text-4xl font-semibold">TaskFlow</h1>
+<h1 class="text-4xl font-semibold">
+TaskFlow
+</h1>
 
 <button id="modeBtn" class="text-2xl">
-☀️
+🌙
 </button>
 
 </div>
 
-<p class="mb-6 text-lg opacity-80">Bienvenido a TaskFlow</p>
+<p class="mb-6 opacity-80">
+Bienvenido a TaskFlow
+</p>
 
 <!-- ADD TASK -->
 
@@ -66,19 +71,25 @@ Añadir tarea
 
 <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 w-full max-w-md">
 
-<div class="flex gap-2 mb-4">
+<!-- SEARCH -->
+
+<div class="flex gap-2 mb-4 w-full">
 
 <input
 id="searchInput"
 placeholder="Buscar tarea..."
-class="flex-1 p-2 rounded-lg text-black"
+class="flex-1 min-w-0 p-2 rounded-lg text-black"
 />
 
-<button id="sortBtn" class="bg-white text-black px-3 rounded-lg">
+<button
+id="sortBtn"
+class="shrink-0 bg-white text-black px-4 rounded-lg">
 Ordenar
 </button>
 
 </div>
+
+<!-- FILTER BUTTONS -->
 
 <div class="flex gap-2 mb-4">
 
@@ -106,122 +117,171 @@ Completadas 0 de 0
 
 <script>
 
-let tasks=[]
+let tasks = JSON.parse(localStorage.getItem("tasks")) || []
 
-const input=document.getElementById("taskInput")
-const addBtn=document.getElementById("addBtn")
-const list=document.getElementById("taskList")
-const counter=document.getElementById("counter")
-const search=document.getElementById("searchInput")
+const input = document.getElementById("taskInput")
+const list = document.getElementById("taskList")
+const counter = document.getElementById("counter")
+const search = document.getElementById("searchInput")
 
-let filter="all"
+let filter = "all"
+
+function save(){
+
+localStorage.setItem("tasks",JSON.stringify(tasks))
+
+}
 
 function render(){
 
 list.innerHTML=""
 
-let filtered=tasks.filter(t=>{
+let filtered = tasks.filter(t=>{
+
 if(filter==="pending") return !t.done
 if(filter==="done") return t.done
 return true
+
 })
 
-filtered=filtered.filter(t=>t.text.toLowerCase().includes(search.value.toLowerCase()))
+filtered = filtered.filter(t=>
+t.text.toLowerCase().includes(search.value.toLowerCase())
+)
 
 filtered.forEach((task,index)=>{
 
-const li=document.createElement("li")
+const li = document.createElement("li")
 
 li.className="flex justify-between items-center bg-white text-black p-3 rounded-xl"
 
-li.innerHTML=`
+li.innerHTML = `
+
+<div class="flex items-center gap-3">
+
+<button class="check bg-green-500 text-white px-3 py-1 rounded">
+✔
+</button>
+
 <span class="${task.done ? 'line-through opacity-50':''}">
 ${task.text}
 </span>
 
-<button class="bg-green-500 text-white px-3 py-1 rounded">
-✔
+</div>
+
+<button class="delete text-red-500">
+✖
 </button>
+
 `
 
-li.querySelector("button").onclick=()=>{
+li.querySelector(".check").onclick=()=>{
+
 task.done=!task.done
+save()
 render()
+
+}
+
+li.querySelector(".delete").onclick=()=>{
+
+tasks.splice(index,1)
+save()
+render()
+
 }
 
 list.appendChild(li)
 
 })
 
-const doneCount=tasks.filter(t=>t.done).length
+const doneCount = tasks.filter(t=>t.done).length
 
-counter.innerText=`Completadas ${doneCount} de ${tasks.length}`
+counter.innerText = `Completadas ${doneCount} de ${tasks.length}`
 
 }
 
-addBtn.onclick=()=>{
+document.getElementById("addBtn").onclick=()=>{
 
 if(input.value.trim()==="") return
 
 tasks.push({
+
 text:input.value,
 done:false
+
 })
 
 input.value=""
 
+save()
+render()
+
+}
+
+document.getElementById("sortBtn").onclick=()=>{
+
+tasks.sort((a,b)=>a.text.localeCompare(b.text))
+save()
 render()
 
 }
 
 document.getElementById("allBtn").onclick=()=>{
+
 filter="all"
 render()
+
 }
 
 document.getElementById("pendingBtn").onclick=()=>{
+
 filter="pending"
 render()
+
 }
 
 document.getElementById("doneBtn").onclick=()=>{
+
 filter="done"
 render()
+
 }
 
-search.oninput=render
+search.oninput = render
 
-document.getElementById("sortBtn").onclick=()=>{
-tasks.sort((a,b)=>a.text.localeCompare(b.text))
-render()
-}
+const modeBtn = document.getElementById("modeBtn")
 
-const modeBtn=document.getElementById("modeBtn")
+let dark = localStorage.getItem("dark") === "true"
 
-let dark=false
-
-modeBtn.onclick=()=>{
-
-dark=!dark
+function applyMode(){
 
 if(dark){
 
 document.body.classList.remove("gradient")
 document.body.classList.add("darkmode")
-
-modeBtn.innerText="🌙"
+modeBtn.innerText="☀️"
 
 }else{
 
 document.body.classList.add("gradient")
 document.body.classList.remove("darkmode")
-
-modeBtn.innerText="☀️"
-
-}
+modeBtn.innerText="🌙"
 
 }
 
+}
+
+modeBtn.onclick=()=>{
+
+dark=!dark
+
+localStorage.setItem("dark",dark)
+
+applyMode()
+
+}
+
+applyMode()
 render()
 
 </script>
