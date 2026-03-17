@@ -1,155 +1,130 @@
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 let filter = "all";
 
-function save(){
-localStorage.setItem("tasks",JSON.stringify(tasks));
+const taskList = document.getElementById("taskList");
+const stats = document.getElementById("stats");
+const progressBar = document.getElementById("progressBar");
+
+// GUARDAR
+function saveTasks() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-function addTask(){
+// RENDER
+function renderTasks() {
+  taskList.innerHTML = "";
 
-const input=document.getElementById("taskInput");
-const title=input.value.trim();
+  let filtered = tasks.filter(t => {
+    if (filter === "pending") return !t.done;
+    if (filter === "completed") return t.done;
+    return true;
+  });
 
-if(!title) return;
+  const search = document.getElementById("search").value.toLowerCase();
 
-tasks.push({
-id:Date.now(),
-title:title,
-completed:false
-});
+  filtered = filtered.filter(t => t.text.toLowerCase().includes(search));
 
-input.value="";
+  filtered.forEach((task, index) => {
+    const div = document.createElement("div");
+    div.className = "task";
 
-save();
-render();
+    div.innerHTML = `
+      <span style="${task.done ? 'text-decoration:line-through;opacity:.6' : ''}">
+        ${task.text}
+      </span>
+      <div class="flex gap-2">
+        <button onclick="toggleTask(${index})">✔</button>
+        <button onclick="deleteTask(${index})">🗑</button>
+      </div>
+    `;
 
+    taskList.appendChild(div);
+  });
+
+  updateStats();
 }
 
-function render(){
+// AÑADIR
+function addTask() {
+  const input = document.getElementById("taskInput");
 
-const list=document.getElementById("taskList");
-list.innerHTML="";
+  if (input.value.trim() === "") return;
 
-let filtered=[...tasks];
+  tasks.push({ text: input.value, done: false });
+  input.value = "";
 
-if(filter==="completed") filtered=tasks.filter(t=>t.completed);
-if(filter==="pending") filtered=tasks.filter(t=>!t.completed);
-
-const search=document.getElementById("search").value.toLowerCase();
-
-filtered=filtered.filter(t=>t.title.toLowerCase().includes(search));
-
-filtered.forEach(task=>{
-
-const div=document.createElement("div");
-div.className="task";
-
-const text=document.createElement("span");
-text.textContent=task.title;
-
-if(task.completed){
-text.style.textDecoration="line-through";
-text.style.opacity=".6";
+  saveTasks();
+  renderTasks();
 }
 
-const actions=document.createElement("div");
-actions.className="flex gap-2";
+// TOGGLE
+function toggleTask(index) {
+  tasks[index].done = !tasks[index].done;
+  saveTasks();
+  renderTasks();
+}
 
-const done=document.createElement("button");
-done.textContent="✔";
-done.className="btn";
+// BORRAR
+function deleteTask(index) {
+  tasks.splice(index, 1);
+  saveTasks();
+  renderTasks();
+}
 
-done.onclick=()=>{
-task.completed=!task.completed;
-save();
-render();
+// COMPLETAR TODAS
+function completeAll() {
+  tasks.forEach(t => t.done = true);
+  saveTasks();
+  renderTasks();
+}
+
+// BORRAR COMPLETADAS
+function deleteCompleted() {
+  tasks = tasks.filter(t => !t.done);
+  saveTasks();
+  renderTasks();
+}
+
+// FILTRO
+function setFilter(f) {
+  filter = f;
+  renderTasks();
+}
+
+// ORDENAR
+function sortTasks() {
+  tasks.sort((a, b) => a.done - b.done);
+  renderTasks();
+}
+
+// STATS + PROGRESO
+function updateStats() {
+  const total = tasks.length;
+  const completed = tasks.filter(t => t.done).length;
+
+  stats.innerText = `${completed} de ${total} completadas`;
+
+  const percent = total ? (completed / total) * 100 : 0;
+  progressBar.style.width = percent + "%";
+}
+
+// MODAL
+function openWelcome() {
+  document.getElementById("welcomeModal").classList.remove("hidden");
+}
+
+function closeWelcome() {
+  document.getElementById("welcomeModal").classList.add("hidden");
+}
+
+// MODO OSCURO
+document.getElementById("themeToggle").onclick = () => {
+  document.body.classList.toggle("dark");
+  document.body.classList.toggle("light");
 };
 
-const edit=document.createElement("button");
-edit.textContent="✏";
-edit.className="btn";
+// BUSCADOR
+document.getElementById("search").addEventListener("input", renderTasks);
 
-edit.onclick=()=>{
-const newTitle=prompt("Editar tarea",task.title);
-if(newTitle){
-task.title=newTitle;
-save();
-render();
-}
-};
-
-const del=document.createElement("button");
-del.textContent="🗑";
-del.className="btn";
-
-del.onclick=()=>{
-tasks=tasks.filter(t=>t.id!==task.id);
-save();
-render();
-};
-
-actions.append(done,edit,del);
-div.append(text,actions);
-list.appendChild(div);
-
-});
-
-updateStats();
-
-}
-
-function updateStats(){
-
-const total=tasks.length;
-const completed=tasks.filter(t=>t.completed).length;
-
-document.getElementById("stats").textContent=`Completadas ${completed} de ${total}`;
-
-const percent=total?completed/total*100:0;
-
-document.getElementById("progressBar").style.width=percent+"%";
-
-}
-
-function setFilter(type){
-filter=type;
-render();
-}
-
-document.getElementById("search").addEventListener("input",render);
-
-function sortTasks(){
-tasks.sort((a,b)=>a.title.localeCompare(b.title));
-save();
-render();
-}
-
-function completeAll(){
-tasks.forEach(t=>t.completed=true);
-save();
-render();
-}
-
-function deleteCompleted(){
-tasks=tasks.filter(t=>!t.completed);
-save();
-render();
-}
-
-const toggle=document.getElementById("themeToggle");
-
-toggle.onclick=()=>{
-document.body.classList.toggle("dark");
-document.body.classList.toggle("light");
-toggle.textContent=document.body.classList.contains("dark")?"☀":"🌙";
-};
-
-function openWelcome(){
-document.getElementById("welcomeModal").classList.remove("hidden");
-}
-
-function closeWelcome(){
-document.getElementById("welcomeModal").classList.add("hidden");
-}
-
-render();
+// INIT
+renderTasks();
