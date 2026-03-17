@@ -123,6 +123,9 @@ justify-content:center;
 background:white;
 padding:40px;
 border-radius:20px;
+max-width:500px;
+text-align:center;
+animation:fadeIn .25s ease;
 }
 
 .dark .modal-box{
@@ -187,6 +190,31 @@ to{opacity:1;transform:translateY(0);}
 </div>
 
 <div id="taskList"></div>
+
+</div>
+
+<!-- MODAL INFO -->
+<div id="welcomeModal" class="modal hidden">
+
+<div class="modal-box">
+
+<h2 class="text-3xl mb-4 font-semibold">Bienvenido a TaskFlow</h2>
+
+<p class="mb-4 text-sm opacity-80">
+TaskFlow es una app simple pero potente para organizar tu día.
+Podés crear tareas, agruparlas por categorías y seguir tu progreso en tiempo real.
+</p>
+
+<p class="mb-4 text-sm opacity-80">
+Diseñada para ser rápida, clara y sin distracciones.
+Todo lo que necesitás para ser más productivo, en un solo lugar.
+</p>
+
+<button onclick="closeWelcome()" class="btn mt-4">
+Entendido
+</button>
+
+</div>
 
 </div>
 
