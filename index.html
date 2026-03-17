@@ -1,77 +1,69 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TaskFlow</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TaskFlow</title>
 
-  <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com"></script>
 
-  <style>
-    body {
-      transition: background 0.3s, color 0.3s;
-    }
+<style>
+body {
+  transition: background 0.3s, color 0.3s;
+}
 
-    .dark-mode {
-      background: linear-gradient(135deg, #020617, #0f172a);
-      color: #e5e7eb;
-    }
+/* 🌙 DARK MODE REAL */
+.dark {
+  background: linear-gradient(135deg,#020617,#0f172a);
+  color: #e5e7eb;
+}
 
-    .dark-card {
-      background: rgba(30, 41, 59, 0.7) !important;
-      backdrop-filter: blur(10px);
-      color: white;
-    }
+/* CARD */
+.card {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px);
+}
+.dark .card {
+  background: rgba(30,41,59,0.7);
+}
 
-    .dark-input {
-      background: #1e293b;
-      color: white;
-      border: 1px solid #334155;
-    }
+/* INPUT */
+.dark input, .dark select {
+  background:#1e293b;
+  color:white;
+  border:1px solid #334155;
+}
 
-    #fondoNotas {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      overflow: hidden;
-    }
+/* ✨ ANIMACIÓN SUAVE */
+.task {
+  transition: all 0.25s ease;
+}
+.task:hover {
+  transform: scale(1.02);
+}
 
-    .nota {
-      position: absolute;
-      width: 80px;
-      height: 80px;
-      border-radius: 14px;
-      opacity: 0.25;
-      animation: flotar 20s linear infinite;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    }
-
-    @keyframes flotar {
-      0% { transform: translateY(100vh); }
-      100% { transform: translateY(-10vh); }
-    }
-
-    #splash {
-      transition: opacity 0.5s;
-    }
-  </style>
+/* 🌈 FONDO SUAVE (NO CUTRE) */
+body::before {
+  content:"";
+  position:fixed;
+  inset:0;
+  background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.3), transparent),
+              radial-gradient(circle at 80% 80%, rgba(255,255,255,0.2), transparent);
+  z-index:-1;
+}
+</style>
 </head>
 
-<body id="body" class="min-h-screen bg-gradient-to-r from-pink-300 to-blue-300 p-4">
+<body id="body" class="bg-gradient-to-r from-pink-300 to-blue-300 p-4">
 
-<div id="splash" class="fixed inset-0 flex items-center justify-center bg-black text-white z-50">
-  <h1 class="text-3xl font-bold">TaskFlow</h1>
-</div>
-
-<div id="fondoNotas"></div>
-
-<div class="max-w-md mx-auto bg-white/30 backdrop-blur-lg p-4 rounded-xl shadow-lg">
+<div class="max-w-md mx-auto card p-4 rounded-xl shadow">
 
   <!-- HEADER -->
-  <div class="flex justify-between mb-3">
+  <div class="flex justify-between items-center mb-3">
     <h1 class="text-xl font-bold">TaskFlow</h1>
     <div class="flex gap-2">
-      <button id="btnModo">🌙</button>
+      <button id="infoBtn">ℹ️</button>
+      <button id="modoBtn">🌙</button>
     </div>
   </div>
 
@@ -81,235 +73,150 @@
   <!-- INPUT -->
   <input id="inputTarea" placeholder="Nueva tarea..." class="w-full p-2 mb-2 border rounded">
 
+  <!-- BOTONES -->
   <div class="flex gap-2 mb-2">
-    <input id="inputCategoria" placeholder="Categoría..." class="flex-1 p-2 border rounded">
-    <button id="btnAgregarCat" class="bg-green-500 text-white px-3">+</button>
-  </div>
-
-  <select id="selectCategorias" class="w-full p-2 border rounded mb-2">
-    <option value="">Seleccionar categoría</option>
-  </select>
-
-  <div id="chips" class="flex gap-2 flex-wrap mb-2"></div>
-
-  <div class="flex gap-2 mb-2">
-    <button id="btnAgregarTarea" class="bg-blue-500 text-white px-3">Añadir</button>
-    <button id="btnOrdenar" class="bg-purple-500 text-white px-3">Ordenar</button>
+    <button id="addBtn" class="bg-blue-500 text-white px-3 py-1 rounded">Añadir</button>
+    <button id="ordenBtn" class="bg-purple-500 text-white px-3 py-1 rounded">Ordenar</button>
   </div>
 
   <!-- STATS -->
   <div id="stats" class="flex justify-between text-sm mb-2"></div>
 
-  <div id="listaTareas"></div>
+  <!-- LISTA -->
+  <div id="lista"></div>
 
 </div>
 
+<!-- MODAL INFO -->
+<div id="modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center">
+  <div class="bg-white p-4 rounded">
+    <p>TaskFlow - Gestor de tareas</p>
+    <button onclick="cerrarModal()">Cerrar</button>
+  </div>
+</div>
+
 <script>
-let categorias = [];
 let tareas = [];
-let categoriasSeleccionadas = [];
-let filtroBusqueda = "";
-let darkMode = false;
-let ordenAsc = true;
+let filtro = "";
+let dark = false;
+let asc = true;
 
 // INIT
 window.onload = () => {
-  cargarDatos();
-  generarNotas();
-  setTimeout(() => document.getElementById("splash").style.opacity = "0", 1000);
+  cargar();
+  render();
 };
 
 // STORAGE
-function cargarDatos() {
-  categorias = JSON.parse(localStorage.getItem("categorias")) || [];
+function cargar(){
   tareas = JSON.parse(localStorage.getItem("tareas")) || [];
-  darkMode = JSON.parse(localStorage.getItem("darkMode")) || false;
-
-  renderCategorias();
-  renderTareas();
+  dark = JSON.parse(localStorage.getItem("dark")) || false;
   aplicarModo();
 }
 
-function guardar() {
-  localStorage.setItem("categorias", JSON.stringify(categorias));
+function guardar(){
   localStorage.setItem("tareas", JSON.stringify(tareas));
-  localStorage.setItem("darkMode", JSON.stringify(darkMode));
+  localStorage.setItem("dark", JSON.stringify(dark));
 }
 
-// CATEGORIAS
-function agregarCategoria() {
-  const input = document.getElementById("inputCategoria");
-  const nombre = input.value.trim();
-  if (!nombre) return;
+// AGREGAR
+function agregar(){
+  let txt = inputTarea.value.trim();
+  if(!txt) return;
 
-  categorias.push(nombre);
-  input.value = "";
+  tareas.push({texto:txt, completada:false});
+  inputTarea.value="";
   guardar();
-  renderCategorias();
+  render();
 }
 
-function renderCategorias() {
-  const select = document.getElementById("selectCategorias");
-  select.innerHTML = `<option value="">Seleccionar categoría</option>`;
-
-  categorias.forEach(cat => {
-    const opt = document.createElement("option");
-    opt.value = cat;
-    opt.textContent = cat;
-    select.appendChild(opt);
-  });
-}
-
-selectCategorias.onchange = (e) => {
-  if (!categoriasSeleccionadas.includes(e.target.value))
-    categoriasSeleccionadas.push(e.target.value);
-  renderChips();
-};
-
-function renderChips() {
-  chips.innerHTML = "";
-  categoriasSeleccionadas.forEach(cat => {
-    chips.innerHTML += `<span class="bg-orange-500 text-white px-2 rounded">${cat}</span>`;
-  });
-}
-
-// TAREAS
-function agregarTarea() {
-  const texto = inputTarea.value.trim();
-  if (!texto) return;
-
-  tareas.push({
-    texto,
-    categorias: [...categoriasSeleccionadas],
-    completada: false,
-    favorita: false
-  });
-
-  inputTarea.value = "";
-  categoriasSeleccionadas = [];
-
-  guardar();
-  renderTareas();
-}
-
-function toggleTarea(i) {
+// TOGGLE
+function toggle(i){
   tareas[i].completada = !tareas[i].completada;
-  sonido();
   guardar();
-  renderTareas();
+  render();
 }
 
-function toggleFavorita(i) {
-  tareas[i].favorita = !tareas[i].favorita;
+// ELIMINAR
+function eliminar(i){
+  tareas.splice(i,1);
   guardar();
-  renderTareas();
-}
-
-function eliminarTarea(i) {
-  tareas.splice(i, 1);
-  guardar();
-  renderTareas();
+  render();
 }
 
 // RENDER
-function renderTareas() {
-  let lista = document.getElementById("listaTareas");
+function render(){
+  let lista = document.getElementById("lista");
 
   let filtradas = tareas.filter(t =>
-    t.texto.toLowerCase().includes(filtroBusqueda)
+    t.texto.toLowerCase().includes(filtro)
   );
 
-  lista.innerHTML = "";
+  lista.innerHTML="";
 
-  filtradas.forEach(t => {
+  filtradas.forEach(t=>{
     let i = tareas.indexOf(t);
 
     let div = document.createElement("div");
-    div.className = "bg-white p-2 mb-2 rounded flex justify-between";
+    div.className="task bg-white p-2 mb-2 rounded flex justify-between";
 
-    if (darkMode) div.classList.add("dark-card");
-
-    div.innerHTML = `
+    div.innerHTML=`
+      <span class="${t.completada?'line-through':''}">${t.texto}</span>
       <div>
-        <p>${t.texto}</p>
-        ${t.categorias.map(c => `<span class="text-xs">${c}</span>`).join("")}
-      </div>
-      <div>
-        <button onclick="toggleFavorita(${i})">${t.favorita ? "⭐" : "☆"}</button>
-        <input type="checkbox" ${t.completada ? "checked":""} onchange="toggleTarea(${i})">
+        <input type="checkbox" ${t.completada?"checked":""} onchange="toggle(${i})">
+        <button onclick="eliminar(${i})">🗑</button>
       </div>
     `;
-
-    // SWIPE
-    let startX = 0;
-    div.addEventListener("touchstart", e => startX = e.touches[0].clientX);
-    div.addEventListener("touchend", e => {
-      if (startX - e.changedTouches[0].clientX > 100) eliminarTarea(i);
-    });
 
     lista.appendChild(div);
   });
 
-  renderStats();
-}
-
-// STATS
-function renderStats() {
   stats.innerHTML = `
     <span>${tareas.length}</span>
     <span>✔ ${tareas.filter(t=>t.completada).length}</span>
-    <span>⭐ ${tareas.filter(t=>t.favorita).length}</span>
   `;
 }
 
 // BUSCAR
-buscador.oninput = (e) => {
-  filtroBusqueda = e.target.value.toLowerCase();
-  renderTareas();
+buscador.oninput = e=>{
+  filtro = e.target.value.toLowerCase();
+  render();
 };
 
 // ORDEN
-btnOrdenar.onclick = () => {
-  tareas.sort((a,b)=> ordenAsc ? a.texto.localeCompare(b.texto) : b.texto.localeCompare(a.texto));
-  ordenAsc = !ordenAsc;
-  renderTareas();
+ordenBtn.onclick = ()=>{
+  tareas.sort((a,b)=> asc ? a.texto.localeCompare(b.texto) : b.texto.localeCompare(a.texto));
+  asc = !asc;
+  render();
 };
 
-// DARK MODE
-btnModo.onclick = () => {
-  darkMode = !darkMode;
+// DARK MODE (FIX REAL)
+modoBtn.onclick = ()=>{
+  dark = !dark;
   guardar();
   aplicarModo();
 };
 
-function aplicarModo() {
-  body.classList.toggle("dark-mode", darkMode);
+function aplicarModo(){
+  document.body.classList.toggle("dark", dark);
 }
 
-// SONIDO
-function sonido() {
-  new Audio("https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3").play();
+// INFO
+infoBtn.onclick = ()=>{
+  modal.classList.remove("hidden");
+};
+
+function cerrarModal(){
+  modal.classList.add("hidden");
 }
 
-// FONDO
-function generarNotas() {
-  const fondo = document.getElementById("fondoNotas");
-  const colores = ["#fef08a","#bfdbfe","#fecaca","#bbf7d0","#e9d5ff"];
+// ENTER
+inputTarea.onkeydown = e=>{
+  if(e.key==="Enter") agregar();
+};
 
-  for (let i=0;i<15;i++){
-    let nota = document.createElement("div");
-    nota.className="nota";
-    nota.style.left=Math.random()*100+"vw";
-    nota.style.background=colores[Math.floor(Math.random()*colores.length)];
-    fondo.appendChild(nota);
-  }
-}
-
-// EVENTOS
-btnAgregarCat.onclick = agregarCategoria;
-btnAgregarTarea.onclick = agregarTarea;
-inputTarea.onkeydown = e => e.key==="Enter" && agregarTarea();
-inputCategoria.onkeydown = e => e.key==="Enter" && agregarCategoria();
+// BOTÓN
+addBtn.onclick = agregar;
 
 </script>
 
