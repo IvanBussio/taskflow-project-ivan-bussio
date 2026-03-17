@@ -83,7 +83,6 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 gap:10px;
-cursor:grab;
 }
 
 .dark .task{
@@ -97,6 +96,16 @@ font-weight:500;
 
 .dark .task span{
 color:white;
+}
+
+/* inputs FIX */
+input{
+color:#111827;
+}
+
+.dark input{
+color:white;
+background:rgba(30,41,59,.7);
 }
 
 /* progreso */
@@ -140,71 +149,49 @@ color:white;
 
 <body class="light min-h-screen flex flex-col items-center px-4 py-6">
 
-<!-- HEADER -->
 <header class="w-full max-w-5xl flex justify-between items-center mb-6">
 
-<h1 class="text-3xl sm:text-4xl font-semibold text-left">
+<h1 class="text-3xl sm:text-4xl font-semibold">
 TaskFlow
 </h1>
 
-<div class="flex items-center gap-2">
+<div class="flex gap-2">
 
-<button onclick="openWelcome()" class="btn px-3 py-1 text-sm">
-ℹ
-</button>
-
-<button id="themeToggle" class="btn px-3 py-1 text-sm">
-🌙
-</button>
+<button onclick="openWelcome()" class="btn px-3 py-1 text-sm">ℹ</button>
+<button id="themeToggle" class="btn px-3 py-1 text-sm">🌙</button>
 
 </div>
 
 </header>
 
-<!-- NUEVA TAREA -->
 <div class="glass w-full max-w-5xl mb-6">
 
 <h2 class="text-xl mb-3">Nueva tarea</h2>
 
-<input
-id="taskInput"
-placeholder="Escribe una tarea..."
-class="w-full p-2 rounded mb-3 text-gray-800 dark:text-white"
-/>
+<input id="taskInput" placeholder="Escribe una tarea..." class="w-full p-2 rounded mb-3"/>
 
 <div class="flex gap-2 flex-wrap">
-
 <button onclick="addTask()" class="btn">Añadir</button>
 <button onclick="completeAll()" class="btn">Completar todas</button>
 <button onclick="deleteCompleted()" class="btn">Borrar completadas</button>
-
 </div>
 
 </div>
 
-<!-- LISTA -->
 <div class="glass w-full max-w-5xl">
 
-<div class="flex flex-col sm:flex-row gap-2 mb-3 items-stretch">
+<div class="flex flex-col sm:flex-row gap-2 mb-3">
 
-<input
-id="search"
-placeholder="Buscar tarea..."
-class="flex-1 p-2 rounded text-gray-800 dark:text-white"
-/>
+<input id="search" placeholder="Buscar tarea..." class="flex-1 p-2 rounded"/>
 
-<button onclick="sortTasks()" class="btn w-full sm:w-auto">
-Ordenar
-</button>
+<button onclick="sortTasks()" class="btn">Ordenar</button>
 
 </div>
 
 <div class="flex gap-2 mb-2 flex-wrap">
-
 <button onclick="setFilter('all')" class="btn">Todas</button>
 <button onclick="setFilter('pending')" class="btn">Pendientes</button>
 <button onclick="setFilter('completed')" class="btn">Completadas</button>
-
 </div>
 
 <p id="stats" class="text-sm mb-2"></p>
@@ -217,30 +204,12 @@ Ordenar
 
 </div>
 
-<!-- MODAL -->
 <div id="welcomeModal" class="modal hidden">
-
 <div class="modal-box">
-
 <h2 class="text-3xl mb-4">Bienvenido a TaskFlow</h2>
-
-<p class="mb-4">
-TaskFlow te ayuda a organizar tus tareas de forma simple y visual.
-</p>
-
-<h3 class="text-xl mt-6 mb-2">Quiénes somos</h3>
-
-<p>
-Proyecto creado durante un bootcamp de desarrollo web para practicar
-JavaScript, diseño moderno y gestión de tareas.
-</p>
-
-<button onclick="closeWelcome()" class="btn mt-6">
-Cerrar
-</button>
-
+<p class="mb-4">Organiza tus tareas fácil y rápido.</p>
+<button onclick="closeWelcome()" class="btn mt-6">Cerrar</button>
 </div>
-
 </div>
 
 <script src="script.js"></script>
