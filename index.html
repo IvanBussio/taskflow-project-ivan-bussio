@@ -1,270 +1,219 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskFlow</title>
 
-<title>TaskFlow Pro</title>
-
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
-  padding: 20px;
-}
-
-/* CONTENEDOR */
-.container {
-  max-width: 400px;
-  margin: auto;
-  background: #ffffff40;
-  padding: 20px;
-  border-radius: 20px;
-  backdrop-filter: blur(10px);
-}
-
-/* INPUT CATEGORÍA */
-.categoria-input {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-
-.categoria-input input {
-  flex: 1;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  background: #eee;
-}
-
-.categoria-input button {
-  width: 45px;
-  height: 45px;
-  border-radius: 10px;
-  border: none;
-  background: #4CAF50;
-  color: white;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-/* SELECT */
-select {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  margin-bottom: 10px;
-}
-
-/* CATEGORÍAS VISUALES */
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 15px;
-}
-
-.tag {
-  background: #ff9800;
-  color: white;
-  padding: 6px 10px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.tag span {
-  cursor: pointer;
-}
-
-/* INPUT TAREA */
-input.tarea {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  margin-bottom: 10px;
-}
-
-/* BOTONES */
-button {
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  margin: 5px 5px 5px 0;
-  cursor: pointer;
-}
-
-.btn-add {
-  background: #2196F3;
-  color: white;
-}
-
-.btn-clear {
-  background: #f44336;
-  color: white;
-}
-
-/* LISTA */
-.task {
-  background: #ffffff80;
-  padding: 10px;
-  border-radius: 10px;
-  margin-bottom: 8px;
-  display: flex;
-  justify-content: space-between;
-}
-</style>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
+<body class="min-h-screen bg-gradient-to-r from-pink-300 to-blue-300 p-4">
 
-<div class="container">
+  <div class="max-w-md mx-auto bg-white/30 backdrop-blur-lg p-4 rounded-xl shadow-lg">
 
-<h2>Nueva tarea</h2>
+    <h1 class="text-2xl font-bold mb-4">Nueva tarea</h1>
 
-<input class="tarea" id="taskInput" placeholder="Escribe una tarea..." />
+    <!-- INPUT TAREA -->
+    <input id="inputTarea" type="text" placeholder="Escribe una tarea..."
+      class="w-full p-2 mb-3 rounded-lg border" />
 
-<!-- CATEGORÍA -->
-<div class="categoria-input">
-  <input type="text" id="newCategory" placeholder="Nueva categoría..." />
-  <button id="addCategoryBtn">+</button>
-</div>
+    <!-- INPUT CATEGORIA -->
+    <div class="flex gap-2 mb-3">
+      <input id="inputCategoria" type="text" placeholder="Nueva categoría..."
+        class="flex-1 p-2 rounded-lg border" />
+      <button id="btnAgregarCat" class="bg-green-500 text-white px-4 rounded-lg">+</button>
+    </div>
 
-<select id="categorySelect"></select>
+    <!-- SELECT -->
+    <select id="selectCategorias" class="w-full p-2 rounded-lg border mb-3">
+      <option value="">Seleccionar categoría</option>
+    </select>
 
-<div class="tags" id="tags"></div>
+    <!-- CHIPS -->
+    <div id="chips" class="flex flex-wrap gap-2 mb-3"></div>
 
-<button class="btn-add" onclick="addTask()">Añadir</button>
-<button class="btn-clear" onclick="clearTasks()">Borrar todo</button>
+    <!-- BOTONES -->
+    <div class="flex gap-2 mb-4">
+      <button id="btnAgregarTarea" class="bg-blue-500 text-white px-4 py-2 rounded-lg">
+        Añadir
+      </button>
 
-<hr>
+      <button id="btnBorrar" class="bg-red-500 text-white px-4 py-2 rounded-lg">
+        Borrar todo
+      </button>
+    </div>
 
-<div id="taskList"></div>
+    <hr class="mb-4">
 
-</div>
+    <!-- LISTA -->
+    <div id="listaTareas" class="space-y-2"></div>
 
-<script>
-let categories = JSON.parse(localStorage.getItem("categories")) || ["General"];
-let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+  </div>
 
-/* ===== CATEGORÍAS ===== */
+  <script>
+    let categorias = [];
+    let categoriasSeleccionadas = [];
+    let tareas = [];
 
-function renderCategories() {
-  const select = document.getElementById("categorySelect");
-  const tags = document.getElementById("tags");
-
-  select.innerHTML = "";
-  tags.innerHTML = "";
-
-  categories.forEach(cat => {
-    // SELECT
-    const option = document.createElement("option");
-    option.value = cat;
-    option.textContent = cat;
-    select.appendChild(option);
-
-    // TAG VISUAL
-    const tag = document.createElement("div");
-    tag.className = "tag";
-    tag.innerHTML = `${cat} <span onclick="deleteCategory('${cat}')">✖</span>`;
-    tags.appendChild(tag);
-  });
-
-  localStorage.setItem("categories", JSON.stringify(categories));
-}
-
-function addCategory() {
-  const input = document.getElementById("newCategory");
-  const value = input.value.trim();
-
-  if (!value) return;
-
-  if (categories.includes(value)) {
-    alert("Ya existe");
-    return;
-  }
-
-  categories.push(value);
-  input.value = "";
-  input.focus();
-
-  renderCategories();
-}
-
-function deleteCategory(cat) {
-  categories = categories.filter(c => c !== cat);
-  renderCategories();
-}
-
-/* ENTER PARA CATEGORÍA */
-document.getElementById("newCategory")
-  .addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      addCategory();
+    // 🔧 Normalizar (evita [object Object])
+    function normalizarCategorias(cats) {
+      return cats.map(cat =>
+        typeof cat === "string" ? { nombre: cat } : cat
+      );
     }
-  });
 
-/* BOTÓN + */
-document.getElementById("addCategoryBtn")
-  .addEventListener("click", addCategory);
+    function getNombre(cat) {
+      return typeof cat === "object" ? cat.nombre : cat;
+    }
 
+    // 📦 Cargar datos
+    function cargarDatos() {
+      const cats = JSON.parse(localStorage.getItem("categorias")) || [];
+      const tasks = JSON.parse(localStorage.getItem("tareas")) || [];
 
-/* ===== TAREAS ===== */
+      categorias = normalizarCategorias(cats);
+      tareas = tasks;
 
-function addTask() {
-  const input = document.getElementById("taskInput");
-  const category = document.getElementById("categorySelect").value;
+      renderCategorias();
+      renderTareas();
+    }
 
-  if (!input.value.trim()) return;
+    // 💾 Guardar
+    function guardar() {
+      localStorage.setItem("categorias", JSON.stringify(categorias));
+      localStorage.setItem("tareas", JSON.stringify(tareas));
+    }
 
-  tasks.push({
-    text: input.value,
-    category: category
-  });
+    // ➕ Agregar categoría
+    function agregarCategoria() {
+      const input = document.getElementById("inputCategoria");
+      const nombre = input.value.trim();
 
-  input.value = "";
+      if (!nombre) return;
 
-  renderTasks();
-}
+      if (categorias.some(c => getNombre(c) === nombre)) return;
 
-function renderTasks() {
-  const list = document.getElementById("taskList");
-  list.innerHTML = "";
+      categorias.push({ nombre });
+      input.value = "";
 
-  tasks.forEach((task, index) => {
-    const div = document.createElement("div");
-    div.className = "task";
+      guardar();
+      renderCategorias();
+    }
 
-    div.innerHTML = `
-      ${task.text} (${task.category})
-      <span onclick="deleteTask(${index})">🗑</span>
-    `;
+    // 🟠 Render categorías
+    function renderCategorias() {
+      const select = document.getElementById("selectCategorias");
+      select.innerHTML = `<option value="">Seleccionar categoría</option>`;
 
-    list.appendChild(div);
-  });
+      categorias.forEach(cat => {
+        const option = document.createElement("option");
+        option.value = getNombre(cat);
+        option.textContent = getNombre(cat);
+        select.appendChild(option);
+      });
+    }
 
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-}
+    // 🟠 Seleccionar categoría
+    document.getElementById("selectCategorias").addEventListener("change", (e) => {
+      const value = e.target.value;
+      if (!value) return;
 
-function deleteTask(index) {
-  tasks.splice(index, 1);
-  renderTasks();
-}
+      if (!categoriasSeleccionadas.includes(value)) {
+        categoriasSeleccionadas.push(value);
+        renderChips();
+      }
+    });
 
-function clearTasks() {
-  tasks = [];
-  renderTasks();
-}
+    // 🟠 Render chips
+    function renderChips() {
+      const container = document.getElementById("chips");
+      container.innerHTML = "";
 
-/* INIT */
-renderCategories();
-renderTasks();
-</script>
+      categoriasSeleccionadas.forEach(cat => {
+        const chip = document.createElement("div");
+        chip.className = "bg-orange-500 text-white px-3 py-1 rounded-lg flex items-center gap-2";
+        chip.innerHTML = `${cat} <button onclick="eliminarChip('${cat}')">✕</button>`;
+        container.appendChild(chip);
+      });
+    }
+
+    function eliminarChip(cat) {
+      categoriasSeleccionadas = categoriasSeleccionadas.filter(c => c !== cat);
+      renderChips();
+    }
+
+    // 🧹 Borrar chips
+    function borrarTodo() {
+      categoriasSeleccionadas = [];
+      renderChips();
+    }
+
+    // ✅ Agregar tarea
+    function agregarTarea() {
+      const input = document.getElementById("inputTarea");
+      const texto = input.value.trim();
+
+      if (!texto) return;
+
+      tareas.push({
+        texto,
+        categorias: [...categoriasSeleccionadas],
+        completada: false
+      });
+
+      input.value = "";
+      categoriasSeleccionadas = [];
+
+      guardar();
+      renderChips();
+      renderTareas();
+    }
+
+    // ✔️ Toggle tarea
+    function toggleTarea(index) {
+      tareas[index].completada = !tareas[index].completada;
+      guardar();
+      renderTareas();
+    }
+
+    // 📋 Render tareas
+    function renderTareas() {
+      const lista = document.getElementById("listaTareas");
+      lista.innerHTML = "";
+
+      tareas.forEach((t, i) => {
+        const div = document.createElement("div");
+        div.className = "bg-white p-3 rounded-lg shadow flex justify-between items-center";
+
+        div.innerHTML = `
+          <div>
+            <p class="${t.completada ? 'line-through text-gray-400' : ''}">
+              ${t.texto}
+            </p>
+            <div class="flex gap-1 mt-1 flex-wrap">
+              ${t.categorias.map(c => `<span class="text-xs bg-gray-200 px-2 rounded">${c}</span>`).join("")}
+            </div>
+          </div>
+          <input type="checkbox" ${t.completada ? "checked" : ""} onchange="toggleTarea(${i})"/>
+        `;
+
+        lista.appendChild(div);
+      });
+    }
+
+    // 🎯 Eventos
+    document.getElementById("btnAgregarCat").onclick = agregarCategoria;
+    document.getElementById("btnAgregarTarea").onclick = agregarTarea;
+    document.getElementById("btnBorrar").onclick = borrarTodo;
+
+    document.getElementById("inputCategoria").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") agregarCategoria();
+    });
+
+    // 🚀 Init
+    cargarDatos();
+  </script>
 
 </body>
 </html>
