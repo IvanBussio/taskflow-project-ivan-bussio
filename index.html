@@ -8,255 +8,310 @@
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
+    body {
+      transition: background 0.3s, color 0.3s;
+    }
+
     .dark-mode {
-      background: #111827;
+      background: linear-gradient(135deg, #020617, #0f172a);
+      color: #e5e7eb;
+    }
+
+    .dark-card {
+      background: rgba(30, 41, 59, 0.7) !important;
+      backdrop-filter: blur(10px);
       color: white;
+    }
+
+    .dark-input {
+      background: #1e293b;
+      color: white;
+      border: 1px solid #334155;
+    }
+
+    #fondoNotas {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .nota {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 14px;
+      opacity: 0.25;
+      animation: flotar 20s linear infinite;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    @keyframes flotar {
+      0% { transform: translateY(100vh); }
+      100% { transform: translateY(-10vh); }
+    }
+
+    #splash {
+      transition: opacity 0.5s;
     }
   </style>
 </head>
 
 <body id="body" class="min-h-screen bg-gradient-to-r from-pink-300 to-blue-300 p-4">
 
-  <div class="max-w-md mx-auto bg-white/30 backdrop-blur-lg p-4 rounded-xl shadow-lg">
+<div id="splash" class="fixed inset-0 flex items-center justify-center bg-black text-white z-50">
+  <h1 class="text-3xl font-bold">TaskFlow</h1>
+</div>
 
-    <!-- HEADER -->
-    <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold">TaskFlow</h1>
+<div id="fondoNotas"></div>
 
-      <div class="flex gap-2">
-        <button id="btnInfo" class="bg-gray-200 px-2 rounded">ℹ️</button>
-        <button id="btnModo" class="bg-gray-200 px-2 rounded">🌙</button>
+<div class="max-w-md mx-auto bg-white/30 backdrop-blur-lg p-4 rounded-xl shadow-lg">
+
+  <!-- HEADER -->
+  <div class="flex justify-between mb-3">
+    <h1 class="text-xl font-bold">TaskFlow</h1>
+    <div class="flex gap-2">
+      <button id="btnModo">🌙</button>
+    </div>
+  </div>
+
+  <!-- BUSCADOR -->
+  <input id="buscador" placeholder="Buscar..." class="w-full p-2 mb-2 border rounded">
+
+  <!-- INPUT -->
+  <input id="inputTarea" placeholder="Nueva tarea..." class="w-full p-2 mb-2 border rounded">
+
+  <div class="flex gap-2 mb-2">
+    <input id="inputCategoria" placeholder="Categoría..." class="flex-1 p-2 border rounded">
+    <button id="btnAgregarCat" class="bg-green-500 text-white px-3">+</button>
+  </div>
+
+  <select id="selectCategorias" class="w-full p-2 border rounded mb-2">
+    <option value="">Seleccionar categoría</option>
+  </select>
+
+  <div id="chips" class="flex gap-2 flex-wrap mb-2"></div>
+
+  <div class="flex gap-2 mb-2">
+    <button id="btnAgregarTarea" class="bg-blue-500 text-white px-3">Añadir</button>
+    <button id="btnOrdenar" class="bg-purple-500 text-white px-3">Ordenar</button>
+  </div>
+
+  <!-- STATS -->
+  <div id="stats" class="flex justify-between text-sm mb-2"></div>
+
+  <div id="listaTareas"></div>
+
+</div>
+
+<script>
+let categorias = [];
+let tareas = [];
+let categoriasSeleccionadas = [];
+let filtroBusqueda = "";
+let darkMode = false;
+let ordenAsc = true;
+
+// INIT
+window.onload = () => {
+  cargarDatos();
+  generarNotas();
+  setTimeout(() => document.getElementById("splash").style.opacity = "0", 1000);
+};
+
+// STORAGE
+function cargarDatos() {
+  categorias = JSON.parse(localStorage.getItem("categorias")) || [];
+  tareas = JSON.parse(localStorage.getItem("tareas")) || [];
+  darkMode = JSON.parse(localStorage.getItem("darkMode")) || false;
+
+  renderCategorias();
+  renderTareas();
+  aplicarModo();
+}
+
+function guardar() {
+  localStorage.setItem("categorias", JSON.stringify(categorias));
+  localStorage.setItem("tareas", JSON.stringify(tareas));
+  localStorage.setItem("darkMode", JSON.stringify(darkMode));
+}
+
+// CATEGORIAS
+function agregarCategoria() {
+  const input = document.getElementById("inputCategoria");
+  const nombre = input.value.trim();
+  if (!nombre) return;
+
+  categorias.push(nombre);
+  input.value = "";
+  guardar();
+  renderCategorias();
+}
+
+function renderCategorias() {
+  const select = document.getElementById("selectCategorias");
+  select.innerHTML = `<option value="">Seleccionar categoría</option>`;
+
+  categorias.forEach(cat => {
+    const opt = document.createElement("option");
+    opt.value = cat;
+    opt.textContent = cat;
+    select.appendChild(opt);
+  });
+}
+
+selectCategorias.onchange = (e) => {
+  if (!categoriasSeleccionadas.includes(e.target.value))
+    categoriasSeleccionadas.push(e.target.value);
+  renderChips();
+};
+
+function renderChips() {
+  chips.innerHTML = "";
+  categoriasSeleccionadas.forEach(cat => {
+    chips.innerHTML += `<span class="bg-orange-500 text-white px-2 rounded">${cat}</span>`;
+  });
+}
+
+// TAREAS
+function agregarTarea() {
+  const texto = inputTarea.value.trim();
+  if (!texto) return;
+
+  tareas.push({
+    texto,
+    categorias: [...categoriasSeleccionadas],
+    completada: false,
+    favorita: false
+  });
+
+  inputTarea.value = "";
+  categoriasSeleccionadas = [];
+
+  guardar();
+  renderTareas();
+}
+
+function toggleTarea(i) {
+  tareas[i].completada = !tareas[i].completada;
+  sonido();
+  guardar();
+  renderTareas();
+}
+
+function toggleFavorita(i) {
+  tareas[i].favorita = !tareas[i].favorita;
+  guardar();
+  renderTareas();
+}
+
+function eliminarTarea(i) {
+  tareas.splice(i, 1);
+  guardar();
+  renderTareas();
+}
+
+// RENDER
+function renderTareas() {
+  let lista = document.getElementById("listaTareas");
+
+  let filtradas = tareas.filter(t =>
+    t.texto.toLowerCase().includes(filtroBusqueda)
+  );
+
+  lista.innerHTML = "";
+
+  filtradas.forEach(t => {
+    let i = tareas.indexOf(t);
+
+    let div = document.createElement("div");
+    div.className = "bg-white p-2 mb-2 rounded flex justify-between";
+
+    if (darkMode) div.classList.add("dark-card");
+
+    div.innerHTML = `
+      <div>
+        <p>${t.texto}</p>
+        ${t.categorias.map(c => `<span class="text-xs">${c}</span>`).join("")}
       </div>
-    </div>
+      <div>
+        <button onclick="toggleFavorita(${i})">${t.favorita ? "⭐" : "☆"}</button>
+        <input type="checkbox" ${t.completada ? "checked":""} onchange="toggleTarea(${i})">
+      </div>
+    `;
 
-    <!-- INPUT TAREA -->
-    <input id="inputTarea" type="text" placeholder="Escribe una tarea..."
-      class="w-full p-2 mb-3 rounded-lg border" />
-
-    <!-- INPUT CATEGORIA -->
-    <div class="flex gap-2 mb-3">
-      <input id="inputCategoria" type="text" placeholder="Nueva categoría..."
-        class="flex-1 p-2 rounded-lg border" />
-      <button id="btnAgregarCat" class="bg-green-500 text-white px-4 rounded-lg">+</button>
-    </div>
-
-    <!-- SELECT -->
-    <select id="selectCategorias" class="w-full p-2 rounded-lg border mb-3">
-      <option value="">Seleccionar categoría</option>
-    </select>
-
-    <!-- CHIPS -->
-    <div id="chips" class="flex flex-wrap gap-2 mb-3"></div>
-
-    <!-- BOTONES -->
-    <div class="flex gap-2 mb-4">
-      <button id="btnAgregarTarea" class="bg-blue-500 text-white px-4 py-2 rounded-lg">
-        Añadir
-      </button>
-
-      <button id="btnBorrar" class="bg-red-500 text-white px-4 py-2 rounded-lg">
-        Borrar todo
-      </button>
-    </div>
-
-    <hr class="mb-4">
-
-    <!-- LISTA -->
-    <div id="listaTareas" class="space-y-2"></div>
-
-  </div>
-
-  <!-- MODAL INFO -->
-  <div id="modalInfo" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center">
-    <div class="bg-white p-4 rounded-lg max-w-sm">
-      <h2 class="text-lg font-bold mb-2">Sobre TaskFlow</h2>
-      <p>App para gestionar tareas con categorías.</p>
-      <button onclick="cerrarModal()" class="mt-3 bg-blue-500 text-white px-3 py-1 rounded">
-        Cerrar
-      </button>
-    </div>
-  </div>
-
-  <script>
-    let categorias = [];
-    let categoriasSeleccionadas = [];
-    let tareas = [];
-    let darkMode = false;
-
-    function normalizarCategorias(cats) {
-      return cats.map(cat =>
-        typeof cat === "string" ? { nombre: cat } : cat
-      );
-    }
-
-    function getNombre(cat) {
-      return typeof cat === "object" ? cat.nombre : cat;
-    }
-
-    function cargarDatos() {
-      categorias = normalizarCategorias(JSON.parse(localStorage.getItem("categorias")) || []);
-      tareas = JSON.parse(localStorage.getItem("tareas")) || [];
-      darkMode = JSON.parse(localStorage.getItem("darkMode")) || false;
-
-      aplicarModo();
-      renderCategorias();
-      renderTareas();
-    }
-
-    function guardar() {
-      localStorage.setItem("categorias", JSON.stringify(categorias));
-      localStorage.setItem("tareas", JSON.stringify(tareas));
-      localStorage.setItem("darkMode", JSON.stringify(darkMode));
-    }
-
-    function agregarCategoria() {
-      const input = document.getElementById("inputCategoria");
-      const nombre = input.value.trim();
-      if (!nombre) return;
-
-      if (categorias.some(c => getNombre(c) === nombre)) return;
-
-      categorias.push({ nombre });
-      input.value = "";
-      guardar();
-      renderCategorias();
-    }
-
-    function renderCategorias() {
-      const select = document.getElementById("selectCategorias");
-      select.innerHTML = `<option value="">Seleccionar categoría</option>`;
-
-      categorias.forEach(cat => {
-        const option = document.createElement("option");
-        option.value = getNombre(cat);
-        option.textContent = getNombre(cat);
-        select.appendChild(option);
-      });
-    }
-
-    document.getElementById("selectCategorias").addEventListener("change", (e) => {
-      const value = e.target.value;
-      if (!value) return;
-
-      if (!categoriasSeleccionadas.includes(value)) {
-        categoriasSeleccionadas.push(value);
-        renderChips();
-      }
+    // SWIPE
+    let startX = 0;
+    div.addEventListener("touchstart", e => startX = e.touches[0].clientX);
+    div.addEventListener("touchend", e => {
+      if (startX - e.changedTouches[0].clientX > 100) eliminarTarea(i);
     });
 
-    function renderChips() {
-      const container = document.getElementById("chips");
-      container.innerHTML = "";
+    lista.appendChild(div);
+  });
 
-      categoriasSeleccionadas.forEach(cat => {
-        const chip = document.createElement("div");
-        chip.className = "bg-orange-500 text-white px-3 py-1 rounded-lg flex items-center gap-2";
-        chip.innerHTML = `${cat} <button onclick="eliminarChip('${cat}')">✕</button>`;
-        container.appendChild(chip);
-      });
-    }
+  renderStats();
+}
 
-    function eliminarChip(cat) {
-      categoriasSeleccionadas = categoriasSeleccionadas.filter(c => c !== cat);
-      renderChips();
-    }
+// STATS
+function renderStats() {
+  stats.innerHTML = `
+    <span>${tareas.length}</span>
+    <span>✔ ${tareas.filter(t=>t.completada).length}</span>
+    <span>⭐ ${tareas.filter(t=>t.favorita).length}</span>
+  `;
+}
 
-    function borrarTodo() {
-      categoriasSeleccionadas = [];
-      renderChips();
-    }
+// BUSCAR
+buscador.oninput = (e) => {
+  filtroBusqueda = e.target.value.toLowerCase();
+  renderTareas();
+};
 
-    function agregarTarea() {
-      const input = document.getElementById("inputTarea");
-      const texto = input.value.trim();
-      if (!texto) return;
+// ORDEN
+btnOrdenar.onclick = () => {
+  tareas.sort((a,b)=> ordenAsc ? a.texto.localeCompare(b.texto) : b.texto.localeCompare(a.texto));
+  ordenAsc = !ordenAsc;
+  renderTareas();
+};
 
-      tareas.push({
-        texto,
-        categorias: [...categoriasSeleccionadas],
-        completada: false
-      });
+// DARK MODE
+btnModo.onclick = () => {
+  darkMode = !darkMode;
+  guardar();
+  aplicarModo();
+};
 
-      input.value = "";
-      categoriasSeleccionadas = [];
+function aplicarModo() {
+  body.classList.toggle("dark-mode", darkMode);
+}
 
-      guardar();
-      renderChips();
-      renderTareas();
-    }
+// SONIDO
+function sonido() {
+  new Audio("https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3").play();
+}
 
-    function toggleTarea(index) {
-      tareas[index].completada = !tareas[index].completada;
-      guardar();
-      renderTareas();
-    }
+// FONDO
+function generarNotas() {
+  const fondo = document.getElementById("fondoNotas");
+  const colores = ["#fef08a","#bfdbfe","#fecaca","#bbf7d0","#e9d5ff"];
 
-    function renderTareas() {
-      const lista = document.getElementById("listaTareas");
-      lista.innerHTML = "";
+  for (let i=0;i<15;i++){
+    let nota = document.createElement("div");
+    nota.className="nota";
+    nota.style.left=Math.random()*100+"vw";
+    nota.style.background=colores[Math.floor(Math.random()*colores.length)];
+    fondo.appendChild(nota);
+  }
+}
 
-      tareas.forEach((t, i) => {
-        const div = document.createElement("div");
-        div.className = "bg-white p-3 rounded-lg shadow flex justify-between items-center";
+// EVENTOS
+btnAgregarCat.onclick = agregarCategoria;
+btnAgregarTarea.onclick = agregarTarea;
+inputTarea.onkeydown = e => e.key==="Enter" && agregarTarea();
+inputCategoria.onkeydown = e => e.key==="Enter" && agregarCategoria();
 
-        div.innerHTML = `
-          <div>
-            <p class="${t.completada ? 'line-through text-gray-400' : ''}">
-              ${t.texto}
-            </p>
-            <div class="flex gap-1 mt-1 flex-wrap">
-              ${t.categorias.map(c => `<span class="text-xs bg-gray-200 px-2 rounded">${c}</span>`).join("")}
-            </div>
-          </div>
-          <input type="checkbox" ${t.completada ? "checked" : ""} onchange="toggleTarea(${i})"/>
-        `;
-
-        lista.appendChild(div);
-      });
-    }
-
-    // 🌙 Modo oscuro
-    function aplicarModo() {
-      const body = document.getElementById("body");
-      if (darkMode) {
-        body.classList.add("dark-mode");
-      } else {
-        body.classList.remove("dark-mode");
-      }
-    }
-
-    document.getElementById("btnModo").onclick = () => {
-      darkMode = !darkMode;
-      guardar();
-      aplicarModo();
-    };
-
-    // ℹ️ Modal
-    document.getElementById("btnInfo").onclick = () => {
-      document.getElementById("modalInfo").classList.remove("hidden");
-    };
-
-    function cerrarModal() {
-      document.getElementById("modalInfo").classList.add("hidden");
-    }
-
-    // ⌨️ ENTER
-    document.getElementById("inputCategoria").addEventListener("keydown", e => {
-      if (e.key === "Enter") agregarCategoria();
-    });
-
-    document.getElementById("inputTarea").addEventListener("keydown", e => {
-      if (e.key === "Enter") agregarTarea();
-    });
-
-    // 🎯 Eventos
-    document.getElementById("btnAgregarCat").onclick = agregarCategoria;
-    document.getElementById("btnAgregarTarea").onclick = agregarTarea;
-    document.getElementById("btnBorrar").onclick = borrarTodo;
-
-    // 🚀 Init
-    cargarDatos();
-  </script>
+</script>
 
 </body>
 </html>
