@@ -11,25 +11,26 @@
 
 <style>
 
+/* RESET */
 body{
-  font-family:'Poppins',sans-serif;
   margin:0;
-  transition:0.4s;
+  font-family:'Poppins',sans-serif;
+  transition:.4s;
 }
 
-/* 🌸 CLARO */
-body.light{
-  background: linear-gradient(270deg,#ffd6e0,#cde7ff,#ffd6e0);
-  background-size:400% 400%;
-  animation:bg 12s ease infinite;
-}
-
-/* 🌌 OSCURO */
+/* 🌌 DARK */
 body.dark{
-  background: linear-gradient(270deg,#0a0a0f,#2a0a4a,#0a0a0f);
+  background: linear-gradient(135deg,#0F0A1F,#1E0A3C,#2B0F5A);
   background-size:400% 400%;
   animation:bg 12s ease infinite;
-  color:white;
+  color:#E5E7EB;
+}
+
+/* 🌸 LIGHT */
+body.light{
+  background: linear-gradient(135deg,#FFD6E0,#E0F2FE);
+  background-size:400% 400%;
+  animation:bg 12s ease infinite;
 }
 
 @keyframes bg{
@@ -57,23 +58,23 @@ header{
 /* BOTONES */
 .btn{
   padding:10px 16px;
-  border-radius:10px;
+  border-radius:12px;
   border:none;
   cursor:pointer;
-  background:#2e2e2e;
+  background:#2A234A;
   color:white;
+  border:1px solid #3A2F6B;
   transition:.3s;
 }
 
 .btn:hover{
-  transform:scale(1.08);
-  background:#444;
+  transform:translateY(-2px);
+  background:#3A2F6B;
 }
 
 /* CONTENEDOR */
 .container{
-  width:100%;
-  max-width:1400px;
+  max-width:1500px;
   margin:auto;
   padding:0 40px;
 }
@@ -93,16 +94,16 @@ header{
 
 /* CARD */
 .card{
-  background:rgba(255,255,255,0.5);
+  background:rgba(28,21,51,0.8);
   padding:25px;
-  border-radius:18px;
+  border-radius:20px;
 }
 
-.dark .card{
-  background:rgba(30,30,60,0.6);
+body.light .card{
+  background:rgba(255,255,255,0.85);
 }
 
-/* INPUTS */
+/* INPUT */
 .input{
   width:100%;
   padding:16px;
@@ -121,16 +122,17 @@ header{
 
 .dashboard-card{
   flex:1;
-  padding:15px;
-  border-radius:14px;
-  color:white;
+  padding:18px;
+  border-radius:16px;
   text-align:center;
+  color:white;
   font-weight:600;
+  box-shadow:0 0 20px rgba(79,140,255,0.2);
 }
 
-.total{ background:#3b82f6; }
-.completed{ background:#10b981; }
-.pending{ background:#f59e0b; }
+.total{ background:#4F8CFF; }
+.completed{ background:#22C55E; }
+.pending{ background:#F59E0B; }
 
 /* TAREAS */
 .task{
@@ -139,19 +141,19 @@ header{
   padding:14px;
   border-radius:14px;
   margin-bottom:10px;
-  background:rgba(255,255,255,0.7);
+  background:#1C1533;
 }
 
-.dark .task{
-  background:#1e1e3f;
+body.light .task{
+  background:white;
 }
 
 .completed{
   text-decoration:line-through;
-  opacity:.6;
+  opacity:.5;
 }
 
-/* CHIPS */
+/* CATEGORIAS */
 .chip{
   padding:5px 12px;
   border-radius:10px;
@@ -159,11 +161,11 @@ header{
   color:white;
 }
 
-.cat-Trabajo{background:#3b82f6;}
-.cat-Personal{background:#10b981;}
-.cat-Compras{background:#f59e0b;}
-.cat-Estudio{background:#8b5cf6;}
-.cat-Gym{background:#ef4444;}
+.cat-Trabajo{background:#3B82F6;}
+.cat-Personal{background:#10B981;}
+.cat-Compras{background:#F59E0B;}
+.cat-Estudio{background:#8B5CF6;}
+.cat-Gym{background:#EF4444;}
 
 /* MODAL */
 .modal{
@@ -176,16 +178,16 @@ header{
 }
 
 .modal-box{
-  background:white;
+  background:#1C1533;
   padding:30px;
   border-radius:18px;
   max-width:450px;
   text-align:center;
 }
 
-.dark .modal-box{
-  background:#1e1e3f;
-  color:white;
+body.light .modal-box{
+  background:white;
+  color:black;
 }
 
 /* FOOTER */
@@ -200,7 +202,7 @@ footer{
 
 </head>
 
-<body class="light">
+<body class="dark">
 
 <header>
 
@@ -208,7 +210,7 @@ footer{
 
 <div>
 <button class="btn" onclick="openInfo()">i</button>
-<button class="btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+<button class="btn" onclick="toggleTheme()" id="themeBtn">☀️</button>
 </div>
 
 </header>
@@ -229,7 +231,6 @@ footer{
 <div>
 
 <div id="dashboard" class="dashboard"></div>
-
 <div id="taskList"></div>
 
 </div>
@@ -241,11 +242,10 @@ footer{
   <div class="modal-box">
     <h2>TaskFlow 🚀</h2>
     <p>
-      Gestiona tus tareas de forma inteligente.<br><br>
+      Organiza tus tareas con IA.<br><br>
       ✔ Categorías automáticas<br>
-      ✔ Orden rápido<br>
-      ✔ Diseño moderno<br><br>
-      Diseñado para productividad real.
+      ✔ Dashboard visual<br>
+      ✔ Diseño profesional<br>
     </p>
   </div>
 </div>
@@ -254,7 +254,7 @@ footer{
 <div id="welcome" class="modal" style="display:none">
   <div class="modal-box">
     <h2>Bienvenido 👋</h2>
-    <p>Organiza tu día como un pro.</p>
+    <p>Tu productividad empieza ahora.</p>
     <button class="btn" onclick="closeWelcome()">Entrar</button>
   </div>
 </div>
