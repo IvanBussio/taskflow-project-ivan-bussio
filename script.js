@@ -55,6 +55,23 @@ function render(){
 
     list.appendChild(div);
   });
+
+  renderDashboard();
+}
+
+/* dashboard */
+function renderDashboard(){
+  const container=document.getElementById("dashboard");
+
+  const total=tasks.length;
+  const completed=tasks.filter(t=>t.completed).length;
+  const pending=total-completed;
+
+  container.innerHTML=`
+    <div class="dashboard-card total">TOTAL<br>${total}</div>
+    <div class="dashboard-card completed">COMPLETADAS<br>${completed}</div>
+    <div class="dashboard-card pending">PENDIENTES<br>${pending}</div>
+  `;
 }
 
 /* ordenar */

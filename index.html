@@ -45,7 +45,6 @@ header{
   padding:20px 60px;
 }
 
-/* TITULO */
 .title{
   font-size:34px;
   font-weight:600;
@@ -71,7 +70,7 @@ header{
   background:#444;
 }
 
-/* CONTENEDOR 4K */
+/* CONTENEDOR */
 .container{
   width:100%;
   max-width:1400px;
@@ -112,6 +111,26 @@ header{
   margin-bottom:14px;
   box-sizing:border-box;
 }
+
+/* DASHBOARD */
+.dashboard{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.dashboard-card{
+  flex:1;
+  padding:15px;
+  border-radius:14px;
+  color:white;
+  text-align:center;
+  font-weight:600;
+}
+
+.total{ background:#3b82f6; }
+.completed{ background:#10b981; }
+.pending{ background:#f59e0b; }
 
 /* TAREAS */
 .task{
@@ -169,6 +188,14 @@ header{
   color:white;
 }
 
+/* FOOTER */
+footer{
+  margin-top:40px;
+  padding:20px;
+  text-align:center;
+  opacity:0.7;
+}
+
 </style>
 
 </head>
@@ -188,7 +215,6 @@ header{
 
 <main class="container layout">
 
-<!-- IZQUIERDA -->
 <div class="card">
 
 <input id="input" class="input" placeholder="Nueva tarea...">
@@ -200,8 +226,13 @@ header{
 
 </div>
 
-<!-- DERECHA -->
+<div>
+
+<div id="dashboard" class="dashboard"></div>
+
 <div id="taskList"></div>
+
+</div>
 
 </main>
 
@@ -213,8 +244,8 @@ header{
       Gestiona tus tareas de forma inteligente.<br><br>
       ✔ Categorías automáticas<br>
       ✔ Orden rápido<br>
-      ✔ Interfaz moderna<br><br>
-      Diseñada para productividad real.
+      ✔ Diseño moderno<br><br>
+      Diseñado para productividad real.
     </p>
   </div>
 </div>
@@ -223,10 +254,14 @@ header{
 <div id="welcome" class="modal" style="display:none">
   <div class="modal-box">
     <h2>Bienvenido 👋</h2>
-    <p>Empieza a organizar tu día como un pro.</p>
+    <p>Organiza tu día como un pro.</p>
     <button class="btn" onclick="closeWelcome()">Entrar</button>
   </div>
 </div>
+
+<footer>
+© 2026 TaskFlow — Ivan Bussio
+</footer>
 
 <script src="script.js"></script>
 
