@@ -6,13 +6,12 @@ function save(){
   localStorage.setItem("categories", JSON.stringify(categories));
 }
 
-/* IA SIMULADA */
+/* 🧠 IA MEJORADA */
 function suggestCategory(text){
   const base = ["Trabajo","Personal","Compras","Gym","Estudio","Salud"];
 
-  return base.filter(cat =>
-    cat.toLowerCase().includes(text.toLowerCase())
-  );
+  return [...new Set([...base, ...categories])]
+    .filter(cat => cat.toLowerCase().includes(text.toLowerCase()));
 }
 
 function renderSuggestions(){
@@ -22,9 +21,7 @@ function renderSuggestions(){
 
   if(!input) return;
 
-  const suggestions = suggestCategory(input);
-
-  suggestions.forEach(cat=>{
+  suggestCategory(input).forEach(cat=>{
     const div = document.createElement("div");
     div.innerText = cat;
     div.className = "cursor-pointer text-sm";
@@ -36,14 +33,15 @@ function renderSuggestions(){
   });
 }
 
-document.getElementById("categoryInput").addEventListener("input", renderSuggestions);
+document.getElementById("categoryInput")
+.addEventListener("input", renderSuggestions);
 
+/* tareas */
 function renderTasks(){
   const list = document.getElementById("taskList");
   list.innerHTML = "";
 
   tasks.forEach((task, index) => {
-
     const div = document.createElement("div");
     div.className = "task";
 
@@ -57,12 +55,6 @@ function renderTasks(){
 
     list.appendChild(div);
   });
-
-  document.getElementById("taskCount").innerText =
-    tasks.length + " tareas";
-
-  document.getElementById("progressBar").style.width =
-    tasks.length > 0 ? "100%" : "0%";
 }
 
 function addTask(){
@@ -84,8 +76,8 @@ function addTask(){
   renderTasks();
 }
 
-function deleteTask(index){
-  tasks.splice(index,1);
+function deleteTask(i){
+  tasks.splice(i,1);
   save();
   renderTasks();
 }
@@ -96,22 +88,60 @@ function sortTasks(){
   renderTasks();
 }
 
+/* tema */
 function toggleTheme(){
   document.body.classList.toggle("dark");
   document.body.classList.toggle("light");
 }
 
-function openWelcome(){
-  document.getElementById("welcomeModal").classList.remove("hidden");
+/* modal */
+function openInfo(){
+  document.getElementById("infoModal").classList.remove("hidden");
 }
 
-function closeWelcome(){
-  document.getElementById("welcomeModal").classList.add("hidden");
+function closeInfo(e){
+  if(!e || e.target.id === "infoModal"){
+    document.getElementById("infoModal").classList.add("hidden");
+  }
 }
 
-if(!localStorage.getItem("visited")){
-  openWelcome();
-  localStorage.setItem("visited",true);
+/* ✏️ FONDO LÁPIZ REAL */
+const canvas = document.getElementById("bgCanvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let lines = [];
+
+for(let i=0;i<30;i++){
+  lines.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    length:Math.random()*200,
+    speed:0.5+Math.random()
+  });
 }
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  ctx.strokeStyle="rgba(0,0,0,0.1)";
+  ctx.lineWidth=1;
+
+  lines.forEach(l=>{
+    ctx.beginPath();
+    ctx.moveTo(l.x,l.y);
+    ctx.lineTo(l.x+l.length,l.y);
+    ctx.stroke();
+
+    l.y += l.speed;
+    if(l.y > canvas.height) l.y = 0;
+  });
+
+  requestAnimationFrame(draw);
+}
+
+draw();
 
 renderTasks();
