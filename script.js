@@ -23,7 +23,7 @@ function addTask(){
   tasks.push({
     id:Date.now(),
     text:text.toUpperCase(),
-    category:catInput.value,
+    category:catInput.value || "Personal",
     completed:false
   });
 
