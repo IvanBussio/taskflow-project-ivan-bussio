@@ -1,33 +1,36 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>TaskFlow PRO</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- Fuente PRO -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
 
 body{
-  font-family:'Poppins',sans-serif;
+  font-family:'Inter',sans-serif;
   overflow-x:hidden;
 }
 
-/* 🌿 claro */
+/* 🌿 MODO CLARO */
 body.light{
-  background:#ecfdf5;
+  background:linear-gradient(120deg,#c7f9cc,#a8e6cf,#b7efc5);
 }
 
-/* 🌌 oscuro */
+/* 🌌 MODO OSCURO */
 body.dark{
-  background:#0f172a;
+  background:linear-gradient(120deg,#020617,#0f172a,#1e1b4b);
   color:white;
 }
 
-/* ✏️ LÍNEAS LÁPIZ ANIMADAS */
+/* canvas */
 .canvas-bg{
   position:fixed;
   top:0;
@@ -39,10 +42,14 @@ body.dark{
 
 /* glass */
 .glass{
-  background:rgba(255,255,255,.5);
-  backdrop-filter:blur(12px);
+  background:rgba(255,255,255,.45);
+  backdrop-filter:blur(14px);
   border-radius:20px;
   padding:25px;
+}
+
+.dark .glass{
+  background:rgba(15,23,42,.6);
 }
 
 /* botones */
@@ -53,25 +60,32 @@ body.dark{
   transition:all .25s ease;
 }
 
-/* ✨ HOVER PRO */
 .btn:hover{
   transform:translateY(-3px) scale(1.05);
-  box-shadow:0 10px 20px rgba(0,0,0,0.15);
+  box-shadow:0 10px 25px rgba(0,0,0,.2);
 }
 
 /* tareas */
 .task{
   background:rgba(255,255,255,.7);
   padding:12px;
-  border-radius:10px;
+  border-radius:12px;
   display:flex;
+  align-items:center;
   justify-content:space-between;
+  gap:10px;
   margin-top:10px;
   transition:.2s;
 }
 
-.task:hover{
-  transform:scale(1.02);
+.dark .task{
+  background:rgba(30,41,59,.7);
+}
+
+/* texto tachado */
+.completed span{
+  text-decoration:line-through;
+  opacity:0.6;
 }
 
 /* chip */
@@ -83,35 +97,20 @@ body.dark{
   font-size:12px;
 }
 
-/* modal */
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.6);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.modal-box{
-  background:white;
-  padding:30px;
-  border-radius:20px;
-  max-width:500px;
-}
-
-.dark .modal-box{
-  background:#1e293b;
-  color:white;
+/* input */
+input{
+  outline:none;
 }
 
 </style>
+
 </head>
 
 <body class="light px-6 py-6">
 
 <canvas id="bgCanvas" class="canvas-bg"></canvas>
 
+<!-- HEADER -->
 <header class="flex justify-between items-center mb-10">
 
 <h1 class="text-4xl font-semibold">TaskFlow</h1>
@@ -123,41 +122,49 @@ body.dark{
 
 </header>
 
+<!-- INPUT -->
 <div class="glass max-w-5xl mx-auto mb-6">
 
-<input id="taskInput" placeholder="Tarea..." class="w-full p-2 rounded mb-2 text-black">
-<input id="categoryInput" placeholder="Categoría..." class="w-full p-2 rounded mb-2 text-black">
+<input id="taskInput" placeholder="Escribe tu tarea..." class="w-full p-3 rounded mb-2 text-black">
 
-<div id="suggestions"></div>
+<input id="categoryInput" placeholder="Categoría..." class="w-full p-3 rounded mb-2 text-black">
 
-<div class="flex gap-2 mt-2">
+<div id="suggestions" class="text-sm mb-2"></div>
+
+<div class="flex gap-2">
 <button onclick="addTask()" class="btn">Añadir</button>
-<button onclick="sortTasks()" class="btn">Ordenar</button>
+<button onclick="sortTasks()" class="btn">Ordenar A-Z</button>
 </div>
 
 </div>
 
+<!-- LISTA -->
 <div class="glass max-w-5xl mx-auto">
 <div id="taskList"></div>
 </div>
 
 <!-- MODAL INFO -->
-<div id="infoModal" class="modal hidden" onclick="closeInfo(event)">
-  <div class="modal-box" onclick="event.stopPropagation()">
-    <h2 class="text-2xl mb-3">TaskFlow PRO</h2>
-    <p>
-      TaskFlow es una aplicación avanzada de gestión de tareas diseñada para mejorar tu productividad.
-    </p>
+<div id="infoModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center" onclick="closeInfo(event)">
 
-    <ul class="mt-3 text-sm">
-      <li>• Organización por categorías inteligentes</li>
-      <li>• Interfaz moderna y fluida</li>
-      <li>• Sistema de sugerencias automático</li>
-      <li>• Optimizada para pantallas grandes (4K)</li>
-    </ul>
+<div class="bg-white p-6 rounded-xl max-w-md" onclick="event.stopPropagation()">
 
-    <button onclick="closeInfo()" class="btn mt-4">Cerrar</button>
-  </div>
+<h2 class="text-2xl mb-3">TaskFlow PRO</h2>
+
+<p class="text-sm">
+TaskFlow es una app moderna de gestión de tareas con categorías inteligentes, animaciones fluidas y una experiencia optimizada para productividad.
+</p>
+
+<ul class="mt-3 text-sm">
+<li>• Organización inteligente</li>
+<li>• Categorías automáticas</li>
+<li>• UI moderna</li>
+<li>• Optimizada para 4K</li>
+</ul>
+
+<button onclick="closeInfo()" class="btn mt-4">Cerrar</button>
+
+</div>
+
 </div>
 
 <script src="script.js"></script>
