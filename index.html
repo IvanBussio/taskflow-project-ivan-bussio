@@ -1,83 +1,44 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TaskFlow PRO</title>
+<title>TaskFlow</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
-
 body{
   font-family:'Poppins',sans-serif;
-  transition:background .6s,color .4s;
-  overflow-x:hidden;
+  transition:background .6s;
 }
 
-/* 🌿 MODO CLARO */
+/* claro */
 body.light{
   background:linear-gradient(120deg,#d1fae5,#bbf7d0,#a7f3d0);
-  background-size:300% 300%;
-  animation:bgmove 15s infinite alternate;
 }
 
-/* 🌌 MODO OSCURO */
+/* oscuro */
 body.dark{
   background:linear-gradient(120deg,#0f172a,#1e1b4b,#312e81);
-  background-size:300% 300%;
-  animation:bgmove 20s infinite alternate;
   color:white;
 }
 
-@keyframes bgmove{
-  0%{background-position:0% 50%;}
-  100%{background-position:100% 50%;}
-}
-
-/* ✏️ líneas animadas */
-body::before{
-  content:"";
-  position:fixed;
-  width:200%;
-  height:200%;
-  background-image:linear-gradient(transparent 95%, rgba(0,0,0,0.05) 100%);
-  animation:moveLines 30s linear infinite;
-  pointer-events:none;
-}
-
-@keyframes moveLines{
-  from{transform:translateY(0);}
-  to{transform:translateY(-200px);}
-}
-
-/* glass */
+/* tarjetas */
 .glass{
-  background:rgba(255,255,255,.35);
+  background:rgba(255,255,255,.4);
   backdrop-filter:blur(14px);
   border-radius:18px;
   padding:25px;
-  box-shadow:0 15px 35px rgba(0,0,0,.15);
-}
-
-.dark .glass{
-  background:rgba(30,41,59,.7);
 }
 
 /* botones */
 .btn{
   padding:10px 18px;
   border-radius:10px;
-  background:rgba(255,255,255,.4);
-  transition:.25s;
-}
-
-.btn:hover{
-  transform:translateY(-2px) scale(1.03);
-  box-shadow:0 8px 20px rgba(0,0,0,.15);
+  background:rgba(255,255,255,.5);
 }
 
 /* tareas */
@@ -87,26 +48,6 @@ body::before{
   border-radius:12px;
   display:flex;
   justify-content:space-between;
-  align-items:center;
-  animation:fadeIn .4s ease;
-}
-
-.dark .task{
-  background:rgba(30,41,59,.7);
-}
-
-.task span{
-  color:#111827;
-  font-weight:500;
-}
-
-.dark .task span{
-  color:white;
-}
-
-@keyframes fadeIn{
-  from{opacity:0; transform:translateY(10px);}
-  to{opacity:1; transform:translateY(0);}
 }
 
 /* progreso */
@@ -114,118 +55,59 @@ body::before{
   height:6px;
   background:rgba(255,255,255,.3);
   border-radius:6px;
-  overflow:hidden;
 }
 
 .progressbar{
   height:100%;
-  width:0%;
-  background:linear-gradient(90deg,#34d399,#10b981);
-  transition:.4s;
+  background:#34d399;
 }
-
-/* input */
-#taskInput:focus{
-  outline:none;
-  box-shadow:0 0 0 2px #34d399;
-}
-
-/* modal */
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.5);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.modal-box{
-  background:white;
-  padding:40px;
-  border-radius:20px;
-  max-width:500px;
-  text-align:center;
-  animation:zoomIn .3s ease;
-}
-
-.dark .modal-box{
-  background:#1e293b;
-  color:white;
-}
-
-@keyframes zoomIn{
-  from{transform:scale(.8); opacity:0;}
-  to{transform:scale(1); opacity:1;}
-}
-
 </style>
-
 </head>
 
 <body class="light min-h-screen flex flex-col items-center px-4 py-6">
 
-<header class="w-full max-w-6xl flex justify-between items-center mb-8">
+<header class="w-full max-w-4xl flex justify-between items-center mb-8">
 
-  <div class="flex gap-2">
-    <button onclick="openWelcome()" class="btn">ℹ Info</button>
-    <button id="themeToggle" class="btn">🌙</button>
-  </div>
+<div class="flex gap-2">
+<button onclick="openWelcome()" class="btn">ℹ Info</button>
+<button onclick="toggleTheme()" class="btn">🌙</button>
+</div>
 
-  <h1 class="text-4xl font-semibold">TaskFlow</h1>
+<h1 class="text-4xl font-semibold">TaskFlow</h1>
 
 </header>
 
-<div class="glass w-full max-w-4xl mb-6">
+<div class="glass w-full max-w-3xl mb-6">
 
-  <h2 class="text-xl mb-3">Nueva tarea</h2>
+<h2>Nueva tarea</h2>
 
-  <input id="taskInput" placeholder="Escribe una tarea..." class="w-full p-2 rounded mb-3 text-black"/>
+<input id="taskInput" class="w-full p-2 rounded mb-3 text-black" placeholder="Nueva tarea...">
 
-  <button onclick="addTask()" class="btn">Añadir</button>
+<div class="flex gap-2">
+<button onclick="addTask()" class="btn">Añadir</button>
+<button onclick="sortTasks()" class="btn">Ordenar A-Z</button>
+</div>
 
-  <p id="taskCount" class="text-sm opacity-70 mt-2"></p>
+<p id="taskCount" class="mt-2 text-sm"></p>
 
-  <div class="progress mt-2">
-    <div id="progressBar" class="progressbar"></div>
-  </div>
+<div class="progress mt-2">
+<div id="progressBar" class="progressbar"></div>
+</div>
 
 </div>
 
-<div class="glass w-full max-w-4xl">
-  <div id="taskList" class="flex flex-col gap-3"></div>
+<div class="glass w-full max-w-3xl">
+<div id="taskList"></div>
 </div>
 
-<div id="welcomeModal" class="modal hidden">
-  <div class="modal-box">
-    <h2 class="text-3xl mb-4">Bienvenido a TaskFlow</h2>
-    <p>Organiza tus tareas de forma profesional</p>
-    <button onclick="closeWelcome()" class="btn mt-6">Cerrar</button>
-  </div>
+<div id="welcomeModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center">
+<div class="bg-white p-6 rounded">
+<h2>Bienvenido a TaskFlow</h2>
+<button onclick="closeWelcome()" class="btn mt-3">Cerrar</button>
+</div>
 </div>
 
-<script type="module" src="script.js"></script>
-
-<script>
-const toggle = document.getElementById("themeToggle");
-toggle.onclick = () => {
-  document.body.classList.toggle("dark");
-  document.body.classList.toggle("light");
-};
-
-function openWelcome(){
-  document.getElementById("welcomeModal").classList.remove("hidden");
-}
-
-function closeWelcome(){
-  document.getElementById("welcomeModal").classList.add("hidden");
-}
-
-if(!localStorage.getItem("visited")){
-  openWelcome();
-  localStorage.setItem("visited",true);
-}
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
