@@ -92,7 +92,7 @@ function save(){
   render();
 }
 
-/* 🌙☀️ tema con icono */
+/* tema */
 function toggleTheme(){
   if(document.body.classList.contains("dark")){
     document.body.classList.remove("dark");
@@ -105,7 +105,7 @@ function toggleTheme(){
   }
 }
 
-/* modal */
+/* modales */
 function openInfo(){
   document.getElementById("infoModal").style.display="flex";
 }

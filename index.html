@@ -42,12 +42,12 @@ body.dark{
 header{
   display:flex;
   justify-content:space-between;
-  padding:20px 40px;
+  padding:20px 60px;
 }
 
-/* TÍTULO */
+/* TITULO */
 .title{
-  font-size:32px;
+  font-size:34px;
   font-weight:600;
   background:linear-gradient(90deg,#ff7eb3,#6ec3ff);
   -webkit-background-clip:text;
@@ -71,18 +71,32 @@ header{
   background:#444;
 }
 
-/* CONTENEDOR */
+/* CONTENEDOR 4K */
 .container{
-  max-width:600px;
+  width:100%;
+  max-width:1400px;
   margin:auto;
+  padding:0 40px;
+}
+
+/* GRID */
+.layout{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:30px;
+}
+
+@media(min-width:1200px){
+  .layout{
+    grid-template-columns:1fr 1.2fr;
+  }
 }
 
 /* CARD */
 .card{
   background:rgba(255,255,255,0.5);
-  padding:20px;
-  border-radius:15px;
-  margin-bottom:20px;
+  padding:25px;
+  border-radius:18px;
 }
 
 .dark .card{
@@ -92,10 +106,10 @@ header{
 /* INPUTS */
 .input{
   width:100%;
-  padding:14px;
-  border-radius:12px;
+  padding:16px;
+  border-radius:14px;
   border:none;
-  margin-bottom:12px;
+  margin-bottom:14px;
   box-sizing:border-box;
 }
 
@@ -103,9 +117,9 @@ header{
 .task{
   display:flex;
   justify-content:space-between;
-  padding:12px;
-  border-radius:12px;
-  margin-bottom:8px;
+  padding:14px;
+  border-radius:14px;
+  margin-bottom:10px;
   background:rgba(255,255,255,0.7);
 }
 
@@ -120,8 +134,8 @@ header{
 
 /* CHIPS */
 .chip{
-  padding:4px 10px;
-  border-radius:8px;
+  padding:5px 12px;
+  border-radius:10px;
   font-size:12px;
   color:white;
 }
@@ -144,9 +158,9 @@ header{
 
 .modal-box{
   background:white;
-  padding:25px;
-  border-radius:15px;
-  max-width:400px;
+  padding:30px;
+  border-radius:18px;
+  max-width:450px;
   text-align:center;
 }
 
@@ -172,8 +186,9 @@ header{
 
 </header>
 
-<main class="container">
+<main class="container layout">
 
+<!-- IZQUIERDA -->
 <div class="card">
 
 <input id="input" class="input" placeholder="Nueva tarea...">
@@ -185,6 +200,7 @@ header{
 
 </div>
 
+<!-- DERECHA -->
 <div id="taskList"></div>
 
 </main>
@@ -194,11 +210,11 @@ header{
   <div class="modal-box">
     <h2>TaskFlow 🚀</h2>
     <p>
-      Organiza tus tareas fácilmente.<br><br>
-      ✔ IA de categorías<br>
-      ✔ Orden automático<br>
-      ✔ Diseño moderno<br><br>
-      Productividad sin esfuerzo.
+      Gestiona tus tareas de forma inteligente.<br><br>
+      ✔ Categorías automáticas<br>
+      ✔ Orden rápido<br>
+      ✔ Interfaz moderna<br><br>
+      Diseñada para productividad real.
     </p>
   </div>
 </div>
@@ -207,7 +223,7 @@ header{
 <div id="welcome" class="modal" style="display:none">
   <div class="modal-box">
     <h2>Bienvenido 👋</h2>
-    <p>Organiza tu día como un pro.</p>
+    <p>Empieza a organizar tu día como un pro.</p>
     <button class="btn" onclick="closeWelcome()">Entrar</button>
   </div>
 </div>
