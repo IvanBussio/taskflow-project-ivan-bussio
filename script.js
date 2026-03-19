@@ -3,9 +3,9 @@ let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 const input = document.getElementById("input");
 const catInput = document.getElementById("categoryInput");
 
-/* IA categorías en tiempo real */
-input.addEventListener("input", () => {
-  const t = input.value.toLowerCase();
+/* IA */
+input.addEventListener("input",()=>{
+  let t = input.value.toLowerCase();
 
   if(t.includes("gym")) catInput.value="Gym";
   else if(t.includes("compr")) catInput.value="Compras";
@@ -16,13 +16,13 @@ input.addEventListener("input", () => {
 
 /* añadir */
 function addTask(){
-  const text = input.value.trim();
+  let text = input.value.trim();
   if(!text) return;
 
   tasks.push({
     id:Date.now(),
     text,
-    category:catInput.value || "Personal",
+    category:catInput.value,
     completed:false
   });
 
@@ -33,15 +33,15 @@ function addTask(){
 
 /* render */
 function render(){
-  const list = document.getElementById("taskList");
+  const list=document.getElementById("taskList");
   list.innerHTML="";
 
   tasks.forEach(t=>{
-    const div = document.createElement("div");
+    const div=document.createElement("div");
     div.className="task";
 
     div.innerHTML=`
-      <span class="${t.completed?'completed':''}" onclick="toggle(${t.id})">
+      <span onclick="toggle(${t.id})" class="${t.completed?'completed':''}">
         ${t.text}
       </span>
 
@@ -56,37 +56,38 @@ function render(){
   });
 }
 
-/* toggle check */
-function toggle(id){
-  tasks = tasks.map(t =>
-    t.id === id ? {...t, completed:!t.completed} : t
-  );
+/* ordenar */
+function sortTasks(){
+  tasks.sort((a,b)=>a.text.localeCompare(b.text));
   save();
 }
 
-/* eliminar */
+/* acciones */
+function toggle(id){
+  tasks = tasks.map(t=>t.id===id?{...t,completed:!t.completed}:t);
+  save();
+}
+
 function remove(id){
   tasks = tasks.filter(t=>t.id!==id);
   save();
 }
 
-/* editar */
 function edit(id){
-  const t = tasks.find(t=>t.id===id);
-  const nuevo = prompt("Editar tarea", t.text);
-  if(nuevo) t.text = nuevo;
+  let t = tasks.find(t=>t.id===id);
+  let nuevo = prompt("Editar",t.text);
+  if(nuevo) t.text=nuevo;
   save();
 }
 
-/* eliminar todo */
 function deleteAll(){
-  tasks = [];
+  tasks=[];
   save();
 }
 
 /* guardar */
 function save(){
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+  localStorage.setItem("tasks",JSON.stringify(tasks));
   render();
 }
 
@@ -103,8 +104,18 @@ function openInfo(){
 
 function closeInfo(e){
   if(e.target.id==="infoModal"){
-    document.getElementById("infoModal").style.display="none";
+    e.currentTarget.style.display="none";
   }
+}
+
+/* welcome */
+if(!localStorage.getItem("welcome")){
+  document.getElementById("welcome").style.display="flex";
+  localStorage.setItem("welcome",true);
+}
+
+function closeWelcome(){
+  document.getElementById("welcome").style.display="none";
 }
 
 /* enter */
