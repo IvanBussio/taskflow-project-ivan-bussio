@@ -2,17 +2,11 @@ import { getTasks, createTask, deleteTask } from "./js/api.js";
 
 let tasks = [];
 
-/* CARGAR TAREAS */
 async function loadTasks() {
-  try {
-    tasks = await getTasks();
-    renderTasks();
-  } catch (error) {
-    console.error("Error cargando tareas", error);
-  }
+  tasks = await getTasks();
+  renderTasks();
 }
 
-/* RENDER */
 function renderTasks() {
   const list = document.getElementById("taskList");
   list.innerHTML = "";
@@ -28,32 +22,28 @@ function renderTasks() {
 
     list.appendChild(div);
   });
+
+  document.getElementById("taskCount").innerText =
+    `${tasks.length} tareas`;
+
+  const progress = document.getElementById("progressBar");
+  progress.style.width = tasks.length > 0 ? "100%" : "0%";
 }
 
-/* AÑADIR */
 window.addTask = async function () {
   const input = document.getElementById("taskInput");
 
   if (!input.value.trim()) return;
 
-  try {
-    await createTask(input.value);
-    input.value = "";
-    loadTasks();
-  } catch (error) {
-    console.error("Error creando tarea", error);
-  }
+  await createTask(input.value);
+
+  input.value = "";
+  loadTasks();
 };
 
-/* BORRAR */
 window.removeTask = async function (id) {
-  try {
-    await deleteTask(id);
-    loadTasks();
-  } catch (error) {
-    console.error("Error eliminando tarea", error);
-  }
+  await deleteTask(id);
+  loadTasks();
 };
 
-/* INIT */
 loadTasks();
