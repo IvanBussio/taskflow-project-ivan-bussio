@@ -18,9 +18,9 @@ body{
   transition:.4s;
 }
 
-/* 🌌 DARK */
+/* 🌌 DARK PASTEL */
 body.dark{
-  background: linear-gradient(135deg,#0F0A1F,#1E0A3C,#2B0F5A);
+  background: linear-gradient(135deg,#0B0A18,#1A1235,#2A1A5A);
   background-size:400% 400%;
   animation:bg 12s ease infinite;
   color:#E5E7EB;
@@ -61,15 +61,15 @@ header{
   border-radius:12px;
   border:none;
   cursor:pointer;
-  background:#2A234A;
+  background:rgba(255,255,255,0.08);
   color:white;
-  border:1px solid #3A2F6B;
+  border:1px solid rgba(255,255,255,0.15);
   transition:.3s;
 }
 
 .btn:hover{
+  background:rgba(255,255,255,0.18);
   transform:translateY(-2px);
-  background:#3A2F6B;
 }
 
 /* CONTENEDOR */
@@ -94,9 +94,10 @@ header{
 
 /* CARD */
 .card{
-  background:rgba(28,21,51,0.8);
+  background:rgba(255,255,255,0.05);
   padding:25px;
   border-radius:20px;
+  backdrop-filter:blur(12px);
 }
 
 body.light .card{
@@ -113,7 +114,7 @@ body.light .card{
   box-sizing:border-box;
 }
 
-/* DASHBOARD */
+/* DASHBOARD PASTEL */
 .dashboard{
   display:flex;
   gap:10px;
@@ -125,16 +126,24 @@ body.light .card{
   padding:18px;
   border-radius:16px;
   text-align:center;
-  color:white;
   font-weight:600;
-  box-shadow:0 0 20px rgba(79,140,255,0.2);
 }
 
-.total{ background:#4F8CFF; }
-.completed{ background:#22C55E; }
+/* 🎨 PASTEL */
+.total{ 
+  background:linear-gradient(135deg,#93C5FD,#BFDBFE);
+  color:#1E3A8A;
+}
 
-/* 🔥 CAMBIO A ROSA */
-.pending{ background:#EC4899; }
+.completed{ 
+  background:linear-gradient(135deg,#86EFAC,#BBF7D0);
+  color:#065F46;
+}
+
+.pending{ 
+  background:linear-gradient(135deg,#F9A8D4,#FBCFE8);
+  color:#831843;
+}
 
 /* TAREAS */
 .task{
@@ -143,17 +152,18 @@ body.light .card{
   padding:14px;
   border-radius:14px;
   margin-bottom:10px;
-  background:#1C1533;
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(10px);
 }
 
 body.light .task{
   background:white;
 }
 
-/* 🔥 SOLO TAREAS SE TACHAN */
+/* TACHADO SOLO TAREAS */
 .task .completed{
   text-decoration:line-through;
-  opacity:.5;
+  opacity:.4;
 }
 
 /* CATEGORIAS */
@@ -248,7 +258,7 @@ footer{
       Organiza tus tareas con IA.<br><br>
       ✔ Categorías automáticas<br>
       ✔ Dashboard visual<br>
-      ✔ Diseño profesional<br>
+      ✔ Diseño moderno<br>
     </p>
   </div>
 </div>
