@@ -1,78 +1,74 @@
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>TaskFlow</title>
 
-const app = express();
+  <script src="https://cdn.tailwindcss.com"></script>
 
-/* CONFIG */
-const PORT = process.env.PORT || 3000;
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
 
-/* MIDDLEWARES */
-app.use(cors());
-app.use(express.json());
+  <style>
+    *:focus {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+  </style>
+</head>
 
-/* LOGGER */
-app.use((req, res, next) => {
-  const start = Date.now();
+<body class="min-h-screen flex items-center justify-center 
+bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white">
 
-  res.on('finish', () => {
-    console.log(`${req.method} ${req.url} ${res.statusCode} - ${Date.now() - start}ms`);
-  });
+  <!-- botón dark -->
+  <button id="darkModeBtn"
+    class="absolute top-4 right-4 text-xl">
+    🌙
+  </button>
 
-  next();
-});
+  <!-- container -->
+  <div class="w-full max-w-md bg-gray-900/80 backdrop-blur 
+  p-6 rounded-2xl shadow-2xl border border-gray-700">
 
-/* DATA EN MEMORIA */
-let tasks = [];
-let id = 1;
+    <!-- título -->
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold">TaskFlow</h1>
+      <p class="text-gray-400 text-sm">Organiza tu día 🚀</p>
+    </div>
 
-/* ROUTES */
+    <!-- input -->
+    <div class="flex gap-2 mb-4">
+      <input
+        id="taskInput"
+        type="text"
+        placeholder="Agregar tarea..."
+        class="flex-1 px-4 py-2 rounded-lg bg-gray-800 text-white placeholder-gray-500"
+      />
 
-// GET
-app.get('/api/v1/tasks', (req, res) => {
-  res.json(tasks);
-});
+      <button id="addBtn"
+        class="bg-green-500 hover:bg-green-600 px-4 rounded-lg font-bold">
+        +
+      </button>
+    </div>
 
-// POST
-app.post('/api/v1/tasks', (req, res) => {
-  const { titulo } = req.body;
+    <!-- acciones -->
+    <div class="flex justify-between text-sm mb-3">
+      <button id="sortBtn" class="text-blue-400 hover:underline">
+        Ordenar
+      </button>
+      <button id="clearBtn" class="text-red-400 hover:underline">
+        Eliminar completadas
+      </button>
+    </div>
 
-  if (!titulo || typeof titulo !== "string" || titulo.trim().length < 3) {
-    return res.status(400).json({ error: "Título inválido (mínimo 3 caracteres)" });
-  }
+    <!-- lista -->
+    <ul id="taskList" class="space-y-2"></ul>
 
-  const nueva = {
-    id: id++,
-    titulo: titulo.trim()
-  };
+  </div>
 
-  tasks.push(nueva);
-
-  res.status(201).json(nueva);
-});
-
-// DELETE
-app.delete('/api/v1/tasks/:id', (req, res) => {
-  const taskId = parseInt(req.params.id);
-
-  const index = tasks.findIndex(t => t.id === taskId);
-
-  if (index === -1) {
-    return res.status(404).json({ error: "No encontrada" });
-  }
-
-  tasks.splice(index, 1);
-
-  res.status(204).send();
-});
-
-/* ERROR HANDLER GLOBAL */
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json({ error: "Error interno del servidor" });
-});
-
-/* START */
-app.listen(PORT, () => {
-  console.log(`Servidor en http://localhost:${PORT}`);
-});
+  <script src="script.js"></script>
+</body>
+</html>
