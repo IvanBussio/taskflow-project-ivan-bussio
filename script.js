@@ -26,12 +26,17 @@ function addTask() {
   li.className = "flex justify-between items-center bg-gray-200 dark:bg-gray-700 px-3 py-2 rounded-lg";
 
   li.innerHTML = `
-    <span class="task-text cursor-pointer">${text}</span>
+    <span class="task-text cursor-pointer select-none">${text}</span>
     <div class="flex gap-2">
-      <button class="edit text-blue-500 focus:outline-none focus:ring-0">✏️</button>
-      <button class="delete text-red-500 focus:outline-none focus:ring-0">✖</button>
+      <button class="edit text-blue-500 focus:outline-none active:outline-none focus:ring-0">✏️</button>
+      <button class="delete text-red-500 focus:outline-none active:outline-none focus:ring-0">✖</button>
     </div>
   `;
+
+  // 🔥 EVITA FOCUS (SOLUCIÓN REAL)
+  li.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+  });
 
   // ✅ completar tarea
   li.querySelector(".task-text").addEventListener("click", () => {
@@ -46,7 +51,8 @@ function addTask() {
 
   // ✏️ editar
   li.querySelector(".edit").addEventListener("click", () => {
-    const newText = prompt("Editar tarea:", text);
+    const currentText = li.querySelector(".task-text").textContent;
+    const newText = prompt("Editar tarea:", currentText);
     if (newText) {
       li.querySelector(".task-text").textContent = newText;
     }
