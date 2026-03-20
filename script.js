@@ -5,26 +5,19 @@ const darkModeBtn = document.getElementById("darkModeBtn");
 const sortBtn = document.getElementById("sortBtn");
 const clearBtn = document.getElementById("clearBtn");
 
-// =======================
 // 🌙 MODO OSCURO
-// =======================
-function toggleDarkMode() {
+darkModeBtn.addEventListener("click", () => {
   document.documentElement.classList.toggle("dark");
 
   const isDark = document.documentElement.classList.contains("dark");
   localStorage.setItem("theme", isDark ? "dark" : "light");
-}
+});
 
-darkModeBtn.addEventListener("click", toggleDarkMode);
-
-// cargar preferencia
 if (localStorage.getItem("theme") === "dark") {
   document.documentElement.classList.add("dark");
 }
 
-// =======================
 // ➕ AGREGAR TAREA
-// =======================
 function addTask() {
   const text = taskInput.value.trim();
   if (!text) return;
@@ -34,18 +27,29 @@ function addTask() {
 
   li.innerHTML = `
     <span class="task-text cursor-pointer">${text}</span>
-    <button class="delete text-red-500">X</button>
+    <div class="flex gap-2">
+      <button class="edit text-blue-500 focus:outline-none focus:ring-0">✏️</button>
+      <button class="delete text-red-500 focus:outline-none focus:ring-0">✖</button>
+    </div>
   `;
 
-  // completar tarea
+  // ✅ completar tarea
   li.querySelector(".task-text").addEventListener("click", () => {
     li.classList.toggle("line-through");
     li.classList.toggle("opacity-50");
   });
 
-  // eliminar tarea
+  // ❌ eliminar
   li.querySelector(".delete").addEventListener("click", () => {
     li.remove();
+  });
+
+  // ✏️ editar
+  li.querySelector(".edit").addEventListener("click", () => {
+    const newText = prompt("Editar tarea:", text);
+    if (newText) {
+      li.querySelector(".task-text").textContent = newText;
+    }
   });
 
   taskList.appendChild(li);
@@ -60,29 +64,25 @@ taskInput.addEventListener("keypress", (e) => {
   if (e.key === "Enter") addTask();
 });
 
-// =======================
-// 🔤 ORDENAR
-// =======================
+// 🔤 ordenar
 sortBtn.addEventListener("click", () => {
   const tasks = Array.from(taskList.children);
 
-  tasks.sort((a, b) => {
-    return a.innerText.localeCompare(b.innerText);
-  });
+  tasks.sort((a, b) =>
+    a.innerText.localeCompare(b.innerText)
+  );
 
   taskList.innerHTML = "";
-  tasks.forEach(task => taskList.appendChild(task));
+  tasks.forEach(t => taskList.appendChild(t));
 });
 
-// =======================
-// 🧹 ELIMINAR COMPLETADAS
-// =======================
+// 🧹 eliminar completadas
 clearBtn.addEventListener("click", () => {
   const tasks = Array.from(taskList.children);
 
-  tasks.forEach(task => {
-    if (task.classList.contains("line-through")) {
-      task.remove();
+  tasks.forEach(t => {
+    if (t.classList.contains("line-through")) {
+      t.remove();
     }
   });
 });
